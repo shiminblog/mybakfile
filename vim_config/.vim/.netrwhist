@@ -1,0 +1,4 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =2
+let g:netrw_dirhist_1='/home/shimin/ALPS.L1.MP8.V2.9_SIGNAL8127_TB_L1/vendor/forge/cubic/SimpleWebCam'
+let g:netrw_dirhist_2='/home/shimin/old753/LA.BR.1.2.4-05310-8x16.0/vendor/qcom/proprietary/qrdplus/Extension/apps/BootAnimation'
