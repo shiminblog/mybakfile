@@ -1,0 +1,4519 @@
+From 4373808560b9fbf228ef4e16fb7c500211a8e027 Mon Sep 17 00:00:00 2001
+From: chenx <chenxiang0527@thundersoft.com>
+Date: Mon, 8 Dec 2014 16:42:05 +0800
+Subject: [PATCH 1/3] drivers:input:misc: support bmp280 driver
+
+Driver support bmp280
+
+Change-Id: Id83870d38e98c8a57d9d0f1a790ca22b8d7885db
+Signed-off-by: Xiang Chen <chenxiang0527@thundersoft.com>
+---
+ .../devicetree/bindings/input/misc/bmp280.txt      |   33 +
+ drivers/input/misc/Kconfig                         |   12 +
+ drivers/input/misc/Makefile                        |    6 +
+ drivers/input/misc/bmp280.c                        | 1556 +++++++++++++++
+ drivers/input/misc/bmp280.h                        |  399 ++++
+ drivers/input/misc/bmp280_core.c                   | 2003 ++++++++++++++++++++
+ drivers/input/misc/bmp280_core.h                   |   65 +
+ drivers/input/misc/bmp280_i2c.c                    |  360 ++++
+ 8 files changed, 4434 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/misc/bmp280.txt
+ create mode 100644 drivers/input/misc/bmp280.c
+ create mode 100644 drivers/input/misc/bmp280.h
+ create mode 100644 drivers/input/misc/bmp280_core.c
+ create mode 100644 drivers/input/misc/bmp280_core.h
+ create mode 100644 drivers/input/misc/bmp280_i2c.c
+
+diff --git a/Documentation/devicetree/bindings/input/misc/bmp280.txt b/Documentation/devicetree/bindings/input/misc/bmp280.txt
+new file mode 100644
+index 0000000..ebf5d56
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/misc/bmp280.txt
+@@ -0,0 +1,33 @@
++Bosch BMP280 altimeter driver
++
++Required properties:
++
++ - compatible			: Should be "bosch,bmp280".
++ - reg					: i2c slave address of the device.
++ - vdd-supply		: Analog power supply needed to power device.
++ - vddio-supply		: Digital IO power supply needed for IO and I2C.
++ - bosch,chip-id		: Chip id for the bmp18x altimeter sensor.
++ - bosch,oversample	: Sensor default oversampling value.
++				Default oversampling value to be used at startup.
++				Value range is 0-3 with rising sensitivity.
++ - bosch,period	: Temperature measurement period (milliseconds).
++				Set to zero if unsure.
++
++Optional properties:
++
++ - bosch,sw-oversample	: Boolean to enable software oversampling if
++				this property is defined. Only take effect when
++				default_oversampling is 3.
++
++Example:
++&i2c_0 { /* BLSP1 QUP2 */
++	bmp280@76 {
++		status = "okay";
++		reg = <0x76>;
++		compatible = "bosch,bmp280";
++		vdd-supply = <&pm8916_l17>;
++		vddio-supply = <&pm8916_l6>;
++		bosch,bmp_filter_default = <3>;
++		bosch,duration = <1>;
++		bosch,default_delay = <200>;
++	};
+diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+index b358471..68cc699 100644
+--- a/drivers/input/misc/Kconfig
++++ b/drivers/input/misc/Kconfig
+@@ -800,6 +800,18 @@ config SENSORS_BMA2X2_ENABLE_INT2
+ 	 acceleration sensors BMA255/BMA254/BMA355/BMA250E/BMA222E/BMA280.
+ 	 Can only open if you do NOT open interrupt INT1 support
+ 
++config SENSORS_BMP280
++	tristate "BMP280 digital Pressure Sensor"
++	depends on (I2C || SPI_MASTER) && SYSFS
++	help
++	 If you say yes here, you get support for Bosch Sensortec's BMP280 digital pressure sensors.
++
++config SENSORS_BMP280_I2C
++	tristate "support I2C bus communication"
++	depends on SENSORS_BMP280 && I2C
++	help
++	 If you say yes here, you get support Bosch Sensortec's BMP280 pressure sensor hooked to an I2C bus.
++
+ config SIG_MOTION
+ 	tristate "support significant motion sensor function"
+ 	depends on SENSORS_BMA2X2  && ( SENSORS_BMA2X2_ENABLE_INT1 || SENSORS_BMA2X2_ENABLE_INT2)
+diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+index 139a4fb..b710646 100644
+--- a/drivers/input/misc/Makefile
++++ b/drivers/input/misc/Makefile
+@@ -83,3 +83,9 @@ endif
+ ifeq ($(CONFIG_BOSCH_BMA2X2_ENABLE_INT2),y)
+ 	EXTRA_CFLAGS += -DBMA2X2_ENABLE_INT2
+ endif
++
++obj-$(CONFIG_SENSORS_BMP280)      += bmp280_core.o bmp280.o
++obj-$(CONFIG_SENSORS_BMP280_I2C)  += bmp280_i2c.o
++ifeq ($(CONFIG_SENSORS_BMP280_I2C),y)
++	EXTRA_CFLAGS += -DBMP_USE_BASIC_I2C_FUNC
++endif
+\ No newline at end of file
+diff --git a/drivers/input/misc/bmp280.c b/drivers/input/misc/bmp280.c
+new file mode 100644
+index 0000000..eca98be
+--- /dev/null
++++ b/drivers/input/misc/bmp280.c
+@@ -0,0 +1,1556 @@
++/*!
++ * @section LICENSE
++ * (C) Copyright 2014 Bosch Sensortec GmbH All Rights Reserved
++ *
++ * This software program is licensed subject to the GNU General
++ * Public License (GPL).Version 2,June 1991,
++ * available at http://www.fsf.org/copyleft/gpl.html
++ *
++ * @filename bmp280.c
++ * @date     2014/02/13
++ * @id       "6d7c0bb"
++ * @version  v1.3
++ * @brief    BMP280 Linux Driver API
++*/
++/****************************************************************************/
++
++#include "bmp280.h"
++static struct bmp280_t *p_bmp280;                      /**< pointer to BMP280 */
++/* Compiler Switch if applicable
++#ifdef
++
++#endif
++*/
++/*******************************************************************************
++ * Description: *//**\brief routine to initialize the function pointers
++ *
++ *
++ *
++ *
++ *  \param
++ *
++ *
++ *
++ *  \return
++ *
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++BMP280_RETURN_FUNCTION_TYPE bmp280_init(struct bmp280_t *bmp280)
++{
++	BMP280_RETURN_FUNCTION_TYPE comres = BMP280_Zero_U8X;
++	unsigned char v_data_u8r = BMP280_Zero_U8X;
++	p_bmp280 = bmp280;                         /* assign BMP280 ptr */
++	p_bmp280->dev_addr = BMP280_I2C_ADDRESS;   /* preset BMP280 I2C_addr */
++	comres += p_bmp280->BMP280_BUS_READ_FUNC(p_bmp280->dev_addr,
++	BMP280_CHIPID_REG, &v_data_u8r, 1);    /* read Chip Id */
++	p_bmp280->chip_id = v_data_u8r;
++
++	bmp280_get_calib_param(); /* readout bmp280 calibparam structure */
++	return comres;
++}
++/* Compiler Switch if applicable
++#ifdef
++
++#endif
++*/
++/*******************************************************************************
++ * Description: *//**\brief reads uncompensated temperature
++ *
++ *
++ *
++ * \param signed long utemperature : Pointer holding
++ *			the uncompensated temperature.
++ *
++ *
++ *
++ *  \return
++ *
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++BMP280_RETURN_FUNCTION_TYPE bmp280_read_ut(BMP280_S32_t *utemperature)
++{
++	BMP280_RETURN_FUNCTION_TYPE comres = BMP280_Zero_U8X;
++	unsigned char a_data_u8r[3] = {0, 0, 0};
++	if (p_bmp280 == BMP280_NULL) {
++		return  E_BMP280_NULL_PTR;
++		} else {
++			comres += p_bmp280->BMP280_BUS_READ_FUNC(
++			p_bmp280->dev_addr,
++			BMP280_TEMPERATURE_MSB_REG, a_data_u8r, 3);
++			*utemperature = (BMP280_S32_t)(((
++			(BMP280_U32_t) (a_data_u8r[0]))
++			<< SHIFT_LEFT_12_POSITION) |
++			(((BMP280_U32_t)(a_data_u8r[1]))
++			<< SHIFT_LEFT_4_POSITION)
++			| ((BMP280_U32_t)a_data_u8r[2]
++			>> SHIFT_RIGHT_4_POSITION));
++		}
++	return comres;
++}
++/* Compiler Switch if applicable
++#ifdef
++
++#endif
++*/
++/*******************************************************************************
++ * Description: *//**\brief Reads actual temperature from uncompensated temperature
++ *                    and returns the value in 0.01 degree Centigrade
++ *                    Output value of "5123" equals 51.23 DegC.
++ *
++ *
++ *
++ *  \param signed long : value of uncompensated temperature.
++ *
++ *
++ *
++ *  \return
++ *			signed long : actual temperature
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++BMP280_S32_t bmp280_compensate_T_int32(BMP280_S32_t adc_t)
++{
++	BMP280_S32_t v_x1_u32r = BMP280_Zero_U8X;
++	BMP280_S32_t v_x2_u32r = BMP280_Zero_U8X;
++	BMP280_S32_t temperature = BMP280_Zero_U8X;
++
++	v_x1_u32r  = ((((adc_t >> 3) - ((BMP280_S32_t)
++	p_bmp280->cal_param.dig_T1 << 1))) *
++	((BMP280_S32_t)p_bmp280->cal_param.dig_T2)) >> 11;
++	v_x2_u32r  = (((((adc_t >> 4) -
++	((BMP280_S32_t)p_bmp280->cal_param.dig_T1)) * ((adc_t >> 4) -
++	((BMP280_S32_t)p_bmp280->cal_param.dig_T1))) >> 12) *
++	((BMP280_S32_t)p_bmp280->cal_param.dig_T3)) >> 14;
++	p_bmp280->cal_param.t_fine = v_x1_u32r + v_x2_u32r;
++	temperature  = (p_bmp280->cal_param.t_fine * 5 + 128) >> 8;
++
++	return temperature;
++}
++/* Compiler Switch if applicable
++#ifdef
++
++#endif
++*/
++/*******************************************************************************
++ * Description: *//**\brief reads uncompensated pressure.
++ *
++ *
++ *
++ *
++ *  \param signed long upressure : Pointer holding the uncompensated pressure.
++ *
++ *
++ *
++ *  \return
++ *
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++BMP280_RETURN_FUNCTION_TYPE bmp280_read_up(BMP280_S32_t *upressure)
++{
++	BMP280_RETURN_FUNCTION_TYPE comres = BMP280_Zero_U8X;
++	unsigned char a_data_u8r[3] = {0, 0, 0};
++	if (p_bmp280 == BMP280_NULL) {
++		return  E_BMP280_NULL_PTR;
++		} else {
++			comres += p_bmp280->BMP280_BUS_READ_FUNC(
++			p_bmp280->dev_addr,
++			BMP280_PRESSURE_MSB_REG, a_data_u8r, 3);
++			*upressure = (BMP280_S32_t)(
++			(((BMP280_U32_t)(a_data_u8r[0]))
++			<< SHIFT_LEFT_12_POSITION) |
++			(((BMP280_U32_t)(a_data_u8r[1]))
++			<< SHIFT_LEFT_4_POSITION) |
++			((BMP280_U32_t)a_data_u8r[2] >>
++			SHIFT_RIGHT_4_POSITION));
++		}
++	return comres;
++}
++/* Compiler Switch if applicable
++#ifdef
++
++#endif
++*/
++/*******************************************************************************
++ * Description: *//**\brief Reads actual pressure from uncompensated pressure
++ *							and returns the value in Pascal(Pa)
++ *                          Output value of "96386" equals 96386 Pa =
++ *                          963.86 hPa = 963.86 millibar
++
++ *
++ *
++ *
++ *  \param signed long : value of uncompensated pressure
++ *
++ *
++ *
++ *  \return
++ *			unsigned long : actual pressure
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++unsigned int bmp280_compensate_P_int32(BMP280_S32_t adc_p)
++{
++	BMP280_S32_t v_x1_u32r = BMP280_Zero_U8X;
++	BMP280_S32_t v_x2_u32r = BMP280_Zero_U8X;
++	BMP280_U32_t pressure = BMP280_Zero_U8X;
++
++	v_x1_u32r = (((BMP280_S32_t)p_bmp280->cal_param.t_fine) >> 1) -
++	(BMP280_S32_t)64000;
++	v_x2_u32r = (((v_x1_u32r >> 2) * (v_x1_u32r >> 2)) >> 11) *
++	((BMP280_S32_t)p_bmp280->cal_param.dig_P6);
++	v_x2_u32r = v_x2_u32r + ((v_x1_u32r *
++	((BMP280_S32_t)p_bmp280->cal_param.dig_P5)) << 1);
++	v_x2_u32r = (v_x2_u32r >> 2) +
++	(((BMP280_S32_t)p_bmp280->cal_param.dig_P4) << 16);
++	v_x1_u32r = (((p_bmp280->cal_param.dig_P3 * (((v_x1_u32r >> 2) *
++	(v_x1_u32r >> 2)) >> 13)) >> 3) +
++	((((BMP280_S32_t)p_bmp280->cal_param.dig_P2) *
++	v_x1_u32r) >> 1)) >> 18;
++	v_x1_u32r = ((((32768+v_x1_u32r)) *
++	((BMP280_S32_t)p_bmp280->cal_param.dig_P1))	>> 15);
++	if (v_x1_u32r == 0)
++		return 0; /* Avoid exception caused by division by zero */
++	pressure = (((BMP280_U32_t)(((BMP280_S32_t)1048576) - adc_p) -
++	(v_x2_u32r >> 12))) * 3125;
++	if (pressure < 0x80000000)
++		pressure = (pressure << 1) / ((BMP280_U32_t)v_x1_u32r);
++	else
++		pressure = (pressure /
++		(BMP280_U32_t)v_x1_u32r) * 2;
++		v_x1_u32r = (((BMP280_S32_t)
++		p_bmp280->cal_param.dig_P9) *
++		((BMP280_S32_t)(((pressure >> 3)
++		* (pressure >> 3)) >> 13)))
++		>> 12;
++		v_x2_u32r = (((BMP280_S32_t)(pressure >> 2)) *
++		((BMP280_S32_t)p_bmp280->cal_param.dig_P8)) >> 13;
++		pressure = (BMP280_U32_t)
++		((BMP280_S32_t)pressure +
++		((v_x1_u32r + v_x2_u32r +
++		p_bmp280->cal_param.dig_P7) >> 4));
++
++	return pressure;
++}
++/* Compiler Switch if applicable
++#ifdef
++
++#endif
++*/
++/*******************************************************************************
++ * Description: *//**\brief reads uncompensated pressure and temperature
++ *
++ *
++ * \param signed long upressure: Pointer holding
++ *	                    the uncompensated pressure.
++ * \param signed long utemperature: Pointer holding
++ *			           the uncompensated temperature.
++ *
++ *  \return
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++BMP280_RETURN_FUNCTION_TYPE bmp280_read_uput(BMP280_S32_t *upressure,
++BMP280_S32_t *utemperature)
++{
++	BMP280_RETURN_FUNCTION_TYPE comres = BMP280_Zero_U8X;
++	unsigned char a_data_u8r[6] = {0, 0, 0, 0, 0, 0};
++	if (p_bmp280 == BMP280_NULL) {
++		return  E_BMP280_NULL_PTR;
++		} else {
++			comres += p_bmp280->BMP280_BUS_READ_FUNC(
++			p_bmp280->dev_addr,
++			BMP280_PRESSURE_MSB_REG, a_data_u8r, 6);
++			*upressure = (BMP280_S32_t)(
++			(((BMP280_U32_t)(a_data_u8r[0]))
++			<< SHIFT_LEFT_12_POSITION) |
++			(((BMP280_U32_t)(a_data_u8r[1]))
++			<< SHIFT_LEFT_4_POSITION) |
++			((BMP280_U32_t)a_data_u8r[2] >>
++			SHIFT_RIGHT_4_POSITION));
++
++			/* Temperature */
++			*utemperature = (BMP280_S32_t)(((
++			(BMP280_U32_t) (a_data_u8r[3]))
++			<< SHIFT_LEFT_12_POSITION) |
++			(((BMP280_U32_t)(a_data_u8r[4]))
++			<< SHIFT_LEFT_4_POSITION)
++			| ((BMP280_U32_t)a_data_u8r[5]
++			>> SHIFT_RIGHT_4_POSITION));
++		}
++	return comres;
++}
++/* Compiler Switch if applicable
++#ifdef
++
++#endif
++*/
++/*******************************************************************************
++ * Description: *//**\brief reads pressure and temperature
++ *
++ *
++ *  \param unsigned long pressure : Pointer holding the compensated pressure.
++ *  \param signed long temperature : Pointer holding
++ *                          the compensated temperature.
++ *
++ *
++ *  \return
++ *
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++BMP280_RETURN_FUNCTION_TYPE bmp280_read_pt(BMP280_U32_t *pressure,
++BMP280_S32_t *temperature)
++{
++	BMP280_RETURN_FUNCTION_TYPE comres = BMP280_Zero_U8X;
++	BMP280_S32_t upressure = BMP280_Zero_U8X;
++	BMP280_S32_t utemperature = BMP280_Zero_U8X;
++	if (p_bmp280 == BMP280_NULL) {
++		return  E_BMP280_NULL_PTR;
++		} else {
++			comres += bmp280_read_uput(
++			&upressure, &utemperature);
++			*temperature = bmp280_compensate_T_int32(
++			utemperature);
++			*pressure = bmp280_compensate_P_int32(
++			upressure);
++		}
++	return comres;
++}
++/* Compiler Switch if applicable
++#ifdef
++
++#endif
++*/
++/*******************************************************************************
++ * Description: *//**\brief reads calibration parameters used for calculation
++ *
++ *
++ *
++ *
++ *  \param  None
++ *
++ *
++ *
++ *  \return
++ *
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++BMP280_RETURN_FUNCTION_TYPE bmp280_get_calib_param()
++{
++	BMP280_RETURN_FUNCTION_TYPE comres = BMP280_Zero_U8X;
++	unsigned char a_data_u8r[26] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
++	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
++	if (p_bmp280 == BMP280_NULL) {
++		return  E_BMP280_NULL_PTR;
++		} else {
++			comres += p_bmp280->BMP280_BUS_READ_FUNC(
++			p_bmp280->dev_addr,
++			BMP280_DIG_T1_LSB_REG, a_data_u8r, 24);
++
++			p_bmp280->cal_param.dig_T1 = (BMP280_U16_t)(((
++			(BMP280_U16_t)((unsigned char)a_data_u8r[1])) <<
++			SHIFT_LEFT_8_POSITION) | a_data_u8r[0]);
++			p_bmp280->cal_param.dig_T2 = (BMP280_S16_t)(((
++			(BMP280_S16_t)((signed char)a_data_u8r[3])) <<
++			SHIFT_LEFT_8_POSITION) | a_data_u8r[2]);
++			p_bmp280->cal_param.dig_T3 = (BMP280_S16_t)(((
++			(BMP280_S16_t)((signed char)a_data_u8r[5])) <<
++			SHIFT_LEFT_8_POSITION) | a_data_u8r[4]);
++			p_bmp280->cal_param.dig_P1 = (BMP280_U16_t)(((
++			(BMP280_U16_t)((unsigned char)a_data_u8r[7])) <<
++			SHIFT_LEFT_8_POSITION) | a_data_u8r[6]);
++			p_bmp280->cal_param.dig_P2 = (BMP280_S16_t)(((
++			(BMP280_S16_t)((signed char)a_data_u8r[9])) <<
++			SHIFT_LEFT_8_POSITION) | a_data_u8r[8]);
++			p_bmp280->cal_param.dig_P3 = (BMP280_S16_t)(((
++			(BMP280_S16_t)((signed char)a_data_u8r[11])) <<
++			SHIFT_LEFT_8_POSITION) | a_data_u8r[10]);
++			p_bmp280->cal_param.dig_P4 = (BMP280_S16_t)(((
++			(BMP280_S16_t)((signed char)a_data_u8r[13])) <<
++			SHIFT_LEFT_8_POSITION) | a_data_u8r[12]);
++			p_bmp280->cal_param.dig_P5 = (BMP280_S16_t)(((
++			(BMP280_S16_t)((signed char)a_data_u8r[15])) <<
++			SHIFT_LEFT_8_POSITION) | a_data_u8r[14]);
++			p_bmp280->cal_param.dig_P6 = (BMP280_S16_t)(((
++			(BMP280_S16_t)((signed char)a_data_u8r[17])) <<
++			SHIFT_LEFT_8_POSITION) | a_data_u8r[16]);
++			p_bmp280->cal_param.dig_P7 = (BMP280_S16_t)(((
++			(BMP280_S16_t)((signed char)a_data_u8r[19])) <<
++			SHIFT_LEFT_8_POSITION) | a_data_u8r[18]);
++			p_bmp280->cal_param.dig_P8 = (BMP280_S16_t)(((
++			(BMP280_S16_t)((signed char)a_data_u8r[21])) <<
++			SHIFT_LEFT_8_POSITION) | a_data_u8r[20]);
++			p_bmp280->cal_param.dig_P9 = (BMP280_S16_t)(((
++			(BMP280_S16_t)((signed char)a_data_u8r[23])) <<
++			SHIFT_LEFT_8_POSITION) | a_data_u8r[22]);
++		}
++	return comres;
++}
++/* Compiler Switch if applicable
++#ifdef
++
++#endif
++*/
++/*******************************************************************************
++ * Description: *//**\brief Used to get the temperature oversampling setting
++ *
++ *
++ *
++ *
++ *  \param unsigned char value : Pointer holding the osrs_t value
++ *
++ *
++ *
++ *  \return
++ *
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++BMP280_RETURN_FUNCTION_TYPE bmp280_get_osrs_t(
++unsigned char *value)
++{
++	BMP280_RETURN_FUNCTION_TYPE comres = BMP280_Zero_U8X;
++	unsigned char v_data_u8r = BMP280_Zero_U8X;
++	if (p_bmp280 == BMP280_NULL) {
++		return  E_BMP280_NULL_PTR;
++		} else {
++			comres += p_bmp280->BMP280_BUS_READ_FUNC(
++			p_bmp280->dev_addr,
++			BMP280_CTRLMEAS_REG_OSRST__REG,
++			&v_data_u8r, 1);
++			*value = BMP280_GET_BITSLICE(v_data_u8r,
++			BMP280_CTRLMEAS_REG_OSRST);
++
++			p_bmp280->osrs_t = *value;
++		}
++	return comres;
++}
++/* Compiler Switch if applicable
++#ifdef
++
++#endif
++*/
++/*******************************************************************************
++ *Description: *//**\brief Used to set the temperature oversampling setting
++ *
++ *
++ *
++ *
++ *  \param unsigned char value : Value of the temperature oversampling setting.
++ *
++ *
++ *
++ *  \return
++ *
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++BMP280_RETURN_FUNCTION_TYPE bmp280_set_osrs_t(
++unsigned char value)
++{
++	BMP280_RETURN_FUNCTION_TYPE comres = SUCCESS;
++	unsigned char v_data_u8r = BMP280_Zero_U8X;
++	if (p_bmp280 == BMP280_NULL) {
++		return  E_BMP280_NULL_PTR;
++		} else {
++			comres += p_bmp280->BMP280_BUS_READ_FUNC(
++			p_bmp280->dev_addr,
++			BMP280_CTRLMEAS_REG_OSRST__REG,
++			&v_data_u8r, 1);
++			if (comres == SUCCESS) {
++				v_data_u8r =
++				BMP280_SET_BITSLICE(v_data_u8r,
++				BMP280_CTRLMEAS_REG_OSRST, value);
++				comres +=
++				p_bmp280->BMP280_BUS_WRITE_FUNC(
++				p_bmp280->dev_addr,
++				BMP280_CTRLMEAS_REG_OSRST__REG,
++				&v_data_u8r, 1);
++				p_bmp280->osrs_t = value;
++			}
++		}
++	return comres;
++}
++/* Compiler Switch if applicable
++#ifdef
++
++#endif
++*/
++/*******************************************************************************
++ * Description: *//**\brief Used to get the pressure oversampling setting
++ *
++ *
++ *
++ *
++ *  \param  *  \param unsigned char value : Pointer holding the osrs_p value.
++ *
++ *
++ *
++ *  \return
++ *
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++BMP280_RETURN_FUNCTION_TYPE bmp280_get_osrs_p(
++unsigned char *value)
++{
++	BMP280_RETURN_FUNCTION_TYPE comres = BMP280_Zero_U8X;
++	unsigned char v_data_u8r = BMP280_Zero_U8X;
++	if (p_bmp280 == BMP280_NULL) {
++		return  E_BMP280_NULL_PTR;
++		} else {
++			comres += p_bmp280->BMP280_BUS_READ_FUNC(
++			p_bmp280->dev_addr,
++			BMP280_CTRLMEAS_REG_OSRSP__REG,
++			&v_data_u8r, 1);
++			*value = BMP280_GET_BITSLICE(v_data_u8r,
++			BMP280_CTRLMEAS_REG_OSRSP);
++
++			p_bmp280->osrs_p = *value;
++		}
++	return comres;
++}
++/* Compiler Switch if applicable
++#ifdef
++
++#endif
++*/
++/*******************************************************************************
++ * Description: *//**\brief Used to set the pressure oversampling setting
++ *
++ *
++ *
++ *
++ *  \param unsigned char value : Value of the pressure oversampling setting.
++ *
++ *
++ *
++ *  \return
++ *
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++BMP280_RETURN_FUNCTION_TYPE bmp280_set_osrs_p(
++	unsigned char value)
++{
++	BMP280_RETURN_FUNCTION_TYPE comres = SUCCESS;
++	unsigned char v_data_u8r = BMP280_Zero_U8X;
++	if (p_bmp280 == BMP280_NULL) {
++		return  E_BMP280_NULL_PTR;
++		} else {
++			comres += p_bmp280->BMP280_BUS_READ_FUNC(
++			p_bmp280->dev_addr,
++			BMP280_CTRLMEAS_REG_OSRSP__REG,
++			&v_data_u8r, 1);
++			if (comres == SUCCESS) {
++				v_data_u8r = BMP280_SET_BITSLICE(
++				v_data_u8r,
++				BMP280_CTRLMEAS_REG_OSRSP, value);
++				comres +=
++				p_bmp280->BMP280_BUS_WRITE_FUNC(
++				p_bmp280->dev_addr,
++				BMP280_CTRLMEAS_REG_OSRSP__REG,
++				&v_data_u8r, 1);
++
++				p_bmp280->osrs_p = value;
++			}
++		}
++	return comres;
++}
++/* Compiler Switch if applicable
++#ifdef
++
++#endif
++*/
++/*******************************************************************************
++ * Description: *//**\brief Used to get the Operational Mode from the sensor
++ *
++ *
++ *
++ *
++ *  \param  *  \param unsigned char mode : Pointer holding the mode value.
++ *              0       -> BMP280_SLEEP_MODE
++ *              1 and 2 -> BMP280_FORCED_MODE
++ *              3       -> BMP280_NORMAL_MODE
++ *  \return
++ *
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++BMP280_RETURN_FUNCTION_TYPE bmp280_get_mode(unsigned char *mode)
++{
++	BMP280_RETURN_FUNCTION_TYPE comres = BMP280_Zero_U8X;
++	unsigned char v_mode_u8r = BMP280_Zero_U8X;
++	if (p_bmp280 == BMP280_NULL) {
++		return  E_BMP280_NULL_PTR;
++		} else {
++			comres += p_bmp280->BMP280_BUS_READ_FUNC(
++			p_bmp280->dev_addr,
++			BMP280_CTRLMEAS_REG_MODE__REG,
++			&v_mode_u8r, 1);
++			*mode = BMP280_GET_BITSLICE(v_mode_u8r,
++			BMP280_CTRLMEAS_REG_MODE);
++		}
++	return comres;
++}
++/* Compiler Switch if applicable
++#ifdef
++
++#endif
++*/
++/*******************************************************************************
++ * Description: *//**\brief Used to set the Operational Mode for the sensor
++ *
++ *
++ *
++ *
++ *  \param unsigned char mode : Value of the mode
++ *              0       -> BMP280_SLEEP_MODE
++ *              1 and 2 -> BMP280_FORCED_MODE
++ *              3       -> BMP280_NORMAL_MODE
++ *  \return
++ *
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++BMP280_RETURN_FUNCTION_TYPE bmp280_set_mode(unsigned char mode)
++{
++	BMP280_RETURN_FUNCTION_TYPE comres = BMP280_Zero_U8X;
++	unsigned char v_mode_u8r = BMP280_Zero_U8X;
++	if (p_bmp280 == BMP280_NULL) {
++		return  E_BMP280_NULL_PTR;
++		} else {
++			if (mode < BMP280_Four_U8X) {
++				v_mode_u8r = (p_bmp280->osrs_t <<
++				SHIFT_LEFT_5_POSITION) + (p_bmp280->osrs_p <<
++				SHIFT_LEFT_2_POSITION) + mode;
++				comres += p_bmp280->BMP280_BUS_WRITE_FUNC(
++				p_bmp280->dev_addr,
++				BMP280_CTRLMEAS_REG_MODE__REG, &v_mode_u8r, 1);
++			} else {
++			comres = E_BMP280_OUT_OF_RANGE;
++			}
++		}
++	return comres;
++}
++/* Compiler Switch if applicable
++#ifdef
++
++#endif
++*/
++/*******************************************************************************
++ * Description: *//**\brief Used to reset the sensor
++ * The value 0xB6 is written to the 0xE0 register the device is reset using the
++ * complete power-on-reset procedure.
++ * Softreset can be easily set using bmp280_set_softreset().
++ *
++ * Usage Hint : bmp280_set_softreset()
++ *
++ *  \param
++ *
++ *
++ *
++ *  \return
++ *
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++BMP280_RETURN_FUNCTION_TYPE bmp280_set_softreset()
++{
++	BMP280_RETURN_FUNCTION_TYPE comres = BMP280_Zero_U8X;
++	unsigned char v_data_u8r = BMP280_SOFT_RESET_CODE;
++	if (p_bmp280 == BMP280_NULL) {
++		return  E_BMP280_NULL_PTR;
++		} else {
++			comres += p_bmp280->BMP280_BUS_WRITE_FUNC(
++			p_bmp280->dev_addr,
++			BMP280_RESET_REG, &v_data_u8r, 1);
++		}
++	return comres;
++}
++/* Compiler Switch if applicable
++#ifdef
++
++#endif
++*/
++/*******************************************************************************
++ * Description: *//**\brief Gets the sensor communication type
++ *
++ *
++ *
++ *
++ *  \param  unsigned char enable_disable : Pointer holding the
++ *                                         spi3 enable or disable state.
++ *
++ *
++ *
++ *  \return
++ *
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++BMP280_RETURN_FUNCTION_TYPE bmp280_get_spi3(unsigned char *enable_disable)
++{
++	BMP280_RETURN_FUNCTION_TYPE comres = BMP280_Zero_U8X;
++	unsigned char v_data_u8r = BMP280_Zero_U8X;
++	if (p_bmp280 == BMP280_NULL) {
++		return  E_BMP280_NULL_PTR;
++		} else {
++			comres += p_bmp280->BMP280_BUS_READ_FUNC(
++			p_bmp280->dev_addr,
++			BMP280_CONFIG_REG_SPI3WEN__REG,
++			&v_data_u8r, 1);
++			*enable_disable = BMP280_GET_BITSLICE(
++			v_data_u8r,
++			BMP280_CONFIG_REG_SPI3WEN);
++		}
++	return comres;
++}
++/* Compiler Switch if applicable
++#ifdef
++
++#endif
++*/
++/*******************************************************************************
++ * Description: *//**\brief Sets the sensor communication type to 3 wire SPI
++ *
++ *
++ *
++ *
++ *  \param unsigned char enable_disable : Value of the enable or disable
++ *
++ *
++ *
++ *  \return
++ *
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++BMP280_RETURN_FUNCTION_TYPE bmp280_set_spi3(unsigned char enable_disable)
++{
++	BMP280_RETURN_FUNCTION_TYPE comres = SUCCESS;
++	unsigned char v_data_u8r = BMP280_Zero_U8X;
++	if (p_bmp280 == BMP280_NULL) {
++		return  E_BMP280_NULL_PTR;
++		} else {
++			comres += p_bmp280->BMP280_BUS_READ_FUNC(
++			p_bmp280->dev_addr,
++			BMP280_CONFIG_REG_SPI3WEN__REG,
++			&v_data_u8r, 1);
++			if (comres == SUCCESS) {
++				v_data_u8r = BMP280_SET_BITSLICE(
++				v_data_u8r,
++				BMP280_CONFIG_REG_SPI3WEN,
++				enable_disable);
++				comres +=
++				p_bmp280->BMP280_BUS_WRITE_FUNC(
++				p_bmp280->dev_addr,
++				BMP280_CONFIG_REG_SPI3WEN__REG,
++				&v_data_u8r, 1);
++			}
++		}
++	return comres;
++}
++/* Compiler Switch if applicable
++#ifdef
++
++#endif
++*/
++/*******************************************************************************
++ * Description: *//**\brief Reads filter setting value
++ *
++ *
++ *
++ *
++ *  \param  *  \param unsigned char *value : Pointer holding the filter value.
++ *
++ *
++ *
++ *  \return
++ *
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++BMP280_RETURN_FUNCTION_TYPE bmp280_get_filter(unsigned char *value)
++{
++	BMP280_RETURN_FUNCTION_TYPE comres = BMP280_Zero_U8X;
++	unsigned char v_data_u8r = BMP280_Zero_U8X;
++	if (p_bmp280 == BMP280_NULL) {
++		return  E_BMP280_NULL_PTR;
++		} else {
++			comres += p_bmp280->BMP280_BUS_READ_FUNC(
++			p_bmp280->dev_addr,
++			BMP280_CONFIG_REG_FILTER__REG,
++			&v_data_u8r, 1);
++			*value = BMP280_GET_BITSLICE(v_data_u8r,
++			BMP280_CONFIG_REG_FILTER);
++		}
++	return comres;
++}
++/* Compiler Switch if applicable
++#ifdef
++
++#endif
++*/
++/*******************************************************************************
++ * Description: *//**\brief Writes filter setting to sensor
++ *
++ *
++ *
++ *
++ *  \param unsigned char value : Value of the filter setting
++ *
++ *
++ *
++ *  \return
++ *
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++BMP280_RETURN_FUNCTION_TYPE bmp280_set_filter(unsigned char value)
++{
++	BMP280_RETURN_FUNCTION_TYPE comres = SUCCESS;
++	unsigned char v_data_u8r = BMP280_Zero_U8X;
++	if (p_bmp280 == BMP280_NULL) {
++		return  E_BMP280_NULL_PTR;
++		} else {
++			comres += p_bmp280->BMP280_BUS_READ_FUNC(
++			p_bmp280->dev_addr,
++			BMP280_CONFIG_REG_FILTER__REG,
++			&v_data_u8r, 1);
++			if (comres == SUCCESS) {
++				v_data_u8r = BMP280_SET_BITSLICE(
++				v_data_u8r,
++				BMP280_CONFIG_REG_FILTER, value);
++				comres +=
++				p_bmp280->BMP280_BUS_WRITE_FUNC(
++				p_bmp280->dev_addr,
++				BMP280_CONFIG_REG_FILTER__REG,
++				&v_data_u8r, 1);
++			}
++		}
++	return comres;
++}
++/* Compiler Switch if applicable
++#ifdef
++
++#endif
++*/
++/*******************************************************************************
++ * Description: *//**\brief Reads standby duration time from the sensor
++ *
++ *  \param * \param unsigned char *time : Pointer holding
++ *                        the standby duration time value.
++ *              0x00 - BMP280_STANDBYTIME_1_MS
++ *              0x01 - BMP280_STANDBYTIME_63_MS
++ *              0x02 - BMP280_STANDBYTIME_125_MS
++ *              0x03 - BMP280_STANDBYTIME_250_MS
++ *              0x04 - BMP280_STANDBYTIME_500_MS
++ *              0x05 - BMP280_STANDBYTIME_1000_MS
++ *              0x06 - BMP280_STANDBYTIME_2000_MS
++ *              0x07 - BMP280_STANDBYTIME_4000_MS
++ *
++ *
++ *  \return
++ *
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++BMP280_RETURN_FUNCTION_TYPE bmp280_get_standbydur(unsigned char *time)
++{
++	BMP280_RETURN_FUNCTION_TYPE comres = BMP280_Zero_U8X;
++	unsigned char v_data_u8r = BMP280_Zero_U8X;
++	if (p_bmp280 == BMP280_NULL) {
++		return  E_BMP280_NULL_PTR;
++		} else {
++			comres += p_bmp280->BMP280_BUS_READ_FUNC(
++			p_bmp280->dev_addr,
++			BMP280_CONFIG_REG_TSB__REG, &v_data_u8r, 1);
++			*time = BMP280_GET_BITSLICE(v_data_u8r,
++			BMP280_CONFIG_REG_TSB);
++		}
++	return comres;
++}
++/* Compiler Switch if applicable
++#ifdef
++
++#endif
++*/
++/*******************************************************************************
++ * Description: *//**\brief Writes standby duration time from the sensor
++ *
++ * Normal mode comprises an automated perpetual cycling between an (active)
++ * Measurement period and an (inactive) standby period.
++ * The standby time is determined by the contents of the register t_sb.
++ * Standby time can be set using BME280_STANDBYTIME_125_MS.
++ *
++ * Usage Hint : bme280_set_standbydur(BME280_STANDBYTIME_125_MS)
++ *
++ *  \param unsigned char time : Value of the standby duration
++ *              0x00 - BMP280_STANDBYTIME_1_MS
++ *              0x01 - BMP280_STANDBYTIME_63_MS
++ *              0x02 - BMP280_STANDBYTIME_125_MS
++ *              0x03 - BMP280_STANDBYTIME_250_MS
++ *              0x04 - BMP280_STANDBYTIME_500_MS
++ *              0x05 - BMP280_STANDBYTIME_1000_MS
++ *              0x06 - BMP280_STANDBYTIME_2000_MS
++ *              0x07 - BMP280_STANDBYTIME_4000_MS
++ *
++ *
++ *  \param unsigned char time : Value of the standby duration
++ *
++ *
++ *
++ *  \return
++ *
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++BMP280_RETURN_FUNCTION_TYPE bmp280_set_standbydur(unsigned char time)
++{
++	BMP280_RETURN_FUNCTION_TYPE comres = SUCCESS;
++	unsigned char v_data_u8r = BMP280_Zero_U8X;
++	if (p_bmp280 == BMP280_NULL) {
++		return  E_BMP280_NULL_PTR;
++		} else {
++			comres += p_bmp280->BMP280_BUS_READ_FUNC(
++			p_bmp280->dev_addr,
++			BMP280_CONFIG_REG_TSB__REG, &v_data_u8r, 1);
++			if (comres == SUCCESS) {
++				v_data_u8r =
++				BMP280_SET_BITSLICE(v_data_u8r,
++				BMP280_CONFIG_REG_TSB, time);
++				comres +=
++				p_bmp280->BMP280_BUS_WRITE_FUNC(
++				p_bmp280->dev_addr,
++				BMP280_CONFIG_REG_TSB__REG,
++				&v_data_u8r, 1);
++			}
++		}
++	return comres;
++}
++/* Compiler Switch if applicable
++#ifdef
++
++#endif
++*/
++/*******************************************************************************
++ * Description: *//**\brief Writes the working mode to the sensor
++ *
++ *
++ *
++ *
++ *  \param unsigned char : Mode to be set
++ *				0 -> BMP280_ULTRALOWPOWER_MODE
++ *				1 -> BMP280_LOWPOWER_MODE
++ *				2 -> BMP280_STANDARDRESOLUTION_MODE
++ *				3 -> BMP280_HIGHRESOLUTION_MODE
++ *				4 -> BMP280_ULTRAHIGHRESOLUTION_MODE
++ *  \return
++ *
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++BMP280_RETURN_FUNCTION_TYPE bmp280_set_workmode(unsigned char mode)
++{
++BMP280_RETURN_FUNCTION_TYPE comres = SUCCESS;
++unsigned char v_data_u8r = BMP280_Zero_U8X;
++if (p_bmp280 == BMP280_NULL) {
++	return  E_BMP280_NULL_PTR;
++	} else {
++		if (mode <= BMP280_Four_U8X) {
++			comres += p_bmp280->BMP280_BUS_READ_FUNC(
++			p_bmp280->dev_addr,	BMP280_CTRLMEAS_REG,
++			&v_data_u8r, 1);
++			if (comres == SUCCESS) {
++				switch (mode) {
++				case BMP280_ULTRALOWPOWER_MODE:
++					p_bmp280->osrs_t =
++					BMP280_ULTRALOWPOWER_OSRS_T;
++					p_bmp280->osrs_p =
++					BMP280_ULTRALOWPOWER_OSRS_P;
++					break;
++				case BMP280_LOWPOWER_MODE:
++					p_bmp280->osrs_t =
++					BMP280_LOWPOWER_OSRS_T;
++					p_bmp280->osrs_p =
++					BMP280_LOWPOWER_OSRS_P;
++					break;
++				case BMP280_STANDARDRESOLUTION_MODE:
++					p_bmp280->osrs_t =
++					BMP280_STANDARDRESOLUTION_OSRS_T;
++					p_bmp280->osrs_p =
++					BMP280_STANDARDRESOLUTION_OSRS_P;
++					break;
++				case BMP280_HIGHRESOLUTION_MODE:
++					p_bmp280->osrs_t =
++					BMP280_HIGHRESOLUTION_OSRS_T;
++					p_bmp280->osrs_p =
++					BMP280_HIGHRESOLUTION_OSRS_P;
++					break;
++				case BMP280_ULTRAHIGHRESOLUTION_MODE:
++					p_bmp280->osrs_t =
++					BMP280_ULTRAHIGHRESOLUTION_OSRS_T;
++					p_bmp280->osrs_p =
++					BMP280_ULTRAHIGHRESOLUTION_OSRS_P;
++					break;
++				}
++				v_data_u8r = BMP280_SET_BITSLICE(v_data_u8r,
++				BMP280_CTRLMEAS_REG_OSRST, p_bmp280->osrs_t);
++				v_data_u8r = BMP280_SET_BITSLICE(v_data_u8r,
++				BMP280_CTRLMEAS_REG_OSRSP, p_bmp280->osrs_p);
++				comres += p_bmp280->BMP280_BUS_WRITE_FUNC(
++				p_bmp280->dev_addr,	BMP280_CTRLMEAS_REG,
++				&v_data_u8r, 1);
++			}
++		} else {
++		comres = E_BMP280_OUT_OF_RANGE;
++		}
++	}
++	return comres;
++}
++/* Compiler Switch if applicable
++#ifdef
++
++#endif
++*/
++/*******************************************************************************
++ * Description: *//**\brief Read both uncompensated pressure and temperature
++ *							 in forced mode
++ *
++ *
++ *  \param signed long upressure: Pointer holding the uncompensated pressure.
++ *  \param signed long utemperature: Pointer holding
++ *                       the uncompensated temperature.
++ *
++ *
++ *  \return
++ *
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++BMP280_RETURN_FUNCTION_TYPE bmp280_get_forced_uput(BMP280_S32_t *upressure,
++BMP280_S32_t *utemperature)
++{
++	BMP280_RETURN_FUNCTION_TYPE comres = BMP280_Zero_U8X;
++	unsigned char v_data_u8r = BMP280_Zero_U8X;
++	unsigned char v_waittime_u8r = BMP280_Zero_U8X;
++	if (p_bmp280 == BMP280_NULL) {
++		return  E_BMP280_NULL_PTR;
++		} else {
++			v_data_u8r = (p_bmp280->osrs_t
++			<< SHIFT_LEFT_5_POSITION) +
++			(p_bmp280->osrs_p << SHIFT_LEFT_2_POSITION) +
++			BMP280_FORCED_MODE;
++			comres += p_bmp280->BMP280_BUS_WRITE_FUNC(
++			p_bmp280->dev_addr,	BMP280_CTRLMEAS_REG,
++			&v_data_u8r, 1);
++			bmp280_compute_wait_time(&v_waittime_u8r);
++			p_bmp280->delay_msec(v_waittime_u8r);
++			comres += bmp280_read_uput(upressure, utemperature);
++		}
++	return comres;
++}
++/* Compiler Switch if applicable
++#ifdef
++
++#endif
++*/
++/*******************************************************************************
++ * Description: *//**\brief This API gives data to the given register and
++ *                          the data is written in the corresponding register
++ *							address
++ *
++ *
++ *
++ *  \param unsigned char addr, unsigned char data, unsigned char len
++ *          addr -> Address of the register
++ *          data -> Data to be written to the register
++ *          len  -> Length of the Data
++ *
++ *
++ *
++ *  \return communication results.
++ *
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++BMP280_RETURN_FUNCTION_TYPE bmp280_write_register(unsigned char addr,
++unsigned char *data, unsigned char len)
++{
++	BMP280_RETURN_FUNCTION_TYPE comres = BMP280_Zero_U8X;
++	if (p_bmp280 == BMP280_NULL) {
++		return  E_BMP280_NULL_PTR;
++		} else {
++			comres += p_bmp280->BMP280_BUS_WRITE_FUNC(
++			p_bmp280->dev_addr,
++			addr, data, len);
++		}
++	return comres;
++}
++/* Compiler Switch if applicable
++#ifdef
++
++#endif
++*/
++/*******************************************************************************
++ * Description: *//**\brief This API reads the data from the given register
++ *							address
++ *
++ *
++ *
++ *  \param unsigned char addr, unsigned char *data, unsigned char len
++ *         addr -> Address of the register
++ *         data -> address of the variable, read value will be kept
++ *         len  -> Length of the data
++ *
++ *
++ *
++ *
++ *  \return results of communication routine
++ *
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++BMP280_RETURN_FUNCTION_TYPE bmp280_read_register(unsigned char addr,
++unsigned char *data, unsigned char len)
++{
++	BMP280_RETURN_FUNCTION_TYPE comres = BMP280_Zero_U8X;
++	if (p_bmp280 == BMP280_NULL) {
++		return  E_BMP280_NULL_PTR;
++		} else {
++			comres += p_bmp280->BMP280_BUS_READ_FUNC(
++			p_bmp280->dev_addr,
++			addr, data, len);
++		}
++	return comres;
++}
++#ifdef BMP280_ENABLE_FLOAT
++/*******************************************************************************
++ * Description: *//**\brief Reads actual temperature from uncompensated temperature
++ *							and returns the value in Degree centigrade
++ *                          Output value of "51.23" equals 51.23 DegC.
++ *
++ *
++ *
++ *  \param signed long : value of uncompensated temperature
++ *
++ *
++ *
++ *  \return
++ *			double : actual temperature in floating point
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++double bmp280_compensate_T_double(BMP280_S32_t adc_t)
++{
++	double v_x1_u32r = BMP280_Zero_U8X;
++	double v_x2_u32r = BMP280_Zero_U8X;
++	double temperature = BMP280_Zero_U8X;
++
++	v_x1_u32r  = (((double)adc_t) / 16384.0 -
++	((double)p_bmp280->cal_param.dig_T1) / 1024.0) *
++	((double)p_bmp280->cal_param.dig_T2);
++	v_x2_u32r  = ((((double)adc_t) / 131072.0 -
++	((double)p_bmp280->cal_param.dig_T1) / 8192.0) *
++	(((double)adc_t) / 131072.0 -
++	((double)p_bmp280->cal_param.dig_T1) / 8192.0)) *
++	((double)p_bmp280->cal_param.dig_T3);
++	p_bmp280->cal_param.t_fine = (BMP280_S32_t)(v_x1_u32r + v_x2_u32r);
++	temperature  = (v_x1_u32r + v_x2_u32r) / 5120.0;
++
++
++	return temperature;
++}
++/*******************************************************************************
++ * Description: *//**\brief Reads actual pressure from uncompensated pressure
++ *							and returns pressure in Pa as double.
++ *                          Output value of "96386.2"
++ *                          equals 96386.2 Pa = 963.862 hPa.
++ *
++ *
++ *
++ *  \param signed int : value of uncompensated pressure
++ *
++ *
++ *
++ *  \return
++ *			double : actual pressure in floating point
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++double bmp280_compensate_P_double(BMP280_S32_t adc_p)
++{
++	double v_x1_u32r = BMP280_Zero_U8X;
++	double v_x2_u32r = BMP280_Zero_U8X;
++	double pressure = BMP280_Zero_U8X;
++
++	v_x1_u32r = ((double)p_bmp280->cal_param.t_fine/2.0) - 64000.0;
++	v_x2_u32r = v_x1_u32r * v_x1_u32r *
++	((double)p_bmp280->cal_param.dig_P6) / 32768.0;
++	v_x2_u32r = v_x2_u32r + v_x1_u32r *
++	((double)p_bmp280->cal_param.dig_P5) * 2.0;
++	v_x2_u32r = (v_x2_u32r / 4.0) +
++	(((double)p_bmp280->cal_param.dig_P4) * 65536.0);
++	v_x1_u32r = (((double)p_bmp280->cal_param.dig_P3) *
++	v_x1_u32r * v_x1_u32r / 524288.0 +
++	((double)p_bmp280->cal_param.dig_P2) * v_x1_u32r) / 524288.0;
++	v_x1_u32r = (1.0 + v_x1_u32r / 32768.0) *
++	((double)p_bmp280->cal_param.dig_P1);
++	if (v_x1_u32r == 0.0)
++		return 0; /* Avoid exception caused by division by zero */
++	pressure = 1048576.0 - (double)adc_p;
++	pressure = (pressure - (v_x2_u32r / 4096.0)) * 6250.0 / v_x1_u32r;
++	v_x1_u32r = ((double)p_bmp280->cal_param.dig_P9) *
++	pressure * pressure / 2147483648.0;
++	v_x2_u32r = pressure * ((double)p_bmp280->cal_param.dig_P8) / 32768.0;
++	pressure = pressure + (v_x1_u32r + v_x2_u32r +
++	((double)p_bmp280->cal_param.dig_P7)) / 16.0;
++
++	return pressure;
++}
++#endif
++#if defined(BMP280_ENABLE_INT64) && defined(BMP280_64BITSUPPORT_PRESENT)
++/*******************************************************************************
++ * Description: *//**\brief Reads actual pressure from uncompensated pressure
++ *                          and returns the value in Pa as unsigned 32 bit
++ *                          integer in Q24.8 format (24 integer bits and
++ *                          8 fractional bits). Output value of "24674867"
++ *                          represents 24674867 / 256 = 96386.2 Pa = 963.862 hPa
++ *
++ *
++ *
++ *  \param signed long : value of uncompensated temperature
++ *
++ *
++ *
++ *  \return
++ *			unsigned long : actual pressure
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ******************************************************************************/
++BMP280_U32_t bmp280_compensate_P_int64(BMP280_S32_t adc_p)
++{
++	BMP280_S64_t v_x1_s64r = BMP280_Zero_U8X;
++	BMP280_S64_t v_x2_s64r = BMP280_Zero_U8X;
++	BMP280_S64_t pressure = BMP280_Zero_U8X;
++	v_x1_s64r = ((BMP280_S64_t)p_bmp280->cal_param.t_fine) - 128000;
++	v_x2_s64r = v_x1_s64r * v_x1_s64r *
++	(BMP280_S64_t)p_bmp280->cal_param.dig_P6;
++	v_x2_s64r = v_x2_s64r + ((v_x1_s64r *
++	(BMP280_S64_t)p_bmp280->cal_param.dig_P5) << 17);
++	v_x2_s64r = v_x2_s64r +
++	(((BMP280_S64_t)p_bmp280->cal_param.dig_P4) << 35);
++	v_x1_s64r = ((v_x1_s64r * v_x1_s64r *
++	(BMP280_S64_t)p_bmp280->cal_param.dig_P3) >> 8) +
++	((v_x1_s64r * (BMP280_S64_t)p_bmp280->cal_param.dig_P2) << 12);
++	v_x1_s64r = (((((BMP280_S64_t)1) << 47) + v_x1_s64r)) *
++	((BMP280_S64_t)p_bmp280->cal_param.dig_P1) >> 33;
++	if (v_x1_s64r == 0)
++		return 0; /* Avoid exception caused by division by zero */
++	pressure = 1048576 - adc_p;
++#if defined(__KERNEL__)
++	pressure = div64_s64(((pressure << 31) - v_x2_s64r) * 3125, v_x1_s64r);
++#else
++	pressure = (((pressure << 31) - v_x2_s64r) * 3125) / v_x1_s64r;
++#endif
++	v_x1_s64r = (((BMP280_S64_t)p_bmp280->cal_param.dig_P9) *
++	(pressure >> 13) * (pressure >> 13)) >> 25;
++	v_x2_s64r = (((BMP280_S64_t)p_bmp280->cal_param.dig_P8) *
++	pressure) >> 19;
++	pressure = ((pressure + v_x1_s64r + v_x2_s64r) >> 8) +
++	(((BMP280_S64_t)p_bmp280->cal_param.dig_P7) << 4);
++	return (BMP280_U32_t)pressure;
++}
++#endif
++/*******************************************************************************
++ * Description: *//**\brief Computing waiting time for sensor data read
++ *
++ *
++ *
++ *
++ *  \param
++ *			unsigned char : value of time
++ *
++ *
++ *  \return
++ *
++ *
++ ******************************************************************************/
++/* Scheduling:
++ *
++ *
++ *
++ * Usage guide:
++ *
++ *
++ * Remarks:
++ *
++ ****************************************************************************/
++BMP280_RETURN_FUNCTION_TYPE bmp280_compute_wait_time(unsigned char
++*v_delaytime_u8r)
++{
++	BMP280_RETURN_FUNCTION_TYPE comres = BMP280_Zero_U8X;
++
++	*v_delaytime_u8r = (T_INIT_MAX + T_MEASURE_PER_OSRS_MAX *
++	(((1 << p_bmp280->osrs_t) >> 1) + ((1 << p_bmp280->osrs_p)
++	>> 1)) + (p_bmp280->osrs_p ? T_SETUP_PRESSURE_MAX : 0) + 15)
++	/ 16;
++	return comres;
++}
+diff --git a/drivers/input/misc/bmp280.h b/drivers/input/misc/bmp280.h
+new file mode 100644
+index 0000000..5c7e1ec
+--- /dev/null
++++ b/drivers/input/misc/bmp280.h
+@@ -0,0 +1,399 @@
++/*!
++ * @section LICENSE
++ * (C) Copyright 2014 Bosch Sensortec GmbH All Rights Reserved
++ *
++ * This software program is licensed subject to the GNU General
++ * Public License (GPL).Version 2,June 1991,
++ * available at http://www.fsf.org/copyleft/gpl.html
++ *
++ * @filename bmp280.h
++ * @date     2014/02/13
++ * @id       "a3b2ffb"
++ * @version  v1.3
++ * @brief    Header of BMP280 Linux Driver API
++*/
++
++#ifndef __BMP280_H__
++#define __BMP280_H__
++
++#if defined(__KERNEL__)
++#include <linux/kernel.h>
++#include <linux/math64.h>
++#define BMP280_U16_t u16
++#define BMP280_S16_t s16
++#define BMP280_U32_t u32
++#define BMP280_S32_t s32
++#define BMP280_U64_t u64
++#define BMP280_S64_t s64
++#define BMP280_64BITSUPPORT_PRESENT
++#else
++#include <limits.h>
++
++/* Find correct data type for signed/unsigned 16 bit variables by
++	checking max of unsigned variant */
++#if USHRT_MAX == 0xFFFF
++	/* 16 bit achieved with short */
++	#define BMP280_U16_t unsigned short
++	#define BMP280_S16_t signed short
++#elif UINT_MAX == 0xFFFF
++	/* 16 bit achieved with int */
++	#define BMP280_U16_t unsigned int
++	#define BMP280_S16_t signed int
++#else
++	#error BMP280_U16_t and BMP280_S16_t could not be \
++	defined automatically, please do so manually
++#endif
++
++/* Find correct data type for 32 bit variables */
++#if INT_MAX == 0x7FFFFFFF
++	/* 32 bit achieved with int */
++	#define BMP280_U32_t unsigned int
++	#define BMP280_S32_t signed int
++#elif LONG_MAX == 0x7FFFFFFF
++	/* 32 bit achieved with long int */
++	#define BMP280_U32_t unsigned long int
++	#define BMP280_S32_t signed long int
++#else
++	#error BMP280_S32_t and BMP280_U32_t could not be \
++	defined automatically, please do so manually
++#endif
++
++/* Find correct data type for 64 bit variables */
++#if defined(LONG_MAX) && LONG_MAX == 0x7fffffffffffffffL
++#define BMP280_S64_t long int
++#define BMP280_64BITSUPPORT_PRESENT
++#elif defined(LLONG_MAX) && (LLONG_MAX == 0x7fffffffffffffffLL)
++#define BMP280_S64_t long long int
++#define BMP280_64BITSUPPORT_PRESENT
++#else
++#warning Either the correct data type for signed 64 bit integer \
++could not be found, or 64 bit integers are not supported in your environment.
++#warning The API will only offer 32 bit pressure calculation.This will \
++slightly impede accuracy(noise of ~1 pascal RMS will be added to output).
++#warning If 64 bit integers are supported on your platform, \
++please set BMP280_S64_t manually and
++#define(BMP280_64BITSUPPORT_PRESENT) manually.
++#endif
++#endif /*__KERNEL__*/
++
++/* If the user wants to support floating point calculations, please set \
++	the following #define. If floating point calculation is not wanted \
++	or allowed (e.g. in Linux kernel), please do not set the define. */
++/* If the user wants to support 64 bit integer calculation (needed for \
++	optimal pressure accuracy) please set the following #define. If \
++	int64 calculation is not wanted (e.g. because it would include \
++	large libraries), please do not set the define. */
++#define BMP280_ENABLE_INT64
++
++/** defines the return parameter type of the BMP280_WR_FUNCTION */
++#define BMP280_BUS_WR_RETURN_TYPE signed char
++
++/**\brief links the order of parameters defined in
++BMP280_BUS_WR_PARAM_TYPE to function calls used inside the API*/
++#define BMP280_BUS_WR_PARAM_TYPES unsigned char, unsigned char,\
++	unsigned char *, unsigned char
++
++/**\brief links the order of parameters defined in
++BMP280_BUS_WR_PARAM_TYPE to function calls used inside the API*/
++#define BMP280_BUS_WR_PARAM_ORDER(device_addr, register_addr,\
++	register_data, wr_len)
++
++/* never change this line */
++#define BMP280_BUS_WRITE_FUNC(device_addr, register_addr,\
++register_data, wr_len) bus_write(device_addr, register_addr,\
++	register_data, wr_len)
++
++/**\brief defines the return parameter type of the BMP280_RD_FUNCTION
++*/
++#define BMP280_BUS_RD_RETURN_TYPE signed char
++
++/**\brief defines the calling parameter types of the BMP280_RD_FUNCTION
++*/
++#define BMP280_BUS_RD_PARAM_TYPES (unsigned char, unsigned char,\
++	unsigned char *, unsigned char)
++
++/**\brief links the order of parameters defined in \
++BMP280_BUS_RD_PARAM_TYPE to function calls used inside the API
++*/
++#define BMP280_BUS_RD_PARAM_ORDER (device_addr, register_addr,\
++	register_data)
++
++/* never change this line */
++#define BMP280_BUS_READ_FUNC(device_addr, register_addr,\
++	register_data, rd_len)bus_read(device_addr, register_addr,\
++	register_data, rd_len)
++
++/**\brief defines the return parameter type of the BMP280_DELAY_FUNCTION
++*/
++#define BMP280_DELAY_RETURN_TYPE void
++
++/**\brief defines the calling parameter types of the BMP280_DELAY_FUNCTION
++*/
++#define BMP280_DELAY_PARAM_TYPES BMP280_U16_t
++
++/* never change this line */
++#define BMP280_DELAY_FUNC(delay_in_msec)\
++		delay_func(delay_in_msec)
++
++#define BMP280_GET_BITSLICE(regvar, bitname)\
++	((regvar & bitname##__MSK) >> bitname##__POS)
++
++#define BMP280_SET_BITSLICE(regvar, bitname, val)\
++	((regvar & ~bitname##__MSK) | ((val<<bitname##__POS)&bitname##__MSK))
++
++
++/* Constants */
++#define BMP280_NULL                          0
++#define BMP280_RETURN_FUNCTION_TYPE          signed char
++
++#define SHIFT_RIGHT_4_POSITION				 4
++#define SHIFT_LEFT_2_POSITION                2
++#define SHIFT_LEFT_4_POSITION                4
++#define SHIFT_LEFT_5_POSITION                5
++#define SHIFT_LEFT_8_POSITION                8
++#define SHIFT_LEFT_12_POSITION               12
++#define SHIFT_LEFT_16_POSITION               16
++#define BMP280_Zero_U8X                      0
++#define BMP280_Four_U8X                      4
++#define BMP280_Eight_U8X                     8
++#define	SUCCESS						(unsigned char)0
++
++#define E_BMP280_NULL_PTR                    ((signed char)-127)
++#define E_BMP280_COMM_RES                    ((signed char)-1)
++#define E_BMP280_OUT_OF_RANGE                ((signed char)-2)
++
++#define BMP280_I2C_ADDRESS1                  0x76
++#define BMP280_I2C_ADDRESS2                  0x77
++#define BMP280_I2C_ADDRESS                   BMP280_I2C_ADDRESS1
++
++/* Sensor Specific constants */
++#define BMP280_SLEEP_MODE                    0x00
++#define BMP280_FORCED_MODE                   0x01
++#define BMP280_NORMAL_MODE                   0x03
++#define BMP280_SOFT_RESET_CODE               0xB6
++
++#define BMP280_STANDBYTIME_1_MS              0x00
++#define BMP280_STANDBYTIME_63_MS             0x01
++#define BMP280_STANDBYTIME_125_MS            0x02
++#define BMP280_STANDBYTIME_250_MS            0x03
++#define BMP280_STANDBYTIME_500_MS            0x04
++#define BMP280_STANDBYTIME_1000_MS           0x05
++#define BMP280_STANDBYTIME_2000_MS           0x06
++#define BMP280_STANDBYTIME_4000_MS           0x07
++
++#define BMP280_OVERSAMPLING_SKIPPED          0x00
++#define BMP280_OVERSAMPLING_1X               0x01
++#define BMP280_OVERSAMPLING_2X               0x02
++#define BMP280_OVERSAMPLING_4X               0x03
++#define BMP280_OVERSAMPLING_8X               0x04
++#define BMP280_OVERSAMPLING_16X              0x05
++
++#define BMP280_ULTRALOWPOWER_MODE            0x00
++#define BMP280_LOWPOWER_MODE	             0x01
++#define BMP280_STANDARDRESOLUTION_MODE       0x02
++#define BMP280_HIGHRESOLUTION_MODE           0x03
++#define BMP280_ULTRAHIGHRESOLUTION_MODE      0x04
++
++#define BMP280_ULTRALOWPOWER_OSRS_P          BMP280_OVERSAMPLING_1X
++#define BMP280_ULTRALOWPOWER_OSRS_T          BMP280_OVERSAMPLING_1X
++
++#define BMP280_LOWPOWER_OSRS_P	             BMP280_OVERSAMPLING_2X
++#define BMP280_LOWPOWER_OSRS_T	             BMP280_OVERSAMPLING_1X
++
++#define BMP280_STANDARDRESOLUTION_OSRS_P     BMP280_OVERSAMPLING_4X
++#define BMP280_STANDARDRESOLUTION_OSRS_T     BMP280_OVERSAMPLING_1X
++
++#define BMP280_HIGHRESOLUTION_OSRS_P         BMP280_OVERSAMPLING_8X
++#define BMP280_HIGHRESOLUTION_OSRS_T         BMP280_OVERSAMPLING_1X
++
++#define BMP280_ULTRAHIGHRESOLUTION_OSRS_P    BMP280_OVERSAMPLING_16X
++#define BMP280_ULTRAHIGHRESOLUTION_OSRS_T    BMP280_OVERSAMPLING_2X
++
++#define BMP280_FILTERCOEFF_OFF               0x00
++#define BMP280_FILTERCOEFF_2                 0x01
++#define BMP280_FILTERCOEFF_4                 0x02
++#define BMP280_FILTERCOEFF_8                 0x03
++#define BMP280_FILTERCOEFF_16                0x04
++
++#define T_INIT_MAX							20
++				/* 20/16 = 1.25 ms */
++#define T_MEASURE_PER_OSRS_MAX				37
++				/* 37/16 = 2.3125 ms*/
++#define T_SETUP_PRESSURE_MAX				10
++				/* 10/16 = 0.625 ms */
++
++/*calibration parameters */
++#define BMP280_DIG_T1_LSB_REG                0x88
++#define BMP280_DIG_T1_MSB_REG                0x89
++#define BMP280_DIG_T2_LSB_REG                0x8A
++#define BMP280_DIG_T2_MSB_REG                0x8B
++#define BMP280_DIG_T3_LSB_REG                0x8C
++#define BMP280_DIG_T3_MSB_REG                0x8D
++#define BMP280_DIG_P1_LSB_REG                0x8E
++#define BMP280_DIG_P1_MSB_REG                0x8F
++#define BMP280_DIG_P2_LSB_REG                0x90
++#define BMP280_DIG_P2_MSB_REG                0x91
++#define BMP280_DIG_P3_LSB_REG                0x92
++#define BMP280_DIG_P3_MSB_REG                0x93
++#define BMP280_DIG_P4_LSB_REG                0x94
++#define BMP280_DIG_P4_MSB_REG                0x95
++#define BMP280_DIG_P5_LSB_REG                0x96
++#define BMP280_DIG_P5_MSB_REG                0x97
++#define BMP280_DIG_P6_LSB_REG                0x98
++#define BMP280_DIG_P6_MSB_REG                0x99
++#define BMP280_DIG_P7_LSB_REG                0x9A
++#define BMP280_DIG_P7_MSB_REG                0x9B
++#define BMP280_DIG_P8_LSB_REG                0x9C
++#define BMP280_DIG_P8_MSB_REG                0x9D
++#define BMP280_DIG_P9_LSB_REG                0x9E
++#define BMP280_DIG_P9_MSB_REG                0x9F
++
++#define BMP280_CHIPID_REG                    0xD0  /*Chip ID Register */
++#define BMP280_RESET_REG                     0xE0  /*Softreset Register */
++#define BMP280_STATUS_REG                    0xF3  /*Status Register */
++#define BMP280_CTRLMEAS_REG                  0xF4  /*Ctrl Measure Register */
++#define BMP280_CONFIG_REG                    0xF5  /*Configuration Register */
++#define BMP280_PRESSURE_MSB_REG              0xF7  /*Pressure MSB Register */
++#define BMP280_PRESSURE_LSB_REG              0xF8  /*Pressure LSB Register */
++#define BMP280_PRESSURE_XLSB_REG             0xF9  /*Pressure XLSB Register */
++#define BMP280_TEMPERATURE_MSB_REG           0xFA  /*Temperature MSB Reg */
++#define BMP280_TEMPERATURE_LSB_REG           0xFB  /*Temperature LSB Reg */
++#define BMP280_TEMPERATURE_XLSB_REG          0xFC  /*Temperature XLSB Reg */
++
++/* Status Register */
++#define BMP280_STATUS_REG_MEASURING__POS           3
++#define BMP280_STATUS_REG_MEASURING__MSK           0x08
++#define BMP280_STATUS_REG_MEASURING__LEN           1
++#define BMP280_STATUS_REG_MEASURING__REG           BMP280_STATUS_REG
++
++#define BMP280_STATUS_REG_IMUPDATE__POS            0
++#define BMP280_STATUS_REG_IMUPDATE__MSK            0x01
++#define BMP280_STATUS_REG_IMUPDATE__LEN            1
++#define BMP280_STATUS_REG_IMUPDATE__REG            BMP280_STATUS_REG
++
++/* Control Measurement Register */
++#define BMP280_CTRLMEAS_REG_OSRST__POS             5
++#define BMP280_CTRLMEAS_REG_OSRST__MSK             0xE0
++#define BMP280_CTRLMEAS_REG_OSRST__LEN             3
++#define BMP280_CTRLMEAS_REG_OSRST__REG             BMP280_CTRLMEAS_REG
++
++#define BMP280_CTRLMEAS_REG_OSRSP__POS             2
++#define BMP280_CTRLMEAS_REG_OSRSP__MSK             0x1C
++#define BMP280_CTRLMEAS_REG_OSRSP__LEN             3
++#define BMP280_CTRLMEAS_REG_OSRSP__REG             BMP280_CTRLMEAS_REG
++
++#define BMP280_CTRLMEAS_REG_MODE__POS              0
++#define BMP280_CTRLMEAS_REG_MODE__MSK              0x03
++#define BMP280_CTRLMEAS_REG_MODE__LEN              2
++#define BMP280_CTRLMEAS_REG_MODE__REG              BMP280_CTRLMEAS_REG
++
++/* Configuration Register */
++#define BMP280_CONFIG_REG_TSB__POS                 5
++#define BMP280_CONFIG_REG_TSB__MSK                 0xE0
++#define BMP280_CONFIG_REG_TSB__LEN                 3
++#define BMP280_CONFIG_REG_TSB__REG                 BMP280_CONFIG_REG
++
++#define BMP280_CONFIG_REG_FILTER__POS              2
++#define BMP280_CONFIG_REG_FILTER__MSK              0x1C
++#define BMP280_CONFIG_REG_FILTER__LEN              3
++#define BMP280_CONFIG_REG_FILTER__REG              BMP280_CONFIG_REG
++
++#define BMP280_CONFIG_REG_SPI3WEN__POS             0
++#define BMP280_CONFIG_REG_SPI3WEN__MSK             0x01
++#define BMP280_CONFIG_REG_SPI3WEN__LEN             1
++#define BMP280_CONFIG_REG_SPI3WEN__REG             BMP280_CONFIG_REG
++
++/* Data Register */
++#define BMP280_PRESSURE_XLSB_REG_DATA__POS         4
++#define BMP280_PRESSURE_XLSB_REG_DATA__MSK         0xF0
++#define BMP280_PRESSURE_XLSB_REG_DATA__LEN         4
++#define BMP280_PRESSURE_XLSB_REG_DATA__REG         BMP280_PRESSURE_XLSB_REG
++
++#define BMP280_TEMPERATURE_XLSB_REG_DATA__POS      4
++#define BMP280_TEMPERATURE_XLSB_REG_DATA__MSK      0xF0
++#define BMP280_TEMPERATURE_XLSB_REG_DATA__LEN      4
++#define BMP280_TEMPERATURE_XLSB_REG_DATA__REG      BMP280_TEMPERATURE_XLSB_REG
++
++#define BMP280_WR_FUNC_PTR\
++	signed char (*bus_write)(unsigned char, unsigned char,\
++			unsigned char *, unsigned char)
++
++#define BMP280_RD_FUNC_PTR\
++	signed char (*bus_read)(unsigned char, unsigned char,\
++			unsigned char *, unsigned char)
++
++#define BMP280_MDELAY_DATA_TYPE BMP280_U16_t
++
++/** this structure holds all device specific calibration parameters */
++struct bmp280_calibration_param_t {
++	BMP280_U16_t dig_T1;
++	BMP280_S16_t dig_T2;
++	BMP280_S16_t dig_T3;
++	BMP280_U16_t dig_P1;
++	BMP280_S16_t dig_P2;
++	BMP280_S16_t dig_P3;
++	BMP280_S16_t dig_P4;
++	BMP280_S16_t dig_P5;
++	BMP280_S16_t dig_P6;
++	BMP280_S16_t dig_P7;
++	BMP280_S16_t dig_P8;
++	BMP280_S16_t dig_P9;
++
++	BMP280_S32_t t_fine;
++};
++/** BMP280 image registers data structure */
++struct bmp280_t {
++	struct bmp280_calibration_param_t cal_param;
++
++	unsigned char chip_id;
++	unsigned char dev_addr;
++
++	unsigned char osrs_t;
++	unsigned char osrs_p;
++
++	BMP280_WR_FUNC_PTR;
++	BMP280_RD_FUNC_PTR;
++	void(*delay_msec)(BMP280_MDELAY_DATA_TYPE);
++};
++
++/* Function Declarations */
++BMP280_RETURN_FUNCTION_TYPE bmp280_init(struct bmp280_t *bmp280);
++BMP280_RETURN_FUNCTION_TYPE bmp280_read_ut(BMP280_S32_t *utemperature);
++BMP280_S32_t bmp280_compensate_T_int32(BMP280_S32_t adc_t);
++BMP280_RETURN_FUNCTION_TYPE bmp280_read_up(BMP280_S32_t *upressure);
++BMP280_U32_t bmp280_compensate_P_int32(BMP280_S32_t adc_p);
++BMP280_RETURN_FUNCTION_TYPE bmp280_read_uput(BMP280_S32_t *upressure,
++		BMP280_S32_t *utemperature);
++BMP280_RETURN_FUNCTION_TYPE bmp280_read_pt(BMP280_U32_t *pressure,
++		BMP280_S32_t *temperature);
++BMP280_RETURN_FUNCTION_TYPE bmp280_get_calib_param(void);
++BMP280_RETURN_FUNCTION_TYPE bmp280_get_osrs_t(unsigned char *value);
++BMP280_RETURN_FUNCTION_TYPE bmp280_set_osrs_t(unsigned char value);
++BMP280_RETURN_FUNCTION_TYPE bmp280_get_osrs_p(unsigned char *value);
++BMP280_RETURN_FUNCTION_TYPE bmp280_set_osrs_p(unsigned char value);
++BMP280_RETURN_FUNCTION_TYPE bmp280_get_mode(unsigned char *mode);
++BMP280_RETURN_FUNCTION_TYPE bmp280_set_mode(unsigned char mode);
++BMP280_RETURN_FUNCTION_TYPE bmp280_set_softreset(void);
++BMP280_RETURN_FUNCTION_TYPE bmp280_get_spi3(unsigned char *enable_disable);
++BMP280_RETURN_FUNCTION_TYPE bmp280_set_spi3(unsigned char enable_disable);
++BMP280_RETURN_FUNCTION_TYPE bmp280_get_filter(unsigned char *value);
++BMP280_RETURN_FUNCTION_TYPE bmp280_set_filter(unsigned char value);
++BMP280_RETURN_FUNCTION_TYPE bmp280_get_standbydur(unsigned char *time);
++BMP280_RETURN_FUNCTION_TYPE bmp280_set_standbydur(unsigned char time);
++BMP280_RETURN_FUNCTION_TYPE bmp280_set_workmode(unsigned char mode);
++BMP280_RETURN_FUNCTION_TYPE bmp280_get_forced_uput(BMP280_S32_t *upressure,
++		BMP280_S32_t *utemperature);
++BMP280_RETURN_FUNCTION_TYPE bmp280_write_register(unsigned char addr,
++	unsigned char *data, unsigned char len);
++BMP280_RETURN_FUNCTION_TYPE bmp280_read_register(unsigned char addr,
++	unsigned char *data, unsigned char len);
++#ifdef BMP280_ENABLE_FLOAT
++double bmp280_compensate_T_double(BMP280_S32_t adc_t);
++double bmp280_compensate_P_double(BMP280_S32_t adc_p);
++#endif
++#if defined(BMP280_ENABLE_INT64) && defined(BMP280_64BITSUPPORT_PRESENT)
++BMP280_U32_t bmp280_compensate_P_int64(BMP280_S32_t adc_p);
++#endif
++BMP280_RETURN_FUNCTION_TYPE bmp280_compute_wait_time(unsigned char
++	*v_delaytime_u8r);
++#endif
+diff --git a/drivers/input/misc/bmp280_core.c b/drivers/input/misc/bmp280_core.c
+new file mode 100644
+index 0000000..fd803da
+--- /dev/null
++++ b/drivers/input/misc/bmp280_core.c
+@@ -0,0 +1,2003 @@
++/*!
++ * @section LICENSE
++ * (C) Copyright 2014 Bosch Sensortec GmbH All Rights Reserved
++ *
++ * This software program is licensed subject to the GNU General
++ * Public License (GPL).Version 2,June 1991,
++ * available at http://www.fsf.org/copyleft/gpl.html
++ *
++ * @filename bmp280_core.c
++ * @date     2014/06/05
++ * @id       "6faad45"
++ * @version  1.3.5
++ *
++ * @brief
++ * The core code of BMP280 device driver
++ *
++ * @detail
++ * This file implements the core code of BMP280 device driver,
++ * which includes hardware related functions, input device register,
++ * device attribute files, etc.
++ * This file calls some functions defined in BMP280.c and could be
++ * called by bmp280_i2c.c and bmp280_spi.c separately.
++*/
++
++#include <linux/device.h>
++#include <linux/init.h>
++#include <linux/slab.h>
++#include <linux/delay.h>
++#include <linux/input.h>
++#include <linux/regulator/consumer.h>
++#include <linux/of_gpio.h>
++#include <linux/sensors.h>
++#include <linux/workqueue.h>
++#include <linux/module.h>
++#ifdef CONFIG_HAS_EARLYSUSPEND
++#include <linux/earlysuspend.h>
++#endif
++#include "bmp280_core.h"
++
++/*! @defgroup bmp280_core_src
++ *  @brief The core code of BMP280 device driver
++ @{*/
++/*! define sensor chip id [BMP280 = 0x56 or 0x57],[... = ...] */
++#define BMP_SENSOR_CHIP_ID      0x56
++/*! define sensor chip id [BMP280 = 0x58 */
++#define BMP_SENSOR_CHIP_ID_C    0x58
++/*! define max check times for chip id */
++#define CHECK_CHIP_ID_TIME_MAX  5
++/*! define sensor i2c address */
++#define BMP_I2C_ADDRESS         BMP280_I2C_ADDRESS
++/*! define minimum pressure value by input event */
++#define ABS_MIN_PRESSURE        30000
++/*! define maximum pressure value by input event */
++#define ABS_MAX_PRESSURE        110000
++/*! define default delay time used by input event [unit:ms] */
++#define BMP_DELAY_DEFAULT       200
++/*! define maximum temperature oversampling */
++#define BMP_OVERSAMPLING_T_MAX  BMP_VAL_NAME(OVERSAMPLING_16X)
++/*! define maximum pressure oversampling */
++#define BMP_OVERSAMPLING_P_MAX  BMP_VAL_NAME(OVERSAMPLING_16X)
++/*! define defalut filter coefficient */
++#define BMP_FILTER_DEFAULT      BMP_VAL_NAME(FILTERCOEFF_8)
++/*! define maximum filter coefficient */
++#define BMP_FILTER_MAX          BMP_VAL_NAME(FILTERCOEFF_16)
++/*! define default work mode */
++#define BMP_WORKMODE_DEFAULT    BMP_VAL_NAME(STANDARDRESOLUTION_MODE)
++/*! define default standby duration [unit:ms] */
++#define BMP_STANDBYDUR_DEFAULT  1
++/*! define i2c interface disable switch */
++#define BMP280_I2C_DISABLE_SWITCH   0x87
++/*! no action to selftest */
++#define BMP_SELFTEST_NO_ACTION      -1
++/*! selftest failed */
++#define BMP_SELFTEST_FAILED         0
++/*! selftest success */
++#define BMP_SELFTEST_SUCCESS        1
++
++/* POWER SUPPLY VOLTAGE RANGE */
++#define BMP280_VDD_MIN_UV  2000000
++#define BMP280_VDD_MAX_UV  3300000
++#define BMP280_VIO_MIN_UV  1750000
++#define BMP280_VIO_MAX_UV  1950000
++
++struct bmp280_platform_data {
++	int (*init)(void);
++	void (*exit)(void);
++	int (*power_on)(bool);
++	unsigned int  duration;
++	unsigned int  bmp_filter_default;
++	unsigned int  default_delay;
++};
++/*!
++ * @brief Each client has this additional data, this particular
++ * data structure is defined for bmp280 client
++*/
++struct bmp_client_data {
++	/*!data bus for hardware communication */
++	struct bmp_data_bus data_bus;
++	/*!device information used by sensor API */
++	struct bmp280_t device;
++	/*!device register to kernel device model */
++	struct device *dev;
++	/*!mutex lock variable */
++	struct mutex lock;
++
++	/*!temperature oversampling variable */
++	u8 oversampling_t;
++	/*!pressure oversampling variable */
++	u8 oversampling_p;
++	/*!indicate operation mode */
++	u8 op_mode;
++	/*!indicate filter coefficient */
++	u8 filter;
++	/*!indicate standby duration */
++	u32 standbydur;
++	/*!indicate work mode */
++	u8 workmode;
++#ifdef CONFIG_HAS_EARLYSUSPEND
++	/*!early suspend variable */
++	struct early_suspend early_suspend;
++#endif
++	/*!indicate input device; register to input core in kernel */
++	struct input_dev *input;
++	/*!register to work queue */
++	struct delayed_work work;
++	/*!delay time used by input event */
++	u32 delay;
++	/*!enable/disable sensor output */
++	u32 enable;
++	/*! indicate selftest status
++	* -1: no action
++	*  0: failed
++	*  1: success
++	*/
++	s8 selftest;
++	struct	sensors_classdev cdev;
++	struct i2c_client *client;
++	/* regulator data */
++	bool power_on;
++	struct regulator *vdd;
++	struct regulator *vio;
++	struct bmp280_platform_data *platform_data;
++};
++
++static struct sensors_classdev sensors_cdev = {
++	.name = "bmp280-pressure",
++	.vendor = "Bosch",
++	.version = 1,
++	.handle = SENSORS_PRESSURE_HANDLE,
++	.type = SENSOR_TYPE_PRESSURE,
++	.max_range = "1200.0",
++	.resolution = "0.01",
++	.sensor_power = "0.67",
++	.min_delay = 20000,	/* microsecond */
++	.fifo_reserved_event_count = 0,
++	.fifo_max_event_count = 0,
++	.enabled = 0,
++	.delay_msec = 200,	/* millisecond */
++	.sensors_enable = NULL,
++	.sensors_poll_delay = NULL,
++};
++static struct bmp_client_data *pdev_data;
++#ifdef CONFIG_HAS_EARLYSUSPEND
++static void bmp_early_suspend(struct early_suspend *h);
++static void bmp_late_resume(struct early_suspend *h);
++#endif
++
++/*!
++ * @brief list all the standby duration
++ * that could be set[unit:ms]
++*/
++static const u32 standbydur_list[] = {
++	1, 63, 125, 250, 500, 1000, 2000, 4000};
++/*!
++ * @brief list all the sensor operation modes
++*/
++static const u8 op_mode_list[] = {
++	BMP_VAL_NAME(SLEEP_MODE),
++	BMP_VAL_NAME(FORCED_MODE),
++	BMP_VAL_NAME(NORMAL_MODE)
++};
++/*!
++ * @brief list all the sensor work modes
++*/
++static const u8 workmode_list[] = {
++	BMP_VAL_NAME(ULTRALOWPOWER_MODE),
++	BMP_VAL_NAME(LOWPOWER_MODE),
++	BMP_VAL_NAME(STANDARDRESOLUTION_MODE),
++	BMP_VAL_NAME(HIGHRESOLUTION_MODE),
++	BMP_VAL_NAME(ULTRAHIGHRESOLUTION_MODE)
++};
++
++static int sensor_regulator_configure(struct bmp_client_data *data, bool on)
++{
++	int rc;
++
++	if (!on) {
++
++		if (regulator_count_voltages(data->vdd) > 0)
++			regulator_set_voltage(data->vdd, 0,
++				BMP280_VDD_MAX_UV);
++
++		regulator_put(data->vdd);
++
++		if (regulator_count_voltages(data->vio) > 0)
++			regulator_set_voltage(data->vio, 0,
++				BMP280_VIO_MAX_UV);
++
++		regulator_put(data->vio);
++	} else {
++		data->vdd = regulator_get(data->dev, "vdd");
++		if (IS_ERR(data->vdd)) {
++			rc = PTR_ERR(data->vdd);
++			dev_err(data->dev,
++				"Regulator get failed vdd rc=%d\n", rc);
++			return rc;
++		}
++
++		if (regulator_count_voltages(data->vdd) > 0) {
++			rc = regulator_set_voltage(data->vdd,
++				BMP280_VDD_MIN_UV, BMP280_VDD_MAX_UV);
++			if (rc) {
++				dev_err(data->dev,
++					"Regulator set failed vdd rc=%d\n",
++					rc);
++				goto reg_vdd_put;
++			}
++		}
++
++		data->vio = regulator_get(data->dev, "vio");
++		if (IS_ERR(data->vio)) {
++			rc = PTR_ERR(data->vio);
++			dev_err(data->dev,
++				"Regulator get failed vio rc=%d\n", rc);
++			goto reg_vdd_set;
++		}
++
++		if (regulator_count_voltages(data->vio) > 0) {
++			rc = regulator_set_voltage(data->vio,
++				BMP280_VIO_MIN_UV, BMP280_VIO_MAX_UV);
++			if (rc) {
++				dev_err(data->dev,
++				"Regulator set failed vio rc=%d\n", rc);
++				goto reg_vio_put;
++			}
++		}
++	}
++
++	return 0;
++reg_vio_put:
++	regulator_put(data->vio);
++
++reg_vdd_set:
++	if (regulator_count_voltages(data->vdd) > 0)
++		regulator_set_voltage(data->vdd, 0, BMP280_VDD_MAX_UV);
++reg_vdd_put:
++	regulator_put(data->vdd);
++	return rc;
++}
++
++static int sensor_regulator_power_on(struct bmp_client_data *data, bool on)
++{
++	int rc = 0;
++
++	if (!on) {
++		rc = regulator_disable(data->vdd);
++		if (rc) {
++			dev_err(data->dev,
++				"Regulator vdd disable failed rc=%d\n", rc);
++			return rc;
++		}
++
++		rc = regulator_disable(data->vio);
++		if (rc) {
++			dev_err(data->dev,
++				"Regulator vio disable failed rc=%d\n", rc);
++			rc = regulator_enable(data->vdd);
++			dev_err(data->dev,
++					"Regulator vio re-enabled rc=%d\n", rc);
++			/*
++			 * Successfully re-enable regulator.
++			 * Enter poweron delay and returns error.
++			 */
++			if (!rc) {
++				rc = -EBUSY;
++				goto enable_delay;
++			}
++		}
++		return rc;
++	} else {
++		rc = regulator_enable(data->vdd);
++		if (rc) {
++			dev_err(data->dev,
++				"Regulator vdd enable failed rc=%d\n", rc);
++			return rc;
++		}
++
++		rc = regulator_enable(data->vio);
++		if (rc) {
++			dev_err(data->dev,
++				"Regulator vio enable failed rc=%d\n", rc);
++			regulator_disable(data->vdd);
++			return rc;
++		}
++	}
++
++enable_delay:
++	msleep(130);
++	dev_dbg(data->dev,
++		"Sensor regulator power on =%d\n", on);
++	return rc;
++}
++
++static int sensor_platform_hw_power_on(bool on)
++{
++	struct bmp_client_data *data;
++	int err = 0;
++
++	if (pdev_data == NULL)
++		return -ENODEV;
++
++	data = pdev_data;
++	if (data->power_on != on) {
++		err = sensor_regulator_power_on(data, on);
++		if (err)
++			dev_err(data->dev,
++					"Can't configure regulator!\n");
++		else
++			data->power_on = on;
++	}
++
++	return err;
++}
++
++static int sensor_platform_hw_init(void)
++{
++	struct bmp_client_data *data;
++	int error;
++
++	if (pdev_data == NULL)
++		return -ENODEV;
++
++	data = pdev_data;
++
++	error = sensor_regulator_configure(data, true);
++	if (error < 0) {
++		dev_err(data->dev, "unable to configure regulator\n");
++		return error;
++	}
++
++	return 0;
++}
++
++static void sensor_platform_hw_exit(void)
++{
++	struct bmp_client_data *data = pdev_data;
++
++	if (data == NULL)
++		return;
++
++	sensor_regulator_configure(data, false);
++}
++
++#ifdef CONFIG_OF
++static int bmp280_parse_dt(struct device *dev,
++			struct bmp280_platform_data *pdata)
++{
++	int ret = 0;
++	unsigned int tmp;
++	struct device_node *np = dev->of_node;
++
++	pdata->init = sensor_platform_hw_init;
++	pdata->exit = sensor_platform_hw_exit;
++	pdata->power_on = sensor_platform_hw_power_on;
++
++	ret = of_property_read_u32(np, "bosch,bmp_filter_default", &tmp);
++	if (ret) {
++		dev_err(dev, "no bmp_filter_default from dt\n");
++		return ret;
++	}
++	pdata->bmp_filter_default = tmp;
++	ret = of_property_read_u32(np, "bosch,duration", &tmp);
++	if (ret) {
++		dev_err(dev, "no duration from dt\n");
++		return ret;
++	}
++	pdata->duration = tmp;
++	ret = of_property_read_u32(np, "bosch,default_delay", &tmp);
++	if (ret) {
++		dev_err(dev, "no duration from dt\n");
++		return ret;
++	}
++	pdata->default_delay = tmp;
++
++	return 0;
++}
++#endif
++
++/*!
++ * @brief implement delay function
++ *
++ * @param msec  millisecond numbers
++ *
++ * @return no return value
++*/
++static void bmp_delay(u16 msec)
++{
++	udelay(1000 * msec);
++}
++
++/*!
++ * @brief check bmp sensor's chip id
++ *
++ * @param data_bus the pointer of data bus
++ *
++ * @return zero success, non-zero failed
++ * @retval zero  success
++ * @retval -EIO communication error
++ * @retval -ENODEV chip id dismatch
++*/
++static int bmp_check_chip_id(struct bmp_data_bus *data_bus)
++{
++	int err = 0;
++	u8 chip_id = 0;
++	u8 read_count = 0;
++
++	while (read_count++ < CHECK_CHIP_ID_TIME_MAX) {
++		err = data_bus->bops->bus_read(BMP_I2C_ADDRESS,
++		BMP_REG_NAME(CHIPID_REG), &chip_id, 1);
++		if (err < 0) {
++			err = -EIO;
++			pr_err("bus read failed\n");
++			return err;
++		}
++
++		if ((BMP_SENSOR_CHIP_ID == (chip_id&0xFE))
++				|| (BMP_SENSOR_CHIP_ID_C == (chip_id&0xFF))) {
++			pr_err("read %s chip id successfully", BMP_NAME);
++			return 0;
++		}
++		udelay(1000);
++	}
++
++	pr_err("read %s chip id failed, read value = %d\n",
++			BMP_NAME, chip_id);
++	return -ENODEV;
++}
++
++/*!
++ * @brief get compersated temperature value
++ *
++ * @param data the pointer of bmp client data
++ * @param temperature the pointer of temperature value
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static int bmp_get_temperature(struct bmp_client_data *data, s32 *temperature)
++{
++	s32 utemperature;
++	int err = 0;
++
++	err = BMP_CALL_API(read_ut)(&utemperature);
++	if (err)
++		return err;
++
++	*temperature = BMP_CALL_API(compensate_T_int32)(utemperature);
++	return err;
++}
++
++/*!
++ * @brief get compersated pressure value
++ *
++ * @param data the pointer of bmp client data
++ * @param pressure the pointer of pressure value
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static int bmp_get_pressure(struct bmp_client_data *data, u32 *pressure)
++{
++	s32 temperature;
++	s32 upressure;
++	int err = 0;
++
++	/*
++	 *get current temperature to compersate pressure value
++	 *via variable t_fine, which is defined in sensor function API
++	 */
++	err = bmp_get_temperature(data, &temperature);
++	if (err)
++		return err;
++	/*printk("----------temperature = %d--------------\n", temperature);*/
++	err = BMP_CALL_API(read_up)(&upressure);
++	if (err)
++		return err;
++
++	*pressure = (BMP_CALL_API(compensate_P_int64)(upressure))>>8;
++	return err;
++}
++
++/*!
++ * @brief get temperature oversampling
++ *
++ * @param data the pointer of bmp client data
++ *
++ * @return temperature oversampling value
++ * @retval 0 oversampling skipped
++ * @retval 1 oversampling1X
++ * @retval 2 oversampling2X
++ * @retval 3 oversampling4X
++ * @retval 4 oversampling8X
++ * @retval 5 oversampling16X
++*/
++static u32 bmp_get_oversampling_t(struct bmp_client_data *data)
++{
++	int err = 0;
++
++	err = BMP_CALL_API(get_osrs_t)(&data->oversampling_t);
++	if (err)
++		return err;
++
++	return data->oversampling_t;
++}
++
++/*!
++ * @brief set temperature oversampling
++ *
++ * @param data the pointer of bmp client data
++ * @param oversampling temperature oversampling value need to set
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static int bmp_set_oversampling_t(struct bmp_client_data *data, u8 oversampling)
++{
++	int err = 0;
++
++	if (oversampling > BMP_OVERSAMPLING_T_MAX)
++		oversampling = BMP_OVERSAMPLING_T_MAX;
++
++	err = BMP_CALL_API(set_osrs_t)(oversampling);
++	if (err)
++		return err;
++
++	data->oversampling_t = oversampling;
++	return err;
++}
++
++/*!
++ * @brief get pressure oversampling
++ *
++ * @param data the pointer of bmp client data
++ *
++ * @return pressure oversampling value
++ * @retval 0 oversampling skipped
++ * @retval 1 oversampling1X
++ * @retval 2 oversampling2X
++ * @retval 3 oversampling4X
++ * @retval 4 oversampling8X
++ * @retval 5 oversampling16X
++*/
++static u32 bmp_get_oversampling_p(struct bmp_client_data *data)
++{
++	int err = 0;
++
++	err = BMP_CALL_API(get_osrs_p)(&data->oversampling_p);
++	if (err)
++		return err;
++
++	return data->oversampling_p;
++}
++
++/*!
++ * @brief set pressure oversampling
++ *
++ * @param data the pointer of bmp client data
++ * @param oversampling pressure oversampling value needed to set
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static int bmp_set_oversampling_p(struct bmp_client_data *data, u8 oversampling)
++{
++	int err = 0;
++
++	if (oversampling > BMP_OVERSAMPLING_P_MAX)
++		oversampling = BMP_OVERSAMPLING_P_MAX;
++
++	err = BMP_CALL_API(set_osrs_p)(oversampling);
++	if (err)
++		return err;
++
++	data->oversampling_p = oversampling;
++	return err;
++}
++
++/*!
++ * @brief get operation mode
++ *
++ * @param data the pointer of bmp client data
++ *
++ * @return operation mode
++ * @retval 0  SLEEP MODE
++ * @retval 1  FORCED MODE
++ * @retval 3  NORMAL MODE
++*/
++static u32 bmp_get_op_mode(struct bmp_client_data *data)
++{
++	int err = 0;
++
++	err = BMP_CALL_API(get_mode)(&data->op_mode);
++	if (err)
++		return err;
++
++	if (data->op_mode == 0x01 || data->op_mode == 0x02)
++		data->op_mode = BMP_VAL_NAME(FORCED_MODE);
++
++	return data->op_mode;
++}
++
++/*!
++ * @brief set operation mode
++ *
++ * @param data the pointer of bmp client data
++ * @param op_mode operation mode need to set
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static int bmp_set_op_mode(struct bmp_client_data *data, u8 op_mode)
++{
++	int err = 0;
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(op_mode_list); i++) {
++		if (op_mode_list[i] == op_mode)
++			break;
++	}
++
++	if (ARRAY_SIZE(op_mode_list) <= i)
++		return -EPERM;
++
++	err = BMP_CALL_API(set_mode)(op_mode);
++	if (err)
++		return err;
++
++	data->op_mode = op_mode;
++	return err;
++}
++
++/*!
++ * @brief get filter coefficient
++ *
++ * @param data the pointer of bmp client data
++ *
++ * @return filter coefficient value
++ * @retval 0 filter off
++ * @retval 1 filter 2
++ * @retval 2 filter 4
++ * @retval 3 filter 8
++ * @retval 4 filter 16
++*/
++static u32 bmp_get_filter(struct bmp_client_data *data)
++{
++	int err = 0;
++
++	err = BMP_CALL_API(get_filter)(&data->filter);
++	if (err)
++		return err;
++
++	return data->filter;
++}
++
++/*!
++ * @brief set filter coefficient
++ *
++ * @param data the pointer of bmp client data
++ * @param filter filter coefficient need to set
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static int bmp_set_filter(struct bmp_client_data *data, u8 filter)
++{
++	int err = 0;
++
++	if (filter > BMP_FILTER_MAX)
++		filter = BMP_FILTER_MAX;
++
++	err = BMP_CALL_API(set_filter)(filter);
++	if (err)
++		return err;
++
++	data->filter = filter;
++	return err;
++}
++
++/*!
++ * @brief get standby duration
++ *
++ * @param data the pointer of bmp client data
++ *
++ * @return standby duration value
++ * @retval 1 0.5ms
++ * @retval 63 62.5ms
++ * @retval 125 125ms
++ * @retval 250 250ms
++ * @retval 500 500ms
++ * @retval 1000 1000ms
++ * @retval 2000 2000ms
++ * @retval 4000 4000ms
++*/
++static u32 bmp_get_standbydur(struct bmp_client_data *data)
++{
++	int err = 0;
++	u8 standbydur;
++
++	err = BMP_CALL_API(get_standbydur)(&standbydur);
++	if (err)
++		return err;
++
++	data->standbydur = standbydur_list[standbydur];
++	return data->standbydur;
++}
++
++/*!
++ * @brief set standby duration
++ *
++ * @param data the pointer of bmp client data
++ * @param standbydur standby duration need to set
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static int bmp_set_standbydur(struct bmp_client_data *data, u32 standbydur)
++{
++	int err = 0;
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(standbydur_list); i++) {
++		if (standbydur_list[i] == standbydur)
++			break;
++	}
++
++	if (ARRAY_SIZE(standbydur_list) <= i)
++		return -EPERM;
++
++	err = BMP_CALL_API(set_standbydur)(i);
++	if (err)
++		return err;
++
++	data->standbydur = standbydur;
++	return err;
++}
++
++/*!
++ * @brief get work mode
++ *
++ * @param data the pointer of bmp client data
++ *
++ * @return work mode
++ * @retval 0 ULTRLOWPOWER MODE
++ * @retval 1 LOWPOWER MODE
++ * @retval 2 STANDARDSOLUTION MODE
++ * @retval 3 HIGHRESOLUTION MODE
++ * @retval 4 ULTRAHIGHRESOLUTION MODE
++*/
++static unsigned char bmp_get_workmode(struct bmp_client_data *data)
++{
++	return data->workmode;
++}
++
++/*!
++ * @brief set work mode, which is defined by software, not hardware.
++ * This setting will impact oversampling value of sensor.
++ *
++ * @param data the pointer of bmp client data
++ * @param workmode work mode need to set
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static int bmp_set_workmode(struct bmp_client_data *data, u8 workmode)
++{
++	int err = 0;
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(workmode_list); i++) {
++		if (workmode_list[i] == workmode)
++			break;
++	}
++
++	if (ARRAY_SIZE(workmode_list) <= i)
++		return -EPERM;
++
++	err = BMP_CALL_API(set_workmode)(workmode);
++	if (err)
++		return err;
++	else
++		data->workmode = workmode;
++
++	bmp_get_oversampling_t(data);
++	bmp_get_oversampling_p(data);
++
++	return err;
++}
++
++/*!
++ * @brief verify i2c disable switch status
++ *
++ * @param data the pointer of bmp client data
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static int bmp280_verify_i2c_disable_switch(struct bmp_client_data *data)
++{
++	int err = 0;
++	u8 reg_val = 0xFF;
++
++	err = BMP_CALL_API(read_register)
++		(BMP280_I2C_DISABLE_SWITCH, &reg_val, 1);
++	if (err < 0) {
++		err = -EIO;
++		pr_err("bus read failed\n");
++		return err;
++	}
++
++	if (reg_val == 0x00) {
++		pr_err("bmp280 i2c interface is available\n");
++		return 0;
++	}
++
++	pr_err("verification of i2c interface is failure\n");
++	return -EPERM;
++}
++
++/*!
++ * @brief verify calibration parameters
++ *
++ * @param data the pointer of bmp client data
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static int bmp280_verify_calib_param(struct bmp_client_data *data)
++{
++	struct bmp280_calibration_param_t *cali = &(data->device.cal_param);
++
++	/* verify that not all calibration parameters are 0 */
++	if (cali->dig_T1 == 0 && cali->dig_T2 == 0 && cali->dig_T3 == 0
++		&& cali->dig_P1 == 0 && cali->dig_P2 == 0
++		&& cali->dig_P3 == 0 && cali->dig_P4 == 0
++		&& cali->dig_P5 == 0 && cali->dig_P6 == 0
++		&& cali->dig_P7 == 0 && cali->dig_P8 == 0
++		&& cali->dig_P9 == 0) {
++		pr_err("all calibration parameters are zero\n");
++		return -EPERM;
++	}
++
++	/* verify whether all the calibration parameters are within range */
++	if (cali->dig_T1 < 19000 || cali->dig_T1 > 35000)
++		return -EPERM;
++	else if (cali->dig_T2 < 22000 || cali->dig_T2 > 30000)
++		return -EPERM;
++	else if (cali->dig_T3 < -3000 || cali->dig_T3 > -1000)
++		return -EPERM;
++	else if (cali->dig_P1 < 30000 || cali->dig_P1 > 42000)
++		return -EPERM;
++	else if (cali->dig_P2 < -12970 || cali->dig_P2 > -8000)
++		return -EPERM;
++	else if (cali->dig_P3 < -5000 || cali->dig_P3 > 8000)
++		return -EPERM;
++	else if (cali->dig_P4 < -10000 || cali->dig_P4 > 18000)
++		return -EPERM;
++	else if (cali->dig_P5 < -500 || cali->dig_P5 > 1100)
++		return -EPERM;
++	else if (cali->dig_P6 < -1000 || cali->dig_P6 > 1000)
++		return -EPERM;
++	else if (cali->dig_P7 < -32768 || cali->dig_P7 > 32767)
++		return -EPERM;
++	else if (cali->dig_P8 < -30000 || cali->dig_P8 > 10000)
++		return -EPERM;
++	else if (cali->dig_P9 < -10000 || cali->dig_P9 > 30000)
++		return -EPERM;
++
++	pr_err("calibration parameters are OK\n");
++	return 0;
++}
++
++/*!
++ * @brief verify compensated temperature and pressure value
++ *
++ * @param data the pointer of bmp client data
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static int bmp280_verify_pt(struct bmp_client_data *data)
++{
++	u8 wait_time = 0;
++	s32 temperature = 0;
++	u32 pressure;
++
++	bmp_set_workmode(data, BMP_VAL_NAME(ULTRALOWPOWER_MODE));
++	bmp_set_op_mode(data, BMP_VAL_NAME(FORCED_MODE));
++	BMP_CALL_API(compute_wait_time)(&wait_time);
++	bmp_delay(wait_time);
++	bmp_get_temperature(data, &temperature);
++	if (temperature <= 0 || temperature >= 40*100) {
++		pr_err("temperature value is out of range:%d*0.01degree\n",
++			temperature);
++		return -EPERM;
++	}
++	bmp_get_pressure(data, &pressure);
++	if (pressure <= 900*100 || pressure >= 1100*100) {
++		pr_err("pressure value is out of range:%d Pa\n", pressure);
++		return -EPERM;
++	}
++
++	pr_err("bmp280 temperature and pressure values are OK\n");
++	return 0;
++}
++
++/*!
++ * @brief do selftest
++ *
++ * @param data the pointer of bmp client data
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static int bmp_do_selftest(struct bmp_client_data *data)
++{
++	int err = 0;
++
++	if (data == NULL)
++		return -EINVAL;
++
++	err = bmp280_verify_i2c_disable_switch(data);
++	if (err) {
++		data->selftest = 0;
++		return BMP_SELFTEST_FAILED;
++	}
++
++	err = bmp280_verify_calib_param(data);
++	if (err) {
++		data->selftest = 0;
++		return BMP_SELFTEST_FAILED;
++	}
++
++	err = bmp280_verify_pt(data);
++	if (err) {
++		data->selftest = 0;
++		return BMP_SELFTEST_FAILED;
++	}
++
++	/* selftest is OK */
++	data->selftest = 1;
++	return BMP_SELFTEST_SUCCESS;
++}
++
++/* sysfs callbacks */
++/*!
++ * @brief get delay value via sysfs node
++ *
++ * @param dev the pointer of device
++ * @param attr the pointer of device attribute file
++ * @param buf the pointer of delay buffer
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static ssize_t show_delay(struct device *dev,
++			struct device_attribute *attr, char *buf)
++{
++	struct bmp_client_data *data = dev_get_drvdata(dev);
++	return snprintf(buf, PAGE_SIZE, "%d\n", data->delay);
++}
++
++/*!
++ * @brief set delay value via sysfs node
++ *
++ * @param dev the pointer of device
++ * @param attr the pointer of device attribute file
++ * @param buf the pointer of delay buffer
++ * @param count buffer size
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static ssize_t store_delay(struct device *dev,
++			struct device_attribute *attr,
++			const char *buf, size_t count)
++{
++	struct bmp_client_data *data = dev_get_drvdata(dev);
++	unsigned long delay;
++	int status = kstrtoul(buf, 10, &delay);
++	if (status == 0) {
++		mutex_lock(&data->lock);
++		data->delay = delay;
++		mutex_unlock(&data->lock);
++		return count;
++	}
++	return status;
++}
++
++/*!
++ * @brief get compersated temperature value via sysfs node
++ *
++ * @param dev the pointer of device
++ * @param attr the pointer of device attribute file
++ * @param buf the pointer of temperature buffer
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static ssize_t show_temperature(struct device *dev,
++			struct device_attribute *attr, char *buf)
++{
++	s32 temperature;
++	int status;
++	struct bmp_client_data *data = dev_get_drvdata(dev);
++
++	mutex_lock(&data->lock);
++	status = bmp_get_temperature(data, &temperature);
++	mutex_unlock(&data->lock);
++	if (status == 0)
++		return snprintf(buf, PAGE_SIZE, "%d\n", temperature);
++
++	return status;
++}
++
++/*!
++ * @brief set compersated pressure value via sysfs node
++ *
++ * @param dev the pointer of device
++ * @param attr the pointer of device attribute file
++ * @param buf the pointer of pressure buffer
++ * @param count buffer size
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static ssize_t show_pressure(struct device *dev,
++			struct device_attribute *attr, char *buf)
++{
++	u32 pressure;
++	int status;
++	struct bmp_client_data *data = dev_get_drvdata(dev);
++
++	mutex_lock(&data->lock);
++	status = bmp_get_pressure(data, &pressure);
++	mutex_unlock(&data->lock);
++	if (status == 0)
++		return snprintf(buf, PAGE_SIZE, "%d\n", pressure);
++
++	return status;
++}
++
++/*!
++ * @brief get temperature oversampling value via sysfs node
++ *
++ * @param dev the pointer of device
++ * @param attr the pointer of device attribute file
++ * @param buf the pointer of temperature oversampling buffer
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static ssize_t show_oversampling_t(struct device *dev,
++			struct device_attribute *attr, char *buf)
++{
++	struct bmp_client_data *data = dev_get_drvdata(dev);
++	return snprintf(buf, PAGE_SIZE, "%d\n", bmp_get_oversampling_t(data));
++}
++
++/*!
++ * @brief set temperature oversampling value via sysfs node
++ *
++ * @param dev the pointer of device
++ * @param attr the pointer of device attribute file
++ * @param buf the pointer of temperature oversampling buffer
++ * @param count buffer size
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static ssize_t store_oversampling_t(struct device *dev,
++			struct device_attribute *attr,
++			const char *buf, size_t count)
++{
++	struct bmp_client_data *data = dev_get_drvdata(dev);
++	unsigned long oversampling;
++	int status = kstrtoul(buf, 10, &oversampling);
++	if (status == 0) {
++		mutex_lock(&data->lock);
++		bmp_set_oversampling_t(data, oversampling);
++		mutex_unlock(&data->lock);
++		return count;
++	}
++	return status;
++}
++
++/*!
++ * @brief get pressure oversampling value via sysfs node
++ *
++ * @param dev the pointer of device
++ * @param attr the pointer of device attribute file
++ * @param buf the pointer of pressure oversampling buffer
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static ssize_t show_oversampling_p(struct device *dev,
++			struct device_attribute *attr, char *buf)
++{
++	struct bmp_client_data *data = dev_get_drvdata(dev);
++	return snprintf(buf, PAGE_SIZE, "%d\n", bmp_get_oversampling_p(data));
++}
++
++/*!
++ * @brief set pressure oversampling value via sysfs node
++ *
++ * @param dev the pointer of device
++ * @param attr the pointer of device attribute file
++ * @param buf the pointer of pressure oversampling buffer
++ * @param count buffer size
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static ssize_t store_oversampling_p(struct device *dev,
++			struct device_attribute *attr,
++			const char *buf, size_t count)
++{
++	struct bmp_client_data *data = dev_get_drvdata(dev);
++	unsigned long oversampling;
++	int status = kstrtoul(buf, 10, &oversampling);
++	if (status == 0) {
++		mutex_lock(&data->lock);
++		bmp_set_oversampling_p(data, oversampling);
++		mutex_unlock(&data->lock);
++		return count;
++	}
++	return status;
++}
++
++/*!
++ * @brief get operation mode via sysfs node
++ *
++ * @param dev the pointer of device
++ * @param attr the pointer of device attribute file
++ * @param buf the pointer of operation mode buffer
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static ssize_t show_op_mode(struct device *dev,
++			struct device_attribute *attr, char *buf)
++{
++	struct bmp_client_data *data = dev_get_drvdata(dev);
++	return snprintf(buf, PAGE_SIZE, "%d\n", bmp_get_op_mode(data));
++}
++
++/*!
++ * @brief set operation mode via sysfs node
++ *
++ * @param dev the pointer of device
++ * @param attr the pointer of device attribute file
++ * @param buf the pointer of operation mode buffer
++ * @param count buffer size
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static ssize_t store_op_mode(struct device *dev,
++			struct device_attribute *attr,
++			const char *buf, size_t count)
++{
++	struct bmp_client_data *data = dev_get_drvdata(dev);
++	unsigned long op_mode;
++	int status = kstrtoul(buf, 10, &op_mode);
++	if (status == 0) {
++		mutex_lock(&data->lock);
++		bmp_set_op_mode(data, op_mode);
++		mutex_unlock(&data->lock);
++		return count;
++	}
++	return status;
++}
++
++/*!
++ * @brief get filter coefficient via sysfs node
++ *
++ * @param dev the pointer of device
++ * @param attr the pointer of device attribute file
++ * @param buf the pointer of filter coefficient buffer
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static ssize_t show_filter(struct device *dev,
++			struct device_attribute *attr, char *buf)
++{
++	struct bmp_client_data *data = dev_get_drvdata(dev);
++	return snprintf(buf, PAGE_SIZE, "%d\n", bmp_get_filter(data));
++}
++
++/*!
++ * @brief set filter coefficient via sysfs node
++ *
++ * @param dev the pointer of device
++ * @param attr the pointer of device attribute file
++ * @param buf the pointer of filter coefficient buffer
++ * @param count buffer size
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static ssize_t store_filter(struct device *dev,
++			struct device_attribute *attr,
++			const char *buf, size_t count)
++{
++	struct bmp_client_data *data = dev_get_drvdata(dev);
++	unsigned long filter;
++	int status = kstrtoul(buf, 10, &filter);
++	if (status == 0) {
++		mutex_lock(&data->lock);
++		bmp_set_filter(data, filter);
++		mutex_unlock(&data->lock);
++		return count;
++	}
++	return status;
++}
++
++/*!
++ * @brief get standby duration via sysfs node
++ *
++ * @param dev the pointer of device
++ * @param attr the pointer of device attribute file
++ * @param buf the pointer of standby duration buffer
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static ssize_t show_standbydur(struct device *dev,
++			struct device_attribute *attr, char *buf)
++{
++	struct bmp_client_data *data = dev_get_drvdata(dev);
++	return snprintf(buf, PAGE_SIZE, "%d\n", bmp_get_standbydur(data));
++}
++
++/*!
++ * @brief set standby duration via sysfs node
++ *
++ * @param dev the pointer of device
++ * @param attr the pointer of device attribute file
++ * @param buf the pointer of standby duration buffer
++ * @param count buffer size
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static ssize_t store_standbydur(struct device *dev,
++			struct device_attribute *attr,
++			const char *buf, size_t count)
++{
++	struct bmp_client_data *data = dev_get_drvdata(dev);
++	unsigned long standbydur;
++	int status = kstrtoul(buf, 10, &standbydur);
++	if (status == 0) {
++		mutex_lock(&data->lock);
++		bmp_set_standbydur(data, standbydur);
++		mutex_unlock(&data->lock);
++		return count;
++	}
++	return status;
++}
++
++/*!
++ * @brief get work mode via sysfs node
++ *
++ * @param dev the pointer of device
++ * @param attr the pointer of device attribute file
++ * @param buf the pointer of work mode buffer
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static ssize_t show_workmode(struct device *dev,
++			struct device_attribute *attr, char *buf)
++{
++	struct bmp_client_data *data = dev_get_drvdata(dev);
++	return snprintf(buf, PAGE_SIZE, "%d\n", bmp_get_workmode(data));
++}
++
++/*!
++ * @brief set work mode via sysfs node
++ *
++ * @param dev the pointer of device
++ * @param attr the pointer of device attribute file
++ * @param buf the pointer of work mode buffer
++ * @param count buffer size
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static ssize_t store_workmode(struct device *dev,
++			struct device_attribute *attr,
++			const char *buf, size_t count)
++{
++	struct bmp_client_data *data = dev_get_drvdata(dev);
++	unsigned long workmode;
++	int status = kstrtoul(buf, 10, &workmode);
++	if (status == 0) {
++		mutex_lock(&data->lock);
++		bmp_set_workmode(data, workmode);
++		mutex_unlock(&data->lock);
++		return count;
++	}
++	return status;
++}
++
++/*!
++ * @brief get sensor work state via sysfs node
++ *
++ * @param dev the pointer of device
++ * @param attr the pointer of device attribute file
++ * @param buf the pointer of enable/disable value buffer
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static ssize_t show_enable(struct device *dev,
++			struct device_attribute *attr, char *buf)
++{
++	struct bmp_client_data *data = dev_get_drvdata(dev);
++	return snprintf(buf, PAGE_SIZE, "%d\n", data->enable);
++}
++
++/*!
++ * @brief enable/disable sensor function via sysfs node
++ *
++ * @param dev the pointer of device
++ * @param attr the pointer of device attribute file
++ * @param buf the pointer of enable/disable buffer
++ * @param count buffer size
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static ssize_t store_enable(struct device *dev,
++			struct device_attribute *attr,
++			const char *buf, size_t count)
++{
++	struct bmp_client_data *data = dev_get_drvdata(dev);
++	unsigned long enable;
++	int status = kstrtoul(buf, 10, &enable);
++	if (status == 0) {
++		enable = enable ? 1 : 0;
++		mutex_lock(&data->lock);
++		if (data->enable != enable) {
++			if (enable) {
++				#ifdef CONFIG_PM
++				bmp_enable(dev);
++				#endif
++				bmp_set_op_mode(data,
++					BMP_VAL_NAME(NORMAL_MODE));
++				schedule_delayed_work(&data->work,
++					msecs_to_jiffies(data->delay));
++			} else{
++				cancel_delayed_work_sync(&data->work);
++				bmp_set_op_mode(data,
++					BMP_VAL_NAME(SLEEP_MODE));
++				#ifdef CONFIG_PM
++				bmp_disable(dev);
++				#endif
++			}
++			data->enable = enable;
++		}
++		mutex_unlock(&data->lock);
++		return count;
++	}
++	return status;
++}
++
++/*!
++ * @brief get selftest status via sysfs node
++ *
++ * @param dev the pointer of device
++ * @param attr the pointer of device attribute file
++ * @param buf the pointer of selftest buffer
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static ssize_t show_selftest(struct device *dev,
++			struct device_attribute *attr, char *buf)
++{
++	struct bmp_client_data *data = dev_get_drvdata(dev);
++	return snprintf(buf, PAGE_SIZE, "%d\n", data->selftest);
++}
++
++/*!
++ * @brief do selftest via sysfs node
++ *
++ * @param dev the pointer of device
++ * @param attr the pointer of device attribute file
++ * @param buf the pointer of selftest buffer
++ * @param count buffer size
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static ssize_t store_selftest(struct device *dev,
++			struct device_attribute *attr,
++			const char *buf, size_t count)
++{
++	struct bmp_client_data *data = dev_get_drvdata(dev);
++	unsigned long action;
++	int status = kstrtoul(buf, 10, &action);
++	if (0 != status)
++		return status;
++
++	/* 1 means do selftest */
++	if (1 != action)
++		return -EINVAL;
++
++	mutex_lock(&data->lock);
++	status = bmp_do_selftest(data);
++	mutex_unlock(&data->lock);
++
++	if (BMP_SELFTEST_SUCCESS == status)
++		return count;
++	else
++		return status;
++}
++
++#ifdef DEBUG_BMP280
++/*!
++ * @brief dump significant registers value from hardware
++ * and copy to use space via sysfs node. This node only for debug,
++ * which could dump registers from 0xF3 to 0xFC.
++ *
++ * @param dev the pointer of device
++ * @param attr the pointer of device attribute file
++ * @param buf the pointer of registers value buffer
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static ssize_t show_dump_reg(struct device *dev,
++			struct device_attribute *attr, char *buf)
++{
++	#define REG_CALI_NUM (0xA1 - 0x88 + 1)
++	#define REG_CTRL_NUM (0xFC - 0xF3 + 1)
++	struct bmp_client_data *data = dev_get_drvdata(dev);
++	char regsbuf[REG_CALI_NUM + REG_CTRL_NUM];
++	char strbuf[REG_CALI_NUM + REG_CTRL_NUM + 256] = {0};
++	int err = 0, i;
++
++	snprintf(strbuf + strlen(strbuf), PAGE_SIZE,
++			"-----calib regs[0x88 ~ 0xA1]-----\n");
++	err = data->data_bus.bops->bus_read(BMP_I2C_ADDRESS,
++			0x88, regsbuf, REG_CALI_NUM);
++	if (err)
++		return err;
++
++	for (i = 0; i < REG_CALI_NUM; i++)
++		snprintf(strbuf + strlen(strbuf),  PAGE_SIZE, "%02X%c",
++				regsbuf[i], ((i+1)%0x10 == 0) ? '\n' : ' ');
++
++	snprintf(strbuf + strlen(strbuf),  PAGE_SIZE,
++			"\n-----ctrl regs[0xF3 ~ 0xFC]-----\n");
++	err = data->data_bus.bops->bus_read(BMP_I2C_ADDRESS,
++		0xF3, regsbuf, REG_CTRL_NUM);
++	if (err)
++		return err;
++
++	for (i = 0; i < REG_CTRL_NUM; i++)
++		snprintf(strbuf + strlen(strbuf),
++			PAGE_SIZE, "%02X ", regsbuf[i]);
++
++	return snprintf(buf, 4096, "%s\n", strbuf);
++}
++#endif/*DEBUG_BMP280*/
++
++static DEVICE_ATTR(delay, S_IWUSR | S_IRUGO,
++			show_delay, store_delay);
++static DEVICE_ATTR(temperature, S_IRUGO,
++			show_temperature, NULL);
++static DEVICE_ATTR(pressure, S_IRUGO,
++			show_pressure, NULL);
++static DEVICE_ATTR(oversampling_t, S_IWUSR | S_IRUGO,
++			show_oversampling_t, store_oversampling_t);
++static DEVICE_ATTR(oversampling_p, S_IWUSR | S_IRUGO,
++			show_oversampling_p, store_oversampling_p);
++static DEVICE_ATTR(op_mode, S_IWUSR | S_IRUGO,
++			show_op_mode, store_op_mode);
++static DEVICE_ATTR(filter, S_IWUSR | S_IRUGO,
++			show_filter, store_filter);
++static DEVICE_ATTR(standbydur, S_IWUSR | S_IRUGO,
++			show_standbydur, store_standbydur);
++static DEVICE_ATTR(workmode, S_IWUSR | S_IRUGO,
++			show_workmode, store_workmode);
++static DEVICE_ATTR(enable, S_IWUSR | S_IRUGO,
++			show_enable, store_enable);
++static DEVICE_ATTR(selftest, S_IWUSR | S_IRUGO,
++			show_selftest, store_selftest);
++#ifdef DEBUG_BMP280
++static DEVICE_ATTR(dump_reg, S_IRUGO,
++			show_dump_reg, NULL);
++#endif
++
++/*!
++ * @brief device attribute files
++*/
++static struct attribute *bmp_attributes[] = {
++	/**< delay attribute */
++	&dev_attr_delay.attr,
++	/**< compersated temperature attribute */
++	&dev_attr_temperature.attr,
++	/**< compersated pressure attribute */
++	&dev_attr_pressure.attr,
++	/**< temperature oversampling attribute */
++	&dev_attr_oversampling_t.attr,
++	/**< pressure oversampling attribute */
++	&dev_attr_oversampling_p.attr,
++	/**< operature mode attribute */
++	&dev_attr_op_mode.attr,
++	/**< filter coefficient attribute */
++	&dev_attr_filter.attr,
++	/**< standby duration attribute */
++	&dev_attr_standbydur.attr,
++	/**< work mode attribute */
++	&dev_attr_workmode.attr,
++	/**< enable/disable attribute */
++	&dev_attr_enable.attr,
++	/**< selftest attribute */
++	&dev_attr_selftest.attr,
++	/**< dump registers attribute */
++#ifdef DEBUG_BMP280
++	&dev_attr_dump_reg.attr,
++#endif
++	/**< flag to indicate the end */
++	NULL
++};
++
++/*!
++ * @brief attribute files group
++*/
++static const struct attribute_group bmp_attr_group = {
++	/**< bmp attributes */
++	.attrs = bmp_attributes,
++};
++
++static ssize_t bmp280_poll_delay_set(struct sensors_classdev *sensors_cdev,
++						unsigned int delay_msec)
++{
++	struct bmp_client_data *data = container_of(sensors_cdev,
++					struct bmp_client_data, cdev);
++	mutex_lock(&data->lock);
++	data->delay = delay_msec;
++	mutex_unlock(&data->lock);
++
++	return 0;
++}
++
++static ssize_t bmp280_enable_set(struct sensors_classdev *sensors_cdev,
++						unsigned int enabled)
++{
++	struct bmp_client_data *data = container_of(sensors_cdev,
++					struct bmp_client_data, cdev);
++
++	enabled = enabled ? 1 : 0;
++
++	mutex_lock(&data->lock);
++	if (data->enable != enabled) {
++		if (enabled) {
++			bmp_set_op_mode(data, BMP_VAL_NAME(NORMAL_MODE));
++			schedule_delayed_work(&data->work,
++				msecs_to_jiffies(data->delay));
++		} else{
++			cancel_delayed_work_sync(&data->work);
++			bmp_set_op_mode(data, BMP_VAL_NAME(SLEEP_MODE));
++		}
++		data->enable = enabled;
++	}
++	mutex_unlock(&data->lock);
++	return 0;
++}
++
++/*!
++ * @brief workqueue function to report input event
++ *
++ * @param work the pointer of workqueue
++ *
++ * @return no return value
++*/
++static void bmp_work_func(struct work_struct *work)
++{
++	struct bmp_client_data *client_data =
++		container_of((struct delayed_work *)work,
++		struct bmp_client_data, work);
++	u32 delay = msecs_to_jiffies(client_data->delay);
++	u32 j1 = jiffies;
++	u32 pressure;
++	int status;
++
++	mutex_lock(&client_data->lock);
++	status = bmp_get_pressure(client_data, &pressure);
++	mutex_unlock(&client_data->lock);
++	if (status == 0) {
++		input_report_abs(client_data->input, ABS_PRESSURE, pressure);
++		input_sync(client_data->input);
++	}
++	/*printk("----------pressure = %d--------------\n", pressure);*/
++	schedule_delayed_work(&client_data->work, delay-(jiffies-j1));
++}
++
++/*!
++ * @brief initialize input device
++ *
++ * @param data the pointer of bmp client data
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static int bmp_input_init(struct bmp_client_data *data)
++{
++	struct input_dev *dev;
++	int err;
++
++	dev = input_allocate_device();
++	if (!dev)
++		return -ENOMEM;
++	dev->name = "pressure";
++	dev->id.bustype = BUS_I2C;
++
++	input_set_capability(dev, EV_ABS, ABS_MISC);
++	input_set_abs_params(dev, ABS_PRESSURE,
++		ABS_MIN_PRESSURE, ABS_MAX_PRESSURE, 0, 0);
++	input_set_drvdata(dev, data);
++
++	err = input_register_device(dev);
++	if (err < 0) {
++		input_free_device(dev);
++		return err;
++	}
++	data->input = dev;
++
++	return 0;
++}
++
++/*!
++ * @brief delete input device
++ *
++ * @param data the pointer of bmp client data
++ *
++ * @return no return value
++*/
++static void bmp_input_delete(struct bmp_client_data *data)
++{
++	struct input_dev *dev = data->input;
++
++	input_unregister_device(dev);
++	input_free_device(dev);
++}
++
++/*!
++ * @brief initialize bmp client
++ *
++ * @param data the pointer of bmp client data
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static int bmp_init_client(struct bmp_client_data *data)
++{
++	int status;
++	unsigned int filter_default;
++	unsigned int duration;
++	struct bmp280_platform_data *pdata = data->platform_data;
++
++	data->device.bus_read = data->data_bus.bops->bus_read;
++	data->device.bus_write = data->data_bus.bops->bus_write;
++	data->device.delay_msec = bmp_delay;
++
++	status = BMP_CALL_API(init)(&data->device);
++	if (status)
++		return status;
++
++	mutex_init(&data->lock);
++
++	data->delay = pdata->default_delay;
++	data->enable = 0;
++	data->selftest = BMP_SELFTEST_NO_ACTION;/* no action to selftest */
++
++	status = bmp_set_op_mode(data, BMP_VAL_NAME(SLEEP_MODE));
++	if (status)
++		return status;
++
++	filter_default = pdata->bmp_filter_default;
++	status = bmp_set_filter(data, filter_default);
++	if (status)
++		return status;
++
++	duration = pdata->duration;
++	status = bmp_set_standbydur(data, duration);
++	if (status)
++		return status;
++
++
++	status = bmp_set_workmode(data, BMP_WORKMODE_DEFAULT);
++	return status;
++}
++
++/*!
++ * @brief probe bmp sensor
++ *
++ * @param dev the pointer of device
++ * @param data_bus the pointer of data bus communication
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++int bmp_probe(struct device *dev, struct bmp_data_bus *data_bus)
++{
++	struct bmp_client_data *data;
++	int err = 0;
++	struct bmp280_platform_data *pdata;
++
++	if (!dev || !data_bus) {
++		err = -EINVAL;
++		goto exit;
++	}
++
++	if (dev->of_node) {
++		pdata = devm_kzalloc(dev,
++				sizeof(struct bmp280_platform_data),
++				GFP_KERNEL);
++		if (!pdata) {
++			dev_err(dev, "Failed to allocate memory\n");
++			return -ENOMEM;
++		}
++
++		dev->platform_data = pdata;
++		err = bmp280_parse_dt(dev, pdata);
++		if (err) {
++			pr_err("%s: sensor_parse_dt() err\n", __func__);
++			return err;
++		}
++	} else {
++		pdata = dev->platform_data;
++		if (!pdata) {
++			dev_err(dev, "No platform data\n");
++			return -ENODEV;
++		}
++	}
++
++	/* check chip id */
++	err = bmp_check_chip_id(data_bus);
++	if (err) {
++		pr_err("Bosch Sensortec Device not found, chip id mismatch!\n");
++		goto exit;
++	} else {
++		pr_err("Bosch Sensortec Device %s detected.\n", BMP_NAME);
++	}
++
++	data = kzalloc(sizeof(struct bmp_client_data), GFP_KERNEL);
++	if (!data) {
++		err = -ENOMEM;
++		goto exit;
++	}
++
++	dev_set_drvdata(dev, data);
++	data->data_bus = *data_bus;
++	data->dev = dev;
++	pdev_data = data;
++	data->platform_data = pdata;
++
++	/* Initialize the BMP chip */
++	err = bmp_init_client(data);
++	if (err != 0)
++		goto exit_free;
++
++	/* Initialize the BMP input device */
++	err = bmp_input_init(data);
++	if (err != 0)
++		goto exit_free;
++
++	pdev_data = data;
++
++	/* h/w initialization */
++	if (pdata->init)
++		pdata->init();
++
++	if (pdata->power_on)
++		pdata->power_on(true);
++
++	/* Register sysfs hooks */
++	err = sysfs_create_group(&data->input->dev.kobj, &bmp_attr_group);
++	if (err)
++		goto error_sysfs;
++
++	data->cdev = sensors_cdev;
++	data->cdev.sensors_enable = bmp280_enable_set;
++	data->cdev.sensors_poll_delay = bmp280_poll_delay_set;
++	err = sensors_classdev_register(&data->input->dev, &data->cdev);
++	if (err) {
++		pr_err("class device create failed: %d\n", err);
++		goto error_class_sysfs;
++	}
++
++	/* workqueue init */
++	INIT_DELAYED_WORK(&data->work, bmp_work_func);
++
++#ifdef CONFIG_HAS_EARLYSUSPEND
++	data->early_suspend.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN + 1;
++	data->early_suspend.suspend = bmp_early_suspend;
++	data->early_suspend.resume = bmp_late_resume;
++	register_early_suspend(&data->early_suspend);
++#endif
++
++	pr_err("Succesfully probe sensor %s\n", BMP_NAME);
++	return 0;
++
++error_class_sysfs:
++	sysfs_remove_group(&data->input->dev.kobj, &bmp_attr_group);
++error_sysfs:
++	bmp_input_delete(data);
++exit_free:
++	kfree(data);
++exit:
++	return err;
++}
++EXPORT_SYMBOL(bmp_probe);
++
++/*!
++ * @brief remove bmp client
++ *
++ * @param dev the pointer of device
++ *
++ * @return zero
++ * @retval zero
++*/
++int bmp_remove(struct device *dev)
++{
++	struct bmp_client_data *data = dev_get_drvdata(dev);
++#ifdef CONFIG_HAS_EARLYSUSPEND
++	unregister_early_suspend(&data->early_suspend);
++#endif
++	sysfs_remove_group(&data->input->dev.kobj, &bmp_attr_group);
++	kfree(data);
++
++	return 0;
++}
++EXPORT_SYMBOL(bmp_remove);
++
++#ifdef CONFIG_PM
++/*!
++ * @brief disable power
++ *
++ * @param dev the pointer of device
++ *
++ * @return zero
++ * @retval zero
++*/
++int bmp_disable(struct device *dev)
++{
++	struct bmp_client_data *data = dev_get_drvdata(dev);
++	struct bmp280_platform_data *pdata = dev->platform_data;
++
++	mutex_lock(&data->lock);
++	cancel_delayed_work_sync(&data->work);
++	bmp_set_op_mode(data, BMP_VAL_NAME(SLEEP_MODE));
++
++	if (pdata->power_on)
++		pdata->power_on(false);
++
++	mutex_unlock(&data->lock);
++	return 0;
++}
++EXPORT_SYMBOL(bmp_disable);
++
++/*!
++ * @brief enable power
++ *
++ * @param dev the pointer of device
++ *
++ * @return zero
++ * @retval zero
++*/
++int bmp_enable(struct device *dev)
++{
++	struct bmp_client_data *data = dev_get_drvdata(dev);
++	struct bmp280_platform_data *pdata = dev->platform_data;
++
++	mutex_lock(&data->lock);
++	if (pdata->power_on)
++		pdata->power_on(true);
++
++	bmp_set_op_mode(data, BMP_VAL_NAME(NORMAL_MODE));
++	schedule_delayed_work(&data->work,
++		msecs_to_jiffies(data->delay));
++	mutex_unlock(&data->lock);
++
++	return 0;
++}
++EXPORT_SYMBOL(bmp_enable);
++#endif
++
++#ifdef CONFIG_HAS_EARLYSUSPEND
++/*!
++ * @brief early suspend function of bmp sensor
++ *
++ * @param h the pointer of early suspend
++ *
++ * @return no return value
++*/
++static void bmp_early_suspend(struct early_suspend *h)
++{
++	struct bmp_client_data *data =
++		container_of(h, struct bmp_client_data, early_suspend);
++
++	mutex_lock(&data->lock);
++	if (data->enable) {
++		cancel_delayed_work_sync(&data->work);
++		bmp_set_op_mode(data, BMP_VAL_NAME(SLEEP_MODE));
++		#ifdef CONFIG_PM
++		(void) bmp_disable(data->dev);
++		#endif
++	}
++	mutex_unlock(&data->lock);
++}
++
++/*!
++ * @brief late resume function of bmp sensor
++ *
++ * @param h the pointer of early suspend
++ *
++ * @return no return value
++*/
++static void bmp_late_resume(struct early_suspend *h)
++{
++	struct bmp_client_data *data =
++		container_of(h, struct bmp_client_data, early_suspend);
++
++	mutex_lock(&data->lock);
++	if (data->enable) {
++		#ifdef CONFIG_PM
++		(void) bmp_enable(data->dev);
++		#endif
++		bmp_set_op_mode(data, BMP_VAL_NAME(NORMAL_MODE));
++		schedule_delayed_work(&data->work,
++			msecs_to_jiffies(data->delay));
++	}
++	mutex_unlock(&data->lock);
++}
++#endif
++
++MODULE_AUTHOR("contact@bosch-sensortec.com");
++MODULE_DESCRIPTION("BMP280 PRESSURE SENSOR DRIVER");
++MODULE_LICENSE("GPL v2");
++/*@}*/
+diff --git a/drivers/input/misc/bmp280_core.h b/drivers/input/misc/bmp280_core.h
+new file mode 100644
+index 0000000..55b8ace
+--- /dev/null
++++ b/drivers/input/misc/bmp280_core.h
+@@ -0,0 +1,65 @@
++/*!
++ * @section LICENSE
++ * (C) Copyright 2014 Bosch Sensortec GmbH All Rights Reserved
++ *
++ * This software program is licensed subject to the GNU General
++ * Public License (GPL).Version 2,June 1991,
++ * available at http://www.fsf.org/copyleft/gpl.html
++ *
++ * @filename bmp280_core.h
++ * @date     "Fri Jan 3 15:29:18 2014 +0800"
++ * @id       "3e78836"
++ *
++ * @brief
++ * The head file of BMP280 device driver core code
++*/
++#ifndef _BMP280_CORE_H
++#define _BMP280_CORE_H
++
++#include "bmp280.h"
++/*#include "bs_log.h"*/
++
++/*! @defgroup bmp280_core_inc
++ *  @brief The head file of BMP280 device driver core code
++ @{*/
++/*! define BMP device name */
++#define BMP_NAME "bmp280"
++
++/*! define BMP register name according to API */
++#define BMP_REG_NAME(name) BMP280_##name
++/*! define BMP value name according to API */
++#define BMP_VAL_NAME(name) BMP280_##name
++/*! define BMP hardware-related function according to API */
++#define BMP_CALL_API(name) bmp280_##name
++/*! only for debug */
++/*#define DEBUG_BMP280*/
++
++/*!
++ * @brief bus communication operation
++*/
++struct bmp_bus_ops {
++	/*!write pointer */
++	BMP280_WR_FUNC_PTR;
++	/*!read pointer */
++	BMP280_RD_FUNC_PTR;
++};
++
++/*!
++ * @brief bus data client
++*/
++struct bmp_data_bus {
++	/*!bus communication operation */
++	const struct bmp_bus_ops *bops;
++	/*!bmp client */
++	void *client;
++};
++
++int bmp_probe(struct device *dev, struct bmp_data_bus *data_bus);
++int bmp_remove(struct device *dev);
++#ifdef CONFIG_PM
++int bmp_enable(struct device *dev);
++int bmp_disable(struct device *dev);
++#endif
++
++#endif/*_BMP280_CORE_H*/
++/*@}*/
+diff --git a/drivers/input/misc/bmp280_i2c.c b/drivers/input/misc/bmp280_i2c.c
+new file mode 100644
+index 0000000..360b98c
+--- /dev/null
++++ b/drivers/input/misc/bmp280_i2c.c
+@@ -0,0 +1,360 @@
++/*!
++ * @section LICENSE
++ * (C) Copyright 2014 Bosch Sensortec GmbH All Rights Reserved
++ *
++ * This software program is licensed subject to the GNU General
++ * Public License (GPL).Version 2,June 1991,
++ * available at http://www.fsf.org/copyleft/gpl.html
++ *
++ * @filename bmp280_i2c.c
++ * @date     "Thu Jun 5 11:25:14 2014 +0800"
++ * @id       "6faad45"
++ *
++ * @brief
++ * This file implements module function, which adds
++ * the driver to I2C core.
++*/
++
++#include <linux/module.h>
++#include <linux/i2c.h>
++#include <linux/delay.h>
++#include "bmp280_core.h"
++
++static struct i2c_client *bmp_i2c_client;
++
++/*! @defgroup bmp280_i2c_src
++ *  @brief bmp280 i2c driver module
++ @{*/
++/*! maximum retry times during i2c transfer */
++#define BMP_MAX_RETRY_I2C_XFER 10
++/*! wait time after i2c transfer error occurred */
++#define BMP_I2C_WRITE_DELAY_TIME 1
++
++#ifdef BMP_USE_BASIC_I2C_FUNC
++/*!
++ * @brief define i2c wirte function
++ *
++ * @param client the pointer of i2c client
++ * @param reg_addr register address
++ * @param data the pointer of data buffer
++ * @param len block size need to write
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static s8 bmp_i2c_read(struct i2c_client *client, u8 reg_addr,
++		u8 *data, u8 len)
++{
++	int retry;
++
++	struct i2c_msg msg[] = {
++		{
++		 .addr = client->addr,
++		 .flags = 0,
++		 .len = 1,
++		 .buf = &reg_addr,
++		},
++
++		{
++		 .addr = client->addr,
++		 .flags = I2C_M_RD,
++		 .len = len,
++		 .buf = data,
++		 },
++	};
++
++	for (retry = 0; retry < BMP_MAX_RETRY_I2C_XFER; retry++) {
++		if (i2c_transfer(client->adapter, msg, ARRAY_SIZE(msg)) > 0)
++			break;
++		else
++			udelay(1000 * BMP_I2C_WRITE_DELAY_TIME);
++	}
++
++	if (BMP_MAX_RETRY_I2C_XFER <= retry) {
++		pr_err("I2C xfer error");
++		return -EIO;
++	}
++
++	return 0;
++}
++
++/*!
++ * @brief define i2c wirte function
++ *
++ * @param client the pointer of i2c client
++ * @param reg_addr register address
++ * @param data the pointer of data buffer
++ * @param len block size need to write
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static s8 bmp_i2c_write(struct i2c_client *client, u8 reg_addr,
++		u8 *data, u8 len)
++{
++	u8 buffer[2];
++	int retry;
++	struct i2c_msg msg[] = {
++		{
++		 .addr = client->addr,
++		 .flags = 0,
++		 .len = 2,
++		 .buf = buffer,
++		 },
++	};
++
++	while (0 != len--) {
++		buffer[0] = reg_addr;
++		buffer[1] = *data;
++		for (retry = 0; retry < BMP_MAX_RETRY_I2C_XFER; retry++) {
++			if (i2c_transfer(client->adapter, msg,
++						ARRAY_SIZE(msg)) > 0) {
++				break;
++			} else {
++				udelay(1000 * BMP_I2C_WRITE_DELAY_TIME);
++			}
++		}
++		if (BMP_MAX_RETRY_I2C_XFER <= retry) {
++			pr_err("I2C xfer error");
++			return -EIO;
++		}
++		reg_addr++;
++		data++;
++	}
++
++	return 0;
++}
++#endif/*BMP_USE_BASIC_I2C_FUNC*/
++
++/*!
++ * @brief define i2c block wirte function
++ *
++ * @param dev_addr sensor i2c address
++ * @param reg_addr register address
++ * @param data the pointer of data buffer
++ * @param len block size need to write
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static s8 bmp_i2c_write_block(u8 dev_addr, u8 reg_addr, u8 *data, u8 len)
++{
++	s8 err = 0;
++
++	if (NULL == bmp_i2c_client)
++		return -EPERM;
++
++#ifdef BMP_USE_BASIC_I2C_FUNC
++	err = bmp_i2c_write(bmp_i2c_client, reg_addr, data, len);
++#else
++	err = i2c_smbus_write_i2c_block_data(bmp_i2c_client,
++			reg_addr, len, data);
++#endif
++	if (err < 0)
++		return err;
++
++	return 0;
++}
++
++/*!
++ * @brief define i2c block read function
++ *
++ * @param dev_addr sensor i2c address
++ * @param reg_addr register address
++ * @param data the pointer of data buffer
++ * @param len block size need to read
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static s8 bmp_i2c_read_block(u8 dev_addr, u8 reg_addr, u8 *data, u8 len)
++{
++	s8 err = 0;
++
++	if (NULL == bmp_i2c_client)
++		return -EPERM;
++
++#ifdef BMP_USE_BASIC_I2C_FUNC
++	err = bmp_i2c_read(bmp_i2c_client, reg_addr, data, len);
++#else
++	err = i2c_smbus_read_i2c_block_data(bmp_i2c_client,
++			reg_addr, len, data);
++#endif
++	if (err < 0)
++		return err;
++
++	return 0;
++}
++
++/*!
++ * @brief i2c bus operation
++*/
++static const struct bmp_bus_ops bmp_i2c_bus_ops = {
++	/**< i2c block write pointer */
++	.bus_write  = bmp_i2c_write_block,
++	/**< i2c block read pointer */
++	.bus_read   = bmp_i2c_read_block
++};
++
++/*!
++ * @brief BMP probe function via i2c bus
++ *
++ * @param client the pointer of i2c client
++ * @param id the pointer of i2c device id
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static int bmp_i2c_probe(struct i2c_client *client,
++				const struct i2c_device_id *id)
++{
++	struct bmp_data_bus data_bus = {
++		.bops = &bmp_i2c_bus_ops,
++		.client = client
++	};
++
++	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
++		pr_err("i2c_check_functionality error!");
++		return -EIO;
++	}
++
++	if (NULL == bmp_i2c_client)
++		bmp_i2c_client = client;
++	else{
++		pr_err("This driver does not support multiple clients!\n");
++		return -EINVAL;
++	}
++
++	return bmp_probe(&client->dev, &data_bus);
++}
++
++/*!
++ * @brief shutdown bmp device in i2c driver
++ *
++ * @param client the pointer of i2c client
++ *
++ * @return no return value
++*/
++static void bmp_i2c_shutdown(struct i2c_client *client)
++{
++#ifdef CONFIG_PM
++	bmp_disable(&client->dev);
++#endif
++}
++
++/*!
++ * @brief remove bmp i2c client
++ *
++ * @param client the pointer of i2c client
++ *
++ * @return zero
++ * @retval zero
++*/
++static int bmp_i2c_remove(struct i2c_client *client)
++{
++	return bmp_remove(&client->dev);
++}
++
++#ifdef CONFIG_PM
++/*!
++ * @brief suspend bmp device in i2c driver
++ *
++ * @param dev the pointer of device
++ *
++ * @return zero
++ * @retval zero
++*/
++static int bmp_i2c_suspend(struct device *dev)
++{
++	return bmp_disable(dev);
++}
++
++/*!
++ * @brief resume bmp device in i2c driver
++ *
++ * @param dev the pointer of device
++ *
++ * @return zero
++ * @retval zero
++*/
++static int bmp_i2c_resume(struct device *dev)
++{
++	return bmp_enable(dev);
++}
++
++/*!
++ * @brief register i2c device power manager hooks
++*/
++static const struct dev_pm_ops bmp_i2c_pm_ops = {
++	/**< device suspend */
++	.suspend = bmp_i2c_suspend,
++	/**< device resume */
++	.resume = bmp_i2c_resume
++};
++#endif
++
++/*!
++ * @brief register i2c device id
++*/
++static const struct i2c_device_id bmp_id[] = {
++	{ BMP_NAME, 0 },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, bmp_id);
++
++static const struct of_device_id bmp280_of_match[] = {
++	{ .compatible = "bosch,bmp280", },
++	{ },
++};
++/*!
++ * @brief register i2c driver hooks
++*/
++static struct i2c_driver bmp_i2c_driver = {
++	.driver = {
++		.owner = THIS_MODULE,
++		.name  = BMP_NAME,
++#ifdef CONFIG_PM
++		.pm    = &bmp_i2c_pm_ops,
++#endif
++		.of_match_table = bmp280_of_match,
++	},
++	.id_table   = bmp_id,
++	.probe      = bmp_i2c_probe,
++	.shutdown   = bmp_i2c_shutdown,
++	.remove     = bmp_i2c_remove
++};
++
++/*!
++ * @brief initialize bmp i2c module
++ *
++ * @return zero success, non-zero failed
++ * @retval zero success
++ * @retval non-zero failed
++*/
++static int __init bmp_i2c_init(void)
++{
++	return i2c_add_driver(&bmp_i2c_driver);
++}
++
++/*!
++ * @brief remove bmp i2c module
++ *
++ * @return no return value
++*/
++static void __exit bmp_i2c_exit(void)
++{
++	i2c_del_driver(&bmp_i2c_driver);
++}
++
++
++MODULE_DESCRIPTION("BMP280 I2C DRIVER");
++MODULE_LICENSE("GPL v2");
++
++module_init(bmp_i2c_init);
++module_exit(bmp_i2c_exit);
++/*@}*/
+-- 
+1.7.9.5
+

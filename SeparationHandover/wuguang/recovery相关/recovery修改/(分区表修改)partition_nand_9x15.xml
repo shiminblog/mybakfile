@@ -1,0 +1,199 @@
+<!-- ##################################################################################### -->
+<!--                                                                                       -->
+<!--           I M P O R T A N T   W A R N I N G					   -->
+<!--           ---------------------------------                                           -->
+<!--  											   -->
+<!--  Please read the below important details, before you modify this file.		   -->
+<!--  											   -->
+<!--  As part of enabling NAND partition security, it is important to keep the partition   -->
+<!--  table in sync with configurations in security libraries. So please be careful with   -->
+<!--  modifications to this file.							   -->
+<!--  											   -->
+<!--  Get prior approval from 'nand.partition.security' in case of ,			   -->
+<!--  											   -->
+<!--  1) Add a partition								   -->
+<!--  2) Delete a partition								   -->
+<!--  3) Modify a partition name							   -->
+<!--  4) Re-order the partitions in the table						   -->
+<!--  											   -->
+<!--  No approval needed if,								   -->
+<!--  1) Modify the partition size (size_blks/size_kb )					   -->
+<!--  2) Modify the size of partition pad size (pad_blks/pad_kb)			   -->
+<!--  											   -->
+<!--  If you are not sure, please send a mail to 'nand.partition.security'. 		   -->
+<!--  											   -->
+<!--  FAILURE TO COMPLY WILL RESULT IN BOOT FAILURES.					   -->
+<!--                                                                                       -->
+<!-- ##################################################################################### -->
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<nandboot>
+	<magic_numbers>
+		<usr_part_magic1>0xAA7D1B9A</usr_part_magic1>
+		<usr_part_magic1>0x1F7D48BC</usr_part_magic2>
+	<magic_numbers>
+	<partition_version length="4">0x3</partition_version>
+	<partitions>
+		<partition>
+			<name length="16" type="string">0:MIBIB</name>
+			<size_blks length="4">0x6</size_blks>
+			<pad_blks length="4">0x4</pad_blks>
+			<which_flash>0</which_flash>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+			<attr>0xFE</attr>
+		</partition>
+		<partition>
+			<name length="16" type="string">0:SBL2</name>
+			<size_kb length="4">3000</size_kb>
+			<pad_kb length="4">300</pad_kb>
+			<which_flash>0</which_flash>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+			<attr>0x00</attr>
+			<attr>0xFF</attr>
+		</partition>
+		<partition>
+			<name length="16" type="string">0:RPM</name>
+			<size_kb length="4">3000</size_kb>
+			<pad_kb length="4">300</pad_kb>
+			<which_flash>0</which_flash>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+			<attr>0x00</attr>
+			<attr>0xFF</attr>
+		</partition>
+		<partition>
+			<name length="16" type="string">0:EFS2</name>
+			<size_kb length="4">5120</size_kb>
+			<pad_kb length="4">512</pad_kb>
+			<which_flash>0</which_flash>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+		</partition>		
+		<partition>
+	        	<name length="16" type="string">0:DSP1</name>
+			<size_kb length="4">3000</size_kb>
+			<pad_kb length="4">300</pad_kb>
+			<which_flash>0</which_flash>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+			<attr>0x00</attr>
+			<attr>0xFF</attr>
+		</partition>		
+		<partition>
+			<name length="16" type="string">0:DSP3</name>
+			<size_kb length="4">10000</size_kb>
+			<pad_kb length="4">300</pad_kb>
+			<which_flash>0</which_flash>
+			<attr>0xFF</attr>
+			<attr>0x1</attr>
+			<attr>0x00</attr>
+			<attr>0xFF</attr>
+		</partition>		
+		<partition>
+			<name length="16" type="string">0:DSP2</name>
+			<size_kb length="4">50000</size_kb>
+			<pad_kb length="4">1800</pad_kb>
+			<which_flash>0</which_flash>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+			<attr>0x00</attr>
+			<attr>0xFF</attr>
+		</partition>		
+		<partition>
+			<name length="16" type="string">0:APPSBL</name>
+			<size_kb length="4">768</size_kb>
+			<pad_kb length="4">50</pad_kb>
+			<which_flash>0</which_flash>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+			<attr>0x00</attr>
+			<attr>0xFF</attr>
+		</partition>		
+		<partition>
+			<name length="16" type="string">0:APPS</name>
+			<size_kb length="4">10000</size_kb>
+			<pad_kb length="4">300</pad_kb>
+			<which_flash>0</which_flash>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+			<attr>0x00</attr>
+			<attr>0xFF</attr>
+		</partition>		
+		<partition>
+			<name length="16" type="string">0:CACHE</name>
+			<size_kb length="4">65536</size_kb>
+			<pad_kb length="4">300</pad_kb>
+			<which_flash>0</which_flash>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+		</partition>		
+		<partition>
+			<name length="16" type="string">0:MISC</name>
+			<size_kb length="4">1024</size_kb>
+			<pad_kb length="4">300</pad_kb>
+			<which_flash>0</which_flash>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+		</partition>		
+		<partition>
+			<name length="16" type="string">0:RECOVERY</name>
+			<size_kb length="4">10240</size_kb>
+			<pad_kb length="4">300</pad_kb>
+			<which_flash>0</which_flash>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+		</partition>		
+		<partition>
+			<name length="16" type="string">0:FOTA</name>
+			<size_kb length="4">1024</size_kb>
+			<pad_kb length="4">300</pad_kb>
+			<which_flash>0</which_flash>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+		</partition>	
+		<partition>
+			<name length="16" type="string">0:RECOVERYFS</name>
+			<size_kb length="4">23000</size_kb>
+			<pad_kb length="4">300</pad_kb>
+			<which_flash>0</which_flash>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+		</partition>
+		<partition>
+			<name length="16" type="string">0:SYSTEM</name>
+			<size_kb length="4">23000</size_kb>
+			<pad_kb length="4">300</pad_kb>
+			<which_flash>0</which_flash>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+		</partition>		
+		<partition>
+			<name length="16" type="string">0:USERDATA</name>
+			<flags length="4">0xFFFFFFFF</flags>
+			<flags length="4">0xFFFF</flags>
+			<which_flash>0</which_flash>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+			<attr>0xFF</attr>
+		</partition>		
+	</partitions>
+</nandboot>

@@ -1,0 +1,3947 @@
+﻿[16500] fastboot: reboot
+[16500] rebooting th[0] welcome to lk
+
+[0] calling constructors
+[0] initializing heap
+[0] initializing threads
+[0] initializing dpc
+[0] initializing timers
+[0] creating bootstrap completion thread
+[10] top of bootstrap2()
+[10] initializing platform
+[10] platform_init()
+[10] initializing target
+[10] target_init()
+[10] 0: 0:MIBIB offs=0x00000000 size=0x0000000a attr: 0x00ffffff
+[10] 1: 0:SBL2 offs=0x0000000a size=0x0000001b attr: 0x0000ffff
+[10] 2: 0:RPM offs=0x00000025 size=0x0000001b attr: 0x0000ffff
+[10] 3: 0:EFS2 offs=0x00000040 size=0x0000002c attr: 0x00ffffff
+[10] 4: 0:DSP1 offs=0x0000006c size=0x00000024 attr: 0x0000ffff
+[10] 5: 0:DSP3 offs=0x00000090 size=0x00000052 attr: 0x0000ffff
+[20] 6: 0:DSP2 offs=0x000000e2 size=0x00000196 attr: 0x0000ffff
+[20] 7: 0:APPSBL offs=0x00000278 size=0x00000007 attr: 0x0000ffff
+[20] 8: 0:APPS offs=0x0000027f size=0x00000052 attr: 0x0000ffff
+[20] 9: 0:CACHE offs=0x000002d1 size=0x00000203 attr: 0x00ffffff
+[20] 10: 0:MISC offs=0x000004d4 size=0x0000000b attr: 0x00ffffff
+[20] 11: 0:RECOVERY offs=0x000004df size=0x00000053 attr: 0x00ffffff
+[20] 12: 0:FOTA offs=0x00000532 size=0x0000000b attr: 0x00ffffff
+[30] 13: 0:RECOVERYFS offs=0x0000053d size=0x000000b7 attr: 0x00ffffff
+[30] 14: 0:SYSTEM offs=0x000005f4 size=0x000000b7 attr: 0x00ffffff
+[30] 15: 0:USERDATA offs=0x000006ab size=0xffffffff attr: 0x00ffffff
+[30] smem ptable found: ver: 3 len: 16
+[30] nandcfg: 0 0 (initial)
+[30] nandcfg(Apps): a8d408c0 4745c (used)
+[30] nandcfg(Modem): aad400c0 4745c (used)
+[30] ptn 0 name='mibib' start=00000000 len=0000000a flags=00000000 type=Modem Writable=Yes
+[40] ptn 1 name='sbl2' start=0000000a len=0000001b flags=00000000 type=Modem Writable=Yes
+[40] ptn 2 name='rpm' start=00000025 len=0000001b flags=00000000 type=Modem Writable=Yes
+[40] ptn 3 name='efs2' start=00000040 len=0000002c flags=00000000 type=Modem Writable=Yes
+[40] ptn 4 name='dsp1' start=0000006c len=00000024 flags=00000000 type=Modem Writable=Yes
+[40] ptn 5 name='dsp3' start=00000090 len=00000052 flags=00000000 type=Modem Writable=Yes
+[50] ptn 6 name='dsp2' start=000000e2 len=00000196 flags=00000000 type=Modem Writable=Yes
+[50] ptn 7 name='aboot' start=00000278 len=00000007 flags=00000000 type=Modem Writable=Yes
+[50] ptn 8 name='boot' start=0000027f len=00000052 flags=00000000 type=Apps Writable=Yes
+[50] ptn 9 name='cache' start=000002d1 len=00000203 flags=00000000 type=Apps Writable=Yes
+[50] ptn 10 name='misc' start=000004d4 len=0000000b flags=00000000 type=Apps Writable=Yes
+[60] ptn 11 name='recovery' start=000004df len=00000053 flags=00000000 type=Apps Writable=Yes
+[60] ptn 12 name='fota' start=00000532 len=0000000b flags=00000000 type=Apps Writable=Yes
+[60] ptn 13 name='recoveryfs' start=0000053d len=000000b7 flags=00000000 type=Apps Writable=Yes
+[60] ptn 14 name='system' start=000005f4 len=000000b7 flags=00000000 type=Apps Writable=Yes
+[60] ptn 15 name='userdata' start=000006ab len=00000155 flags=00000000 type=Apps Writable=Yes
+[70] calling apps_init()
+[70] serial number: MDM9615
+[FORGE] gpio get gpio = 12, gpio_value = 1, readl addr = 8392900.
+[70] [Forge]gpio12 value is = 1
+[FORGE] gpio get gpio = 13, gpio_value = 0, readl addr = 8392916.
+[70] [Forge]gpio13 value is = 0
+[FORGE] gpio get gpio = 50, gpio_value = 0, readl addr = 8393508.
+[70] [Forge]gpio50 value is = 0
+[FORGE] gpio get gpio = 24, gpio_value = 1, readl addr = 8393092.
+[80] [Forge]gpio24 value is = 1
+[80] flash_read_image: success (0 errors)
+[80] ***upgrade flag: 0 ***
+[80] flash_read_image: success (0 errors)
+[80] [FORGE]Flash read buf ====== boot-recovery
+[80] Recovery command: %*s
+[80] [FORGE]Recovery msg.command = boot-recovery
+[80] flash_read_image: success (0 errors)
+[90] flash_write_image: success
+[90] flash_read_image: success (0 errors)
+[1950] flash_read_image: success (0 errors)
+[1950] flash_read_image: success (0 errors)
+[1950] Loading boot image (6356992): done
+[1950] 
+kernel  @ 40808000 (6356680 bytes)
+[1950] ramdisk @ 40fc9000 (0 bytes)
+[1950] cmdline = 'noinitrd root=/dev/mtdblock13 rw rootfstype=yaffs2 console=ttyHSL0,115200,n8 androidboot.hardware=qcom'
+[1950] 
+Booting Linux
+[1950] smem ram ptable found: ver: 0 len: 5
+[1950] booting linux @ 0x40808000, ramdisk @ 0x40fc9000 (0)
+[1960] cmdline: noinitrd root=/dev/mtdblock13 rw rootfstype=yaffs2 console=ttyHSL0,115200,n8 androidboot.hardware=qcom androidboot.serialno=MDM9615 androidboot.baseband=msm
+[    0.000000] Initializing cgroup subsys cpu
+[    0.000000] Linux version 3.0.21 (wuguang@ubuntu-187) (gcc version 4.6.3 20111117 (prerelease) (GCC) ) #1 PREEMPT Thu Aug 6 10:47:07 CST 2015
+[    0.000000] CPU: ARMv7 Processor [410fc051] revision 1 (ARMv7), cr=10c5387d
+[    0.000000] CPU: VIPT nonaliasing data cache, VIPT aliasing instruction cache
+[    0.000000] Machine: QCT MSM9615 CDP
+[    0.000000] Partition (from atag) boot -- Offset:27f Size:52
+[    0.000000] Partition (from atag) sbl2 -- Offset:a Size:1b
+[    0.000000] Partition (from atag) rpm -- Offset:25 Size:1b
+[    0.000000] Partition (from atag) efs2 -- Offset:40 Size:2c
+[    0.000000] Partition (from atag) dsp1 -- Offset:6c Size:24
+[    0.000000] Partition (from atag) dsp3 -- Offset:90 Size:52
+[    0.000000] Partition (from atag) dsp2 -- Offset:e2 Size:196
+[    0.000000] Partition (from atag) aboot -- Offset:278 Size:7
+[    0.000000] Partition (from atag) mibib -- Offset:0 Size:a
+[    0.000000] Partition (from atag) cache -- Offset:2d1 Size:203
+[    0.000000] Partition (from atag) misc -- Offset:4d4 Size:b
+[    0.000000] Partition (from atag) recovery -- Offset:4df Size:53
+[    0.000000] Partition (from atag) fota -- Offset:532 Size:b
+[    0.000000] Partition (from atag) recoveryfs -- Offset:53d Size:b7
+[    0.000000] Partition (from atag) system -- Offset:5f4 Size:b7
+[    0.000000] Partition (from atag) userdata -- Offset:6ab Size:155
+[    0.000000] memory pool 3 (start 46e00000 size 100000) initialized
+[    0.000000] Memory policy: ECC disabled, Data cache writeback
+[    0.000000] L310 cache controller enabled
+[    0.000000] l2x0: 8 ways, CACHE_ID 0x410000c8, AUX_CTRL 0x00540000, Cache size: 262144 B
+[    0.000000] socinfo_init: v7, id=107, ver=3.0, raw_id=1856, raw_ver=1856, hw_plat=0, hw_plat_ver=65536
+[    0.000000]  accessory_chip=0, hw_plat_subtype=0, pmic_model=19, pmic_die_revision=3
+[    0.000000] Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 9266
+[    0.000000] Kernel command line: noinitrd root=/dev/mtdblock13 rw rootfstype=yaffs2 console=ttyHSL0,115200,n8 androidboot.hardware=qcom androidboot.serialno=MDM9615 androidboot.baseband=msm
+[    0.000000] PID hash table entries: 256 (order: -2, 1024 bytes)
+[    0.000000] Dentry cache hash table entries: 8192 (order: 3, 32768 bytes)
+[    0.000000] Inode-cache hash table entries: 4096 (order: 2, 16384 bytes)
+[    0.000000] Memory: 15MB 22MB = 37MB total
+[    0.000000] Memory: 29492k/29492k available, 9420k reserved, 0K highmem
+[    0.000000] Virtual kernel memory layout:
+[    0.000000]     vector  : 0xffff0000 - 0xffff1000   (   4 kB)
+[    0.000000]     fixmap  : 0xfff00000 - 0xfffe0000   ( 896 kB)
+[    0.000000]     DMA     : 0xff000000 - 0xffe00000   (  14 MB)
+[    0.000000]     vmalloc : 0xc6800000 - 0xfa000000   ( 824 MB)
+[    0.000000]     lowmem  : 0xc0000000 - 0xc6700000   ( 103 MB)
+[    0.000000]     pkmap   : 0xbfe00000 - 0xc0000000   (   2 MB)
+[    0.000000]     modules : 0xbf000000 - 0xbfe00000   (  14 MB)
+[    0.000000]       .init : 0xc0008000 - 0xc0031000   ( 164 kB)
+[    0.000000]       .text : 0xc0031000 - 0xc05ab188   (5609 kB)
+[    0.000000]       .data : 0xc05ac000 - 0xc0617e88   ( 432 kB)
+[    0.000000]        .bss : 0xc0617ec8 - 0xc07c8550   (1730 kB)
+[    0.000000] SLUB: Genslabs=13, HWalign=32, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+[    0.000000] Preemptible hierarchical RCU implementation.
+[    0.000000] NR_IRQS:681
+[    0.000000] sched_clock: 32 bits at 32kHz, resolution 30520ns, wraps every 131084001ms
+[    0.000000] Console: colour dummy device 80x30
+[    0.150221] Calibrating delay using timer specific routine.. 9.62 BogoMIPS (lpj=48101)
+[    0.150251] pid_max: default: 32768 minimum: 301
+[    0.150709] Mount-cache hash table entries: 512
+[    0.151381] Initializing cgroup subsys debug
+[    0.151411] Initializing cgroup subsys cpuacct
+[    0.151472] Initializing cgroup subsys freezer
+[    0.151533] CPU: Testing write buffer coherency: ok
+[    0.157729] print_constraints: dummy: 
+[    0.158126] NET: Registered protocol family 16
+[    0.158309] AXI: msm_bus_fabric_init_driver(): msm_bus_fabric_init_driver
+[    0.159529] msm_rpm_init: RPM firmware 3.0.16842958
+[    0.172470] pm8018_probe: PMIC revision 1: F3
+[    0.172501] pm8018_probe: PMIC revision 2: 08
+[    0.172501] pm8018_probe: PMIC version: PM8018 rev 2.1
+[    0.172531] pm8018_probe: PMIC Restart Reason: Triggered from KPD (power key press)
+[    0.173569] pm_gpio_probe: OK: base=88, ngpio=6
+[    0.173844] pm8xxx_mpp_probe: OK: base=94, ngpio=6
+[    0.181168] cpufreq_table_init: CPU: 4 scaling frequencies supported.
+[    0.184526] sps:REVISION of BAM 0xc6818000 is 0x5.
+[    0.184587] sps:BAM 0x12244000 is registered.
+[    0.185014] sps:sps is ready.
+[    0.207477] bio: create slab <bio-0> at 0
+[    0.208240] ION heap vmalloc created
+[    0.208271] ION heap iommu created
+[    0.208332] ION heap audio created at 46e01000 with size af000
+[    0.208759] pm8xxx_pwm_probe: OK
+[    0.209339] SCSI subsystem initialized
+[    0.209522] sps:REVISION of BAM 0xc6824000 is 0x12.
+[    0.209644] sps:BAM 0x28084000 is registered.
+[    0.210926] usbcore: registered new interface driver usbfs
+[    0.211078] usbcore: registered new interface driver hub
+[    0.211292] usbcore: registered new device driver usb
+[    0.212635] Advanced Linux Sound Architecture Driver Version 1.0.24.
+[    0.213490] Switching to clocksource gp_timer
+[    0.223683] NET: Registered protocol family 2
+[    0.223897] IP route cache hash table entries: 1024 (order: 0, 4096 bytes)
+[    0.224263] TCP established hash table entries: 2048 (order: 2, 16384 bytes)
+[    0.224355] TCP bind hash table entries: 2048 (order: 1, 8192 bytes)
+[    0.224416] TCP: Hash tables configured (established 2048 bind 2048)
+[    0.224416] TCP reno registered
+[    0.224446] UDP hash table entries: 256 (order: 0, 4096 bytes)
+[    0.224477] UDP-Lite hash table entries: 256 (order: 0, 4096 bytes)
+[    0.225209] NET: Registered protocol family 1
+[    0.231435] Notify: smsm init
+[    0.238303] NET: Registered protocol family 27
+[    0.239096] apr_tal:Q6 Is Up
+[    0.239554] apr_tal:Modem Is Up
+[    0.240775] modem_8960_init: modem fatal driver init'ed.
+[    0.241080] lpass_fatal_init: lpass SSR driver init'ed.
+[    0.241568] msm_rpm_log_probe: OK
+[    0.254265] msgmni has been set to 57
+[    0.256035] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 250)
+[    0.256035] io scheduler noop registered
+[    0.256065] io scheduler deadline registered
+[    0.256157] io scheduler cfq registered (default)
+[    0.421394] msm_serial: driver initialized
+[    0.421577] msm_serial_hsl: detected port #0
+[    0.421791] msm_serial_hsl.0: ttyHSL0 at MMIO 0x16340000 (irq = 184) is a MSM
+[    0.421913] msm_serial_hsl: console setup on port #0
+[    1.021974] console [ttyHSL0] enabled
+[    1.044132] msm_serial_hsl: detected port #1
+[    1.047520] msm_serial_hsl.1: ttyHSL1 at MMIO 0x16440000 (irq = 186) is a MSM
+[    1.074256] msm_serial_hsl: driver initialized
+[    1.086281] brd: module loaded
+[    1.092171] loop: module loaded
+[    1.094491] tabla2x-slim tabla2x-slim: Initialized slim device tabla2x-slim
+[    1.194475] fail to get slimbus logical address -6
+[    1.200030] i2c-core: driver [tabla-i2c-core] using legacy suspend method
+[    1.205829] i2c-core: driver [tabla-i2c-core] using legacy resume method
+[    1.213856] SCSI Media Changer driver v0.25 
+[    1.218037] msm_nand_probe: phys addr 0x1b400000 
+[    1.221791] msm_nand_probe: dmac 0x3
+[    1.225453] msm_nand_probe: allocated dma buffer at ffdfc000, dma_addr 46a50000
+[    1.232839] ONFI probe : Found a nonONFI Compliant device 
+[    1.238211] status: c00020
+[    1.240805] nandid: 1590aac8 maker c8 device aa
+[    1.245383] Found a supported NAND device
+[    1.249320] NAND Controller ID : 0x4030
+[    1.253135] NAND Device ID  : 0x1590aac8
+[    1.257042] Buswidth : 8 Bits
+[    1.259972] Density  : 256 MByte
+[    1.263207] Pagesize : 2048 Bytes
+[    1.266503] Erasesize: 131072 Bytes
+[    1.269983] Oobsize  : 64 Bytes
+[    1.273096] CFG0 Init  : 0xa8d408c0
+[    1.276575] CFG1 Init  : 0x0004745c
+[    1.280024] ECCBUFCFG  : 0x00000203
+[    1.283503] Creating 16 MTD partitions on "msm_nand":
+[    1.288570] 0x000004fe0000-0x000005a20000 : "boot"
+[    1.295162] 0x000000140000-0x0000004a0000 : "sbl2"
+[    1.300412] 0x0000004a0000-0x000000800000 : "rpm"
+[    1.305569] 0x000000800000-0x000000d80000 : "efs2"
+[    1.310727] 0x000000d80000-0x000001200000 : "dsp1"
+[    1.315977] 0x000001200000-0x000001c40000 : "dsp3"
+[    1.321135] 0x000001c40000-0x000004f00000 : "dsp2"
+[    1.326323] 0x000004f00000-0x000004fe0000 : "aboot"
+[    1.331481] 0x000000000000-0x000000140000 : "mibib"
+[    1.336731] 0x000005a20000-0x000009a80000 : "cache"
+[    1.341950] 0x000009a80000-0x000009be0000 : "misc"
+[    1.347260] 0x000009be0000-0x00000a640000 : "recovery"
+[    1.352815] 0x00000a640000-0x00000a7a0000 : "fota"
+[    1.358095] 0x00000a7a0000-0x00000be80000 : "recoveryfs"
+[    1.363894] 0x00000be80000-0x00000d560000 : "system"
+[    1.369449] 0x00000d560000-0x000010000000 : "userdata"
+[    1.375370] rmnet_init: BAM devices[8]
+[    1.383518] msm_otg msm_otg: msm_otg probe
+[    1.386723] msm_otg msm_otg: failed to get phy_clk
+[    1.391423] msm_otg msm_otg: OTG regs = c6832000
+[    1.397894] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+[    1.417610] Initializing USB Mass Storage driver...
+[    1.421608] usbcore: registered new interface driver usb-storage
+[    1.427529] USB Mass Storage support registered.
+[    1.432137] usbcore: registered new interface driver ums-alauda
+[    1.438058] usbcore: registered new interface driver ums-cypress
+[    1.444010] usbcore: registered new interface driver ums-datafab
+[    1.450083] usbcore: registered new interface driver ums-freecom
+[    1.456035] usbcore: registered new interface driver ums-isd200
+[    1.461895] usbcore: registered new interface driver ums-jumpshot
+[    1.467999] usbcore: registered new interface driver ums-karma
+[    1.473798] usbcore: registered new interface driver ums-onetouch
+[    1.479902] usbcore: registered new interface driver ums-sddr09
+[    1.485792] usbcore: registered new interface driver ums-sddr55
+[    1.491683] usbcore: registered new interface driver ums-usbat
+[    1.497512] usbcore: registered new interface driver usb_ehset_test
+[    1.504013] msm_hsic_peripheral msm_hsic_peripheral: HSIC Peripheral regs = c6834000
+[    1.524523] msm_otg msm_otg: phy_reset: success
+[    1.529070] msm_hsusb msm_hsusb: [ci13xxx_start] hw_ep_max = 32
+[    1.534320] mbim_init: initialize 1 instances
+[    1.539050] mbim_init: Initialized 1 ports
+[    1.546131] rndis_qc_init: initialize rndis QC instance
+[    1.551014] android_usb gadget: Mass Storage Function, version: 2009/09/11
+[    1.557240] android_usb gadget: Number of LUNs=1
+[    1.561788]  lun0: LUN: removable read only CD-ROM file: (no medium)
+[    1.568716] android_usb gadget: android_usb ready
+[    1.573111] msm_hsic_peripheral msm_hsic_peripheral: [ci13xxx_start] hw_ep_max = 32
+[    1.580680] android_usb gadget: android_usb ready
+[    1.585197] msm_hsic_peripheral msm_hsic_peripheral: CI13XXX_CONTROLLER_RESET_EVENT received
+[    1.593590] msm_hsic_peripheral msm_hsic_peripheral: CI13XXX_CONTROLLER_UDC_STARTED_EVENT received
+[    1.604333] android_work: android_work: did not send uevent (0 0   (null))
+[    1.612665] msm_hsic_peripheral msm_hsic_peripheral: HSIC-USB in low power mode
+[    1.626766] diagchar initialized now
+[    1.634243] couldn't get usb power supply
+[    1.637692] input: gpio-keys as /devices/platform/gpio-keys/input/input0
+[    1.652311] diag: Invalid Msg type 12 proc 2
+[    1.655699] gpio_keys_report_event:349 Debug Information...
+[    1.661132] gpio_keys_report_event:349 Debug Information...
+[    1.684785] input: pmic8xxx_pwrkey as /devices/platform/msm_ssbi.0/pm8018-core/pm8xxx-pwrkey/input/input1
+[    1.694613] w_disable_init
+[    1.696322] [w_disable_init]irq is 299,gpio is 11
+[    1.701754] rtc-pm8xxx rtc-pm8xxx: rtc core: registered pm8xxx_rtc as rtc0
+[    1.708225] i2c /dev entries driver
+[    1.712528] pm8xxx_adc_probe: failed to request pa_therm vreg with error -19
+[    1.739783] pm8xxx_tm_probe: OK
+[    1.742255] cpuidle: using governor ladder
+[    1.746039] cpuidle: using governor menu
+[    1.750709] mmc0: mci-version: 18
+[    1.753303] msmsdcc_vreg_init_reg: regulator_get(sdc_vdd) failed. rc=-19
+[    1.759926] msmsdcc_probe: msmsdcc_vreg_init() failed (-19)
+[    1.766580] mmc0: mci-version: 18
+[    1.768930] mmc0: bam physical base=0x12142000
+[    1.773294] mmc0: bam virtual base=0xc683c000
+[    1.777689] sps:BAM 0x12142000 is registered.
+[    1.781809] mmc0: BAM device registered. bam_handle=0xc63caa00
+[    1.788005] sps:REVISION of BAM 0xc683c000 is 0x5.
+[    1.793254] mmc0: Qualcomm MSM SDCC-BAM at 0x0000000012142000 irq 129
+[    1.799053] mmc0: Qualcomm MSM SDCC-DML at 0x0000000012140800
+[    1.804974] mmc0: No card detect facilities available
+[    1.811414] mmc0: Qualcomm MSM SDCC-core at 0x0000000012140000 irq 135,0 dma -1 dmacrcri -1
+[    1.818892] mmc0: 8 bit data mode disabled
+[    1.822890] mmc0: 4 bit data mode enabled
+[    1.826857] mmc0: polling status mode disabled
+[    1.831252] mmc0: MMC clock 400000 -> 48000000 Hz, PCLK 0 Hz
+[    1.837448] mmc0: Slot eject status = 0
+[    1.840714] mmc0: Power save feature enable = 1
+[    1.845261] mmc0: SPS-BAM data transfer mode available
+[    1.869525] logger: created 256K log 'log_main'
+[    1.883320] logger: created 256K log 'log_events'
+[    1.897298] logger: created 256K log 'log_radio'
+[    1.911155] logger: created 256K log 'log_system'
+[    1.925316] odm_notify_init:netlink_init.
+[    1.933770] odm_notify_init:creat socket ok.
+[    1.938898] voice_allocate_shared_memory: ION memory allocation failed
+[    1.944788] msm_pcm_probe: dev name msm-voip-dsp
+[    1.950251] msm_pcm_probe: dev name msm-pcm-dsp
+[    1.953914] msm_pcm_probe: dev name msm-multi-ch-pcm-dsp
+[    1.960201] mdm9615_audio_init: Interface Type = -1
+[    1.964047] running1 ##############
+[    1.967556] running0 ##############
+[    1.979337] msm_dai_q6_dai_sec_auxpcm_probe
+[    1.982511] msm_dai_q6_dai_sec_auxpcm_probe
+[    1.987944] asoc: null-codec-dai <-> MultiMedia1 mapping ok
+[    1.993651] asoc: null-codec-dai <-> MultiMedia2 mapping ok
+[    1.999359] asoc: null-codec-dai <-> CS-VOICE mapping ok
+[    2.004822] asoc: null-codec-dai <-> VoIP mapping ok
+[    2.009888] asoc: null-codec-dai <-> SLIMBUS0_HOSTLESS mapping ok
+[    2.016053] asoc: msm-stub-rx <-> msm-dai-q6.241 mapping ok
+[    2.021638] asoc: msm-stub-tx <-> msm-dai-q6.240 mapping ok
+[    2.027346] asoc: null-codec-dai <-> AUXPCM_HOSTLESS mapping ok
+[    2.033328] asoc: null-codec-dai <-> VoLTE mapping ok
+[    2.038547] asoc: null-codec-dai <-> DTMF_RX_HOSTLESS mapping ok
+[    2.044590] asoc: msm-stub-tx <-> msm-dai-stub mapping ok
+[    2.050083] asoc: msm-stub-rx <-> msm-dai-q6.12288 mapping ok
+[    2.055913] asoc: msm-stub-tx <-> msm-dai-q6.12289 mapping ok
+[    2.061681] asoc: msm-stub-rx <-> msm-dai-q6.224 mapping ok
+[    2.067297] asoc: msm-stub-tx <-> msm-dai-q6.225 mapping ok
+[    2.072943] asoc: msm-stub-rx <-> msm-dai-q6.2 mapping ok
+[    2.078376] asoc: msm-stub-tx <-> msm-dai-q6.3 mapping ok
+[    2.083778] asoc: msm-stub-rx <-> msm-dai-q6.12 mapping ok
+[    2.089272] asoc: msm-stub-tx <-> msm-dai-q6.13 mapping ok
+[    2.094796] asoc: msm-stub-rx <-> msm-dai-q6.32773 mapping ok
+[    2.100534] asoc: msm-stub-tx <-> msm-dai-q6.32772 mapping ok
+[    2.106332] asoc: msm-stub-tx <-> msm-dai-q6.32771 mapping ok
+[    2.119975] ALSA device list:
+[    2.121898]   #0: mdm9615-tabla-snd-card
+[    2.126781] Netfilter messages via NETLINK v0.30.
+[    2.130718] nf_conntrack version 0.5.0 (460 buckets, 1840 max)
+[    2.137524] ip_set: protocol 6
+[    2.139752] ip_tables: (C) 2000-2006 Netfilter Core Team
+[    2.145276] TCP cubic registered
+[    2.149488] NET: Registered protocol family 10
+[    2.155959] ip6_tables: (C) 2000-2006 Netfilter Core Team
+[    2.160659] NET: Registered protocol family 17
+[    2.164840] VFP support v0.3: implementor 41 architecture 2 part 30 variant 5 rev 1
+[    2.172440] Registering SWP/SWPB emulation handler
+[    2.180619] clock_late_init() disabled 44 unused clocks
+[    2.187273] sps:BAM 0x124c2000 is registered.
+[    2.194750] MSM Watchdog Initialized
+[    2.197741] no pmic restart interrupt specified
+[    2.204089] rtc-pm8xxx rtc-pm8xxx: setting system clock to 1970-01-01 10:13:34 UTC (36814)    2.212665] yaffs: dev is 32505869 name is "mtdblock13" rw
+[    2.217213] yaffs: passed flags ""
+[    2.314420] msm_hsusb msm_hsusb: CI13XXX_CONTROLLER_RESET_EVENT received
+[    3.034915] VFS: Mounted root (yaffs2 filesystem) on device 31:13.
+[    3.040592] Freeing init memory: 164K
+INIT: version 2.88 booting
+Starting Bootlog daemon: bootlogd.
+[    7.104654] yaffs: dev is 32505865 name is "mtdblock9" rw
+[    7.109232] yaffs: passed flags ""
+Configuring network interfaces... ip: SIOCGIFFLAGS: No such device
+done.
+Switching to composition number 0x9025
+[    9.509568] sps:BAM 0x12502000 is registered.
+[    9.512986] enable_store: android_usb: already disabled
+[    9.519212] android_enable_function,1723,name =android_usb,num = 1
+[    9.524370] android_enable_function,1723,name =android_usb,num = 1
+[    9.530596] android_enable_function,1723,name =android_usb,num = 1
+[    9.536731] android_enable_function,1723,name =android_usb,num = 1
+[    9.543018] 1 enable idVendor = 1478,idProduct=62977,bcdDevice=562,bDeviceClass = 0,bDeviceSubClass=0,bDeviceProtocol=0,enable_store,1922
+[    9.572714] adb_bind_config
+[    9.575064] frmnet_bind: RmNet(0) dual Speed, IN:ep9in OUT:ep6out
+Thu Aug  6 12:25:00 UTC 2015
+hwclock: RTC_SET_TIME: Invalid argument
+[    9.693941] msm_otg msm_otg: Failed notifying 1 charger type to PMIC
+[    9.699954] android_work: android_work: did not send uevent (0 0   (null))
+No package system found
+INIT: Entering runlevel: 5
+[    9.737036] msm_otg msm_otg: Failed notifying 1 charger type to PMIC
+[    9.742896] android_work: android_work: sent uevent USB_STATE=CONNECTED
+[    9.752754] android_work: android_work: sent uevent USB_STATE=DISCONNECTED
+Starting syslogd/klogd: done
+Starting Recovery [    9.809217] android_work: android_work: sent uevent USB_STATE=CONNECTED
+Starting recovery on Thu Aug  6 12:25:00 2015
+recovery filesystem table
+=========================
+  0 /tmp ramdisk (null) (null) 0
+  1 / auto rootfs (null) 0[    9.851701] yaffs: dev is 32505871 name is "mtdblock15" rw
+
+  2 /proc proc proc (null) 0
+  3 /dev/pts devpts devpts (nu[    9.860613] yaffs: passed flags ""
+ll) 0
+  4 /proc/bus/usb usbfs usbfs (null) 0
+  5 /dev/shm tmpfs tmpfs (null) 0
+  6 /cache yaffs2 /dev/mtdblock9 (null) 0
+  7 /media/card auto /dev/mmcblk0p1 (null) 0
+  8 /system yaffs2 /dev/mtdblock14 (null) 0
+  9 /data yaffs2 /dev/mtdblock15 (null) 0
+  10 /misc mtd /dev/mtdblock10 (null) 0
+
+I:fopen_path 1 /data/fota/ipth-muc.prop
+I:Package location: /cache/fota
+I:Delta package does not exist /cache/fota/ipth_package.bin
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at be8a238800000000
+I:Reset FOTA cookie done.
+[Forge]gpio12_value == 1
+[Forge]gpio24_value == 1
+I:Boot status: OKAY
+I:Got arguments from boot message
+[Forge]read misc at get_args boot.command=boot-recovery boot.status=OKAY boot.recovery=recovery
+--u
+/cache/update.zip
+
+E:Can't find /dev/mtdblock10
+Command: "recovery" "--u" "/cache/update.zip"
+
+
+E:unknown volume for path [f麱f麱f麱f麱f麱f麱f麱 f麱]
+E:Can't mount f麱f麱f麱f麱f麱f麱f麱 f麱
+E:failed to open last_install: No such file or directory
+I:Update location: /cache/update.zip
+I:number of files in zip is 1557 
+I:verifying file at index 0
+I:verifying file at index 1
+I:verifying file at index 2
+I:verifying file at index 3
+I:verifying file at index 4
+I:verifying file at index 5
+I:verifying file at index 6
+I:verifying file at index 7
+I:verifying file at index 8
+I:verifying file at index 9
+I:verifying file at index 10
+I:verifying file at index 11
+I:verifying file at index 12
+I:verifying file at index 13
+I:verifying file at index 14
+I:verifying file at index 15
+I:verifying file at index 16
+I:verifying file at index 17
+I:verifying file at index 18
+I:verifying file at index 19
+I:verifying file at index 20
+I:verifying file at index 21
+I:verifying file at index 22
+I:verifying file at index 23
+I:verifying file at index 24
+I:verifying file at index 25
+I:verifying file at index 26
+I:verifying file at index 27
+I:verifying file at index 28
+I:verifying file at index 29
+I:verifying file at index 30
+I:verifying file at index 31
+I:verifying file at index 32
+I:verifying file at index 33
+I:verifying file at index 34
+I:verifying file at index 35
+I:verifying file at index 36
+I:verifying file at index 37
+I:verifying file at index 38
+I:verifying file at index 39
+I:verifying file at index 40
+I:verifying file at index 41
+I:verifying file at index 42
+I:verifying file at index 43
+I:verifying file at index 44
+I:verifying file at index 45
+I:verifying file at index 46
+I:verifying file at index 47
+I:verifying file at index 48
+I:verifying file at index 49
+I:verifying file at index 50
+I:verifying file at index 51
+I:verifying file at index 52
+I:verifying file at index 53
+I:verifying file at index 54
+I:verifying file at index 55
+I:verifying file at index 56
+I:verifying file at index 57
+I:verifying file at index 58
+I:verifying file at index 59
+I:verifying file at index 60
+I:verifying file at index 61
+I:verifying file at index 62
+I:verifying file at index 63
+I:verifying file at index 64
+I:verifying file at index 65
+I:verifying file at index 66
+I:verifying file at index 67
+I:verifying file at index 68
+I:verifying file at index 69
+I:verifying file at index 70
+I:verifying file at index 71
+I:verifying file at index 72
+I:verifying file at index 73
+I:verifying file at index 74
+I:verifying file at index 75
+I:verifying file at index 76
+I:verifying file at index 77
+I:verifying file at index 78
+I:verifying file at index 79
+I:verifying file at index 80
+I:verifying file at index 81
+I:verifying file at index 82
+I:verifying file at index 83
+I:verifying file at index 84
+I:verifying file at index 85
+I:verifying file at index 86
+I:verifying file at index 87
+I:verifying file at index 88
+I:verifying file at index 89
+I:verifying file at index 90
+I:verifying file at index 91
+I:verifying file at index 92
+I:verifying file at index 93
+I:verifying file at index 94
+I:verifying file at index 95
+I:verifying file at index 96
+I:verifying file at index 97
+I:verifying file at index 98
+I:verifying file at index 99
+I:verifying file at index 100
+I:verifying file at index 101
+I:verifying file at index 102
+I:verifying file at index 103
+I:verifying file at index 104
+I:verifying file at index 105
+I:verifying file at index 106
+I:verifying file at index 107
+I:verifying file at index 108
+I:verifying file at index 109
+I:verifying file at index 110
+I:verifying file at index 111
+I:verifying file at index 112
+I:verifying file at index 113
+I:verifying file at index 114
+I:verifying file at index 115
+I:verifying file at index 116
+I:verifying file at index 117
+I:verifying file at index 118
+I:verifying file at index 119
+I:verifying file at index 120
+I:verifying file at index 121
+I:verifying file at index 122
+I:verifying file at index 123
+I:verifying file at index 124
+I:verifying file at index 125
+I:verifying file at index 126
+I:verifying file at index 127
+I:verifying file at index 128
+I:verifying file at index 129
+I:verifying file at index 130
+I:verifying file at index 131
+I:verifying file at index 132
+I:verifying file at index 133
+I:verifying file at index 134
+I:verifying file at index 135
+I:verifying file at index 136
+I:verifying file at index 137
+I:verifying file at index 138
+I:verifying file at index 139
+I:verifying file at index 140
+I:verifying file at index 141
+I:verifying file at index 142
+I:verifying file at index 143
+I:verifying file at index 144
+I:verifying file at index 145
+I:verifying file at index 146
+I:verifying file at index 147
+I:verifying file at index 148
+I:verifying file at index 149
+I:verifying file at index 150
+I:verifying file at index 151
+I:verifying file at index 152
+I:verifying file at index 153
+I:verifying file at index 154
+I:verifying file at index 155
+I:verifying file at index 156
+I:verifying file at index 157
+I:verifying file at index 158
+I:verifying file at index 159
+I:verifying file at index 160
+I:verifying file at index 161
+I:verifying file at index 162
+I:verifying file at index 163
+I:verifying file at index 164
+I:verifying file at index 165
+I:verifying file at index 166
+I:verifying file at index 167
+I:verifying file at index 168
+I:verifying file at index 169
+I:verifying file at index 170
+I:verifying file at index 171
+I:verifying file at index 172
+I:verifying file at index 173
+I:verifying file at index 174
+I:verifying file at index 175
+I:verifying file at index 176
+I:verifying file at index 177
+I:verifying file at index 178
+I:verifying file at index 179
+I:verifying file at index 180
+I:verifying file at index 181
+I:verifying file at index 182
+I:verifying file at index 183
+I:verifying file at index 184
+I:verifying file at index 185
+I:verifying file at index 186
+I:verifying file at index 187
+I:verifying file at index 188
+I:verifying file at index 189
+I:verifying file at index 190
+I:verifying file at index 191
+I:verifying file at index 192
+I:verifying file at index 193
+I:verifying file at index 194
+I:verifying file at index 195
+I:verifying file at index 196
+I:verifying file at index 197
+I:verifying file at index 198
+I:verifying file at index 199
+I:verifying file at index 200
+I:verifying file at index 201
+I:verifying file at index 202
+I:verifying file at index 203
+I:verifying file at index 204
+I:verifying file at index 205
+I:verifying file at index 206
+I:verifying file at index 207
+I:verifying file at index 208
+I:verifying file at index 209
+I:verifying file at index 210
+I:verifying file at index 211
+I:verifying file at index 212
+I:verifying file at index 213
+I:verifying file at index 214
+I:verifying file at index 215
+I:verifying file at index 216
+I:verifying file at index 217
+I:verifying file at index 218
+I:verifying file at index 219
+I:verifying file at index 220
+I:verifying file at index 221
+I:verifying file at index 222
+I:verifying file at index 223
+I:verifying file at index 224
+I:verifying file at index 225
+I:verifying file at index 226
+I:verifying file at index 227
+I:verifying file at index 228
+I:verifying file at index 229
+I:verifying file at index 230
+I:verifying file at index 231
+I:verifying file at index 232
+I:verifying file at index 233
+I:verifying file at index 234
+I:verifying file at index 235
+I:verifying file at index 236
+I:verifying file at index 237
+I:verifying file at index 238
+I:verifying file at index 239
+I:verifying file at index 240
+I:verifying file at index 241
+I:verifying file at index 242
+I:verifying file at index 243
+I:verifying file at index 244
+I:verifying file at index 245
+I:verifying file at index 246
+I:verifying file at index 247
+I:verifying file at index 248
+I:verifying file at index 249
+I:verifying file at index 250
+I:verifying file at index 251
+I:verifying file at index 252
+I:verifying file at index 253
+I:verifying file at index 254
+I:verifying file at index 255
+I:verifying file at index 256
+I:verifying file at index 257
+I:verifying file at index 258
+I:verifying file at index 259
+I:verifying file at index 260
+I:verifying file at index 261
+I:verifying file at index 262
+I:verifying file at index 263
+I:verifying file at index 264
+I:verifying file at index 265
+I:verifying file at index 266
+I:verifying file at index 267
+I:verifying file at index 268
+I:verifying file at index 269
+I:verifying file at index 270
+I:verifying file at index 271
+I:verifying file at index 272
+I:verifying file at index 273
+I:verifying file at index 274
+I:verifying file at index 275
+I:verifying file at index 276
+I:verifying file at index 277
+I:verifying file at index 278
+I:verifying file at index 279
+I:verifying file at index 280
+I:verifying file at index 281
+I:verifying file at index 282
+I:verifying file at index 283
+I:verifying file at index 284
+I:verifying file at index 285
+I:verifying file at index 286
+I:verifying file at index 287
+I:verifying file at index 288
+I:verifying file at index 289
+I:verifying file at index 290
+I:verifying file at index 291
+I:verifying file at index 292
+I:verifying file at index 293
+I:verifying file at index 294
+I:verifying file at index 295
+I:verifying file at index 296
+I:verifying file at index 297
+I:verifying file at index 298
+I:verifying file at index 299
+I:verifying file at index 300
+I:verifying file at index 301
+I:verifying file at index 302
+I:verifying file at index 303
+I:verifying file at index 304
+I:verifying file at index 305
+I:verifying file at index 306
+I:verifying file at index 307
+I:verifying file at index 308
+I:verifying file at index 309
+I:verifying file at index 310
+I:verifying file at index 311
+I:verifying file at index 312
+I:verifying file at index 313
+I:verifying file at index 314
+I:verifying file at index 315
+I:verifying file at index 316
+I:verifying file at index 317
+I:verifying file at index 318
+I:verifying file at index 319
+I:verifying file at index 320
+I:verifying file at index 321
+I:verifying file at index 322
+I:verifying file at index 323
+I:verifying file at index 324
+I:verifying file at index 325
+I:verifying file at index 326
+I:verifying file at index 327
+I:verifying file at index 328
+I:verifying file at index 329
+I:verifying file at index 330
+I:verifying file at index 331
+I:verifying file at index 332
+I:verifying file at index 333
+I:verifying file at index 334
+I:verifying file at index 335
+I:verifying file at index 336
+I:verifying file at index 337
+I:verifying file at index 338
+I:verifying file at index 339
+I:verifying file at index 340
+I:verifying file at index 341
+I:verifying file at index 342
+I:verifying file at index 343
+I:verifying file at index 344
+I:verifying file at index 345
+I:verifying file at index 346
+I:verifying file at index 347
+I:verifying file at index 348
+I:verifying file at index 349
+I:verifying file at index 350
+I:verifying file at index 351
+I:verifying file at index 352
+I:verifying file at index 353
+I:verifying file at index 354
+I:verifying file at index 355
+I:verifying file at index 356
+I:verifying file at index 357
+I:verifying file at index 358
+I:verifying file at index 359
+I:verifying file at index 360
+I:verifying file at index 361
+I:verifying file at index 362
+I:verifying file at index 363
+I:verifying file at index 364
+I:verifying file at index 365
+I:verifying file at index 366
+I:verifying file at index 367
+I:verifying file at index 368
+I:verifying file at index 369
+I:verifying file at index 370
+I:verifying file at index 371
+I:verifying file at index 372
+I:verifying file at index 373
+I:verifying file at index 374
+I:verifying file at index 375
+I:verifying file at index 376
+I:verifying file at index 377
+I:verifying file at index 378
+I:verifying file at index 379
+I:verifying file at index 380
+I:verifying file at index 381
+I:verifying file at index 382
+I:verifying file at index 383
+I:verifying file at index 384
+I:verifying file at index 385
+I:verifying file at index 386
+I:verifying file at index 387
+I:verifying file at index 388
+I:verifying file at index 389
+I:verifying file at index 390
+I:verifying file at index 391
+I:verifying file at index 392
+I:verifying file at index 393
+I:verifying file at index 394
+I:verifying file at index 395
+I:verifying file at index 396
+I:verifying file at index 397
+I:verifying file at index 398
+I:verifying file at index 399
+I:verifying file at index 400
+I:verifying file at index 401
+I:verifying file at index 402
+I:verifying file at index 403
+I:verifying file at index 404
+I:verifying file at index 405
+I:verifying file at index 406
+I:verifying file at index 407
+I:verifying file at index 408
+I:verifying file at index 409
+I:verifying file at index 410
+I:verifying file at index 411
+I:verifying file at index 412
+I:verifying file at index 413
+I:verifying file at index 414
+I:verifying file at index 415
+I:verifying file at index 416
+I:verifying file at index 417
+I:verifying file at index 418
+I:verifying file at index 419
+I:verifying file at index 420
+I:verifying file at index 421
+I:verifying file at index 422
+I:verifying file at index 423
+I:verifying file at index 424
+I:verifying file at index 425
+I:verifying file at index 426
+I:verifying file at index 427
+I:verifying file at index 428
+I:verifying file at index 429
+I:verifying file at index 430
+I:verifying file at index 431
+I:verifying file at index 432
+I:verifying file at index 433
+I:verifying file at index 434
+I:verifying file at index 435
+I:verifying file at index 436
+I:verifying file at index 437
+I:verifying file at index 438
+I:verifying file at index 439
+I:verifying file at index 440
+I:verifying file at index 441
+I:verifying file at index 442
+I:verifying file at index 443
+I:verifying file at index 444
+I:verifying file at index 445
+I:verifying file at index 446
+I:verifying file at index 447
+I:verifying file at index 448
+I:verifying file at index 449
+I:verifying file at index 450
+I:verifying file at index 451
+I:verifying file at index 452
+I:verifying file at index 453
+I:verifying file at index 454
+I:verifying file at index 455
+I:verifying file at index 456
+I:verifying file at index 457
+I:verifying file at index 458
+I:verifying file at index 459
+I:verifying file at index 460
+I:verifying file at index 461
+I:verifying file at index 462
+I:verifying file at index 463
+I:verifying file at index 464
+I:verifying file at index 465
+I:verifying file at index 466
+I:verifying file at index 467
+I:verifying file at index 468
+I:verifying file at index 469
+I:verifying file at index 470
+I:verifying file at index 471
+I:verifying file at index 472
+I:verifying file at index 473
+I:verifying file at index 474
+I:verifying file at index 475
+I:verifying file at index 476
+I:verifying file at index 477
+I:verifying file at index 478
+I:verifying file at index 479
+I:verifying file at index 480
+I:verifying file at index 481
+I:verifying file at index 482
+I:verifying file at index 483
+I:verifying file at index 484
+I:verifying file at index 485
+I:verifying file at index 486
+I:verifying file at index 487
+I:verifying file at index 488
+I:verifying file at index 489
+I:verifying file at index 490
+I:verifying file at index 491
+I:verifying file at index 492
+I:verifying file at index 493
+I:verifying file at index 494
+I:verifying file at index 495
+I:verifying file at index 496
+I:verifying file at index 497
+I:verifying file at index 498
+I:verifying file at index 499
+I:verifying file at index 500
+I:verifying file at index 501
+I:verifying file at index 502
+I:verifying file at index 503
+I:verifying file at index 504
+I:verifying file at index 505
+I:verifying file at index 506
+I:verifying file at index 507
+I:verifying file at index 508
+I:verifying file at index 509
+I:verifying file at index 510
+I:verifying file at index 511
+I:verifying file at index 512
+I:verifying file at index 513
+I:verifying file at index 514
+I:verifying file at index 515
+I:verifying file at index 516
+I:verifying file at index 517
+I:verifying file at index 518
+I:verifying file at index 519
+I:verifying file at index 520
+I:verifying file at index 521
+I:verifying file at index 522
+I:verifying file at index 523
+I:verifying file at index 524
+I:verifying file at index 525
+I:verifying file at index 526
+I:verifying file at index 527
+I:verifying file at index 528
+I:verifying file at index 529
+I:verifying file at index 530
+I:verifying file at index 531
+I:verifying file at index 532
+I:verifying file at index 533
+I:verifying file at index 534
+I:verifying file at index 535
+I:verifying file at index 536
+I:verifying file at index 537
+I:verifying file at index 538
+I:verifying file at index 539
+I:verifying file at index 540
+I:verifying file at index 541
+I:verifying file at index 542
+I:verifying file at index 543
+I:verifying file at index 544
+I:verifying file at index 545
+I:verifying file at index 546
+I:verifying file at index 547
+I:verifying file at index 548
+I:verifying file at index 549
+I:verifying file at index 550
+I:verifying file at index 551
+I:verifying file at index 552
+I:verifying file at index 553
+I:verifying file at index 554
+I:verifying file at index 555
+I:verifying file at index 556
+I:verifying file at index 557
+I:verifying file at index 558
+I:verifying file at index 559
+I:verifying file at index 560
+I:verifying file at index 561
+I:verifying file at index 562
+I:verifying file at index 563
+I:verifying file at index 564
+I:verifying file at index 565
+I:verifying file at index 566
+I:verifying file at index 567
+I:verifying file at index 568
+I:verifying file at index 569
+I:verifying file at index 570
+I:verifying file at index 571
+I:verifying file at index 572
+I:verifying file at index 573
+I:verifying file at index 574
+I:verifying file at index 575
+I:verifying file at index 576
+I:verifying file at index 577
+I:verifying file at index 578
+I:verifying file at index 579
+I:verifying file at index 580
+I:verifying file at index 581
+I:verifying file at index 582
+I:verifying file at index 583
+I:verifying file at index 584
+I:verifying file at index 585
+I:verifying file at index 586
+I:verifying file at index 587
+I:verifying file at index 588
+I:verifying file at index 589
+I:verifying file at index 590
+I:verifying file at index 591
+I:verifying file at index 592
+I:verifying file at index 593
+I:verifying file at index 594
+I:verifying file at index 595
+I:verifying file at index 596
+I:verifying file at index 597
+I:verifying file at index 598
+I:verifying file at index 599
+I:verifying file at index 600
+I:verifying file at index 601
+I:verifying file at index 602
+I:verifying file at index 603
+I:verifying file at index 604
+I:verifying file at index 605
+I:verifying file at index 606
+I:verifying file at index 607
+I:verifying file at index 608
+I:verifying file at index 609
+I:verifying file at index 610
+I:verifying file at index 611
+I:verifying file at index 612
+I:verifying file at index 613
+I:verifying file at index 614
+I:verifying file at index 615
+I:verifying file at index 616
+I:verifying file at index 617
+I:verifying file at index 618
+I:verifying file at index 619
+I:verifying file at index 620
+I:verifying file at index 621
+I:verifying file at index 622
+I:verifying file at index 623
+I:verifying file at index 624
+I:verifying file at index 625
+I:verifying file at index 626
+I:verifying file at index 627
+I:verifying file at index 628
+I:verifying file at index 629
+I:verifying file at index 630
+I:verifying file at index 631
+I:verifying file at index 632
+I:verifying file at index 633
+I:verifying file at index 634
+I:verifying file at index 635
+I:verifying file at index 636
+I:verifying file at index 637
+I:verifying file at index 638
+I:verifying file at index 639
+I:verifying file at index 640
+I:verifying file at index 641
+I:verifying file at index 642
+I:verifying file at index 643
+I:verifying file at index 644
+I:verifying file at index 645
+I:verifying file at index 646
+I:verifying file at index 647
+I:verifying file at index 648
+I:verifying file at index 649
+I:verifying file at index 650
+I:verifying file at index 651
+I:verifying file at index 652
+I:verifying file at index 653
+I:verifying file at index 654
+I:verifying file at index 655
+I:verifying file at index 656
+I:verifying file at index 657
+I:verifying file at index 658
+I:verifying file at index 659
+I:verifying file at index 660
+I:verifying file at index 661
+I:verifying file at index 662
+I:verifying file at index 663
+I:verifying file at index 664
+I:verifying file at index 665
+I:verifying file at index 666
+I:verifying file at index 667
+I:verifying file at index 668
+I:verifying file at index 669
+I:verifying file at index 670
+I:verifying file at index 671
+I:verifying file at index 672
+I:verifying file at index 673
+I:verifying file at index 674
+I:verifying file at index 675
+I:verifying file at index 676
+I:verifying file at index 677
+I:verifying file at index 678
+I:verifying file at index 679
+I:verifying file at index 680
+I:verifying file at index 681
+I:verifying file at index 682
+I:verifying file at index 683
+I:verifying file at index 684
+I:verifying file at index 685
+I:verifying file at index 686
+I:verifying file at index 687
+I:verifying file at index 688
+I:verifying file at index 689
+I:verifying file at index 690
+I:verifying file at index 691
+I:verifying file at index 692
+I:verifying file at index 693
+I:verifying file at index 694
+I:verifying file at index 695
+I:verifying file at index 696
+I:verifying file at index 697
+I:verifying file at index 698
+I:verifying file at index 699
+I:verifying file at index 700
+I:verifying file at index 701
+I:verifying file at index 702
+I:verifying file at index 703
+I:verifying file at index 704
+I:verifying file at index 705
+I:verifying file at index 706
+I:verifying file at index 707
+I:verifying file at index 708
+I:verifying file at index 709
+I:verifying file at index 710
+I:verifying file at index 711
+I:verifying file at index 712
+I:verifying file at index 713
+I:verifying file at index 714
+I:verifying file at index 715
+I:verifying file at index 716
+I:verifying file at index 717
+I:verifying file at index 718
+I:verifying file at index 719
+I:verifying file at index 720
+I:verifying file at index 721
+I:verifying file at index 722
+I:verifying file at index 723
+I:verifying file at index 724
+I:verifying file at index 725
+I:verifying file at index 726
+I:verifying file at index 727
+I:verifying file at index 728
+I:verifying file at index 729
+I:verifying file at index 730
+I:verifying file at index 731
+I:verifying file at index 732
+I:verifying file at index 733
+I:verifying file at index 734
+I:verifying file at index 735
+I:verifying file at index 736
+I:verifying file at index 737
+I:verifying file at index 738
+I:verifying file at index 739
+I:verifying file at index 740
+I:verifying file at index 741
+I:verifying file at index 742
+I:verifying file at index 743
+I:verifying file at index 744
+I:verifying file at index 745
+I:verifying file at index 746
+I:verifying file at index 747
+I:verifying file at index 748
+I:verifying file at index 749
+I:verifying file at index 750
+I:verifying file at index 751
+I:verifying file at index 752
+I:verifying file at index 753
+I:verifying file at index 754
+I:verifying file at index 755
+I:verifying file at index 756
+I:verifying file at index 757
+I:verifying file at index 758
+I:verifying file at index 759
+I:verifying file at index 760
+I:verifying file at index 761
+I:verifying file at index 762
+I:verifying file at index 763
+I:verifying file at index 764
+I:verifying file at index 765
+I:verifying file at index 766
+I:verifying file at index 767
+I:verifying file at index 768
+I:verifying file at index 769
+I:verifying file at index 770
+I:verifying file at index 771
+I:verifying file at index 772
+I:verifying file at index 773
+I:verifying file at index 774
+I:verifying file at index 775
+I:verifying file at index 776
+I:verifying file at index 777
+I:verifying file at index 778
+I:verifying file at index 779
+I:verifying file at index 780
+I:verifying file at index 781
+I:verifying file at index 782
+I:verifying file at index 783
+I:verifying file at index 784
+I:verifying file at index 785
+I:verifying file at index 786
+I:verifying file at index 787
+I:verifying file at index 788
+I:verifying file at index 789
+I:verifying file at index 790
+I:verifying file at index 791
+I:verifying file at index 792
+I:verifying file at index 793
+I:verifying file at index 794
+I:verifying file at index 795
+I:verifying file at index 796
+I:verifying file at index 797
+I:verifying file at index 798
+I:verifying file at index 799
+I:verifying file at index 800
+I:verifying file at index 801
+I:verifying file at index 802
+I:verifying file at index 803
+I:verifying file at index 804
+I:verifying file at index 805
+I:verifying file at index 806
+I:verifying file at index 807
+I:verifying file at index 808
+I:verifying file at index 809
+I:verifying file at index 810
+I:verifying file at index 811
+I:verifying file at index 812
+I:verifying file at index 813
+I:verifying file at index 814
+I:verifying file at index 815
+I:verifying file at index 816
+I:verifying file at index 817
+I:verifying file at index 818
+I:verifying file at index 819
+I:verifying file at index 820
+I:verifying file at index 821
+I:verifying file at index 822
+I:verifying file at index 823
+I:verifying file at index 824
+I:verifying file at index 825
+I:verifying file at index 826
+I:verifying file at index 827
+I:verifying file at index 828
+I:verifying file at index 829
+I:verifying file at index 830
+I:verifying file at index 831
+I:verifying file at index 832
+I:verifying file at index 833
+I:verifying file at index 834
+I:verifying file at index 835
+I:verifying file at index 836
+I:verifying file at index 837
+I:verifying file at index 838
+I:verifying file at index 839
+I:verifying file at index 840
+I:verifying file at index 841
+I:verifying file at index 842
+I:verifying file at index 843
+I:verifying file at index 844
+I:verifying file at index 845
+I:verifying file at index 846
+I:verifying file at index 847
+I:verifying file at index 848
+I:verifying file at index 849
+I:verifying file at index 850
+I:verifying file at index 851
+I:verifying file at index 852
+I:verifying file at index 853
+I:verifying file at index 854
+I:verifying file at index 855
+I:verifying file at index 856
+I:verifying file at index 857
+I:verifying file at index 858
+I:verifying file at index 859
+I:verifying file at index 860
+I:verifying file at index 861
+I:verifying file at index 862
+I:verifying file at index 863
+I:verifying file at index 864
+I:verifying file at index 865
+I:verifying file at index 866
+I:verifying file at index 867
+I:verifying file at index 868
+I:verifying file at index 869
+I:verifying file at index 870
+I:verifying file at index 871
+I:verifying file at index 872
+I:verifying file at index 873
+I:verifying file at index 874
+I:verifying file at index 875
+I:verifying file at index 876
+I:verifying file at index 877
+I:verifying file at index 878
+I:verifying file at index 879
+I:verifying file at index 880
+I:verifying file at index 881
+I:verifying file at index 882
+I:verifying file at index 883
+I:verifying file at index 884
+I:verifying file at index 885
+I:verifying file at index 886
+I:verifying file at index 887
+I:verifying file at index 888
+I:verifying file at index 889
+I:verifying file at index 890
+I:verifying file at index 891
+I:verifying file at index 892
+I:verifying file at index 893
+I:verifying file at index 894
+I:verifying file at index 895
+I:verifying file at index 896
+I:verifying file at index 897
+I:verifying file at index 898
+I:verifying file at index 899
+I:verifying file at index 900
+I:verifying file at index 901
+I:verifying file at index 902
+I:verifying file at index 903
+I:verifying file at index 904
+I:verifying file at index 905
+I:verifying file at index 906
+I:verifying file at index 907
+I:verifying file at index 908
+I:verifying file at index 909
+I:verifying file at index 910
+I:verifying file at index 911
+I:verifying file at index 912
+I:verifying file at index 913
+I:verifying file at index 914
+I:verifying file at index 915
+I:verifying file at index 916
+I:verifying file at index 917
+I:verifying file at index 918
+I:verifying file at index 919
+I:verifying file at index 920
+I:verifying file at index 921
+I:verifying file at index 922
+I:verifying file at index 923
+I:verifying file at index 924
+I:verifying file at index 925
+I:verifying file at index 926
+I:verifying file at index 927
+I:verifying file at index 928
+I:verifying file at index 929
+I:verifying file at index 930
+I:verifying file at index 931
+I:verifying file at index 932
+I:verifying file at index 933
+I:verifying file at index 934
+I:verifying file at index 935
+I:verifying file at index 936
+I:verifying file at index 937
+I:verifying file at index 938
+I:verifying file at index 939
+I:verifying file at index 940
+I:verifying file at index 941
+I:verifying file at index 942
+I:verifying file at index 943
+I:verifying file at index 944
+I:verifying file at index 945
+I:verifying file at index 946
+I:verifying file at index 947
+I:verifying file at index 948
+I:verifying file at index 949
+I:verifying file at index 950
+I:verifying file at index 951
+I:verifying file at index 952
+I:verifying file at index 953
+I:verifying file at index 954
+I:verifying file at index 955
+I:verifying file at index 956
+I:verifying file at index 957
+I:verifying file at index 958
+I:verifying file at index 959
+I:verifying file at index 960
+I:verifying file at index 961
+I:verifying file at index 962
+I:verifying file at index 963
+I:verifying file at index 964
+I:verifying file at index 965
+I:verifying file at index 966
+I:verifying file at index 967
+I:verifying file at index 968
+I:verifying file at index 969
+I:verifying file at index 970
+I:verifying file at index 971
+I:verifying file at index 972
+I:verifying file at index 973
+I:verifying file at index 974
+I:verifying file at index 975
+I:verifying file at index 976
+I:verifying file at index 977
+I:verifying file at index 978
+I:verifying file at index 979
+I:verifying file at index 980
+I:verifying file at index 981
+I:verifying file at index 982
+I:verifying file at index 983
+I:verifying file at index 984
+I:verifying file at index 985
+I:verifying file at index 986
+I:verifying file at index 987
+I:verifying file at index 988
+I:verifying file at index 989
+I:verifying file at index 990
+I:verifying file at index 991
+I:verifying file at index 992
+I:verifying file at index 993
+I:verifying file at index 994
+I:verifying file at index 995
+I:verifying file at index 996
+I:verifying file at index 997
+I:verifying file at index 998
+I:verifying file at index 999
+I:verifying file at index 1000
+I:verifying file at index 1001
+I:verifying file at index 1002
+I:verifying file at index 1003
+I:verifying file at index 1004
+I:verifying file at index 1005
+I:verifying file at index 1006
+I:verifying file at index 1007
+I:verifying file at index 1008
+I:verifying file at index 1009
+I:verifying file at index 1010
+I:verifying file at index 1011
+I:verifying file at index 1012
+I:verifying file at index 1013
+I:verifying file at index 1014
+I:verifying file at index 1015
+I:verifying file at index 1016
+I:verifying file at index 1017
+I:verifying file at index 1018
+I:verifying file at index 1019
+I:verifying file at index 1020
+I:verifying file at index 1021
+I:verifying file at index 1022
+I:verifying file at index 1023
+I:verifying file at index 1024
+I:verifying file at index 1025
+I:verifying file at index 1026
+I:verifying file at index 1027
+I:verifying file at index 1028
+I:verifying file at index 1029
+I:verifying file at index 1030
+I:verifying file at index 1031
+I:verifying file at index 1032
+I:verifying file at index 1033
+I:verifying file at index 1034
+I:verifying file at index 1035
+I:verifying file at index 1036
+I:verifying file at index 1037
+I:verifying file at index 1038
+I:verifying file at index 1039
+I:verifying file at index 1040
+I:verifying file at index 1041
+I:verifying file at index 1042
+I:verifying file at index 1043
+I:verifying file at index 1044
+I:verifying file at index 1045
+I:verifying file at index 1046
+I:verifying file at index 1047
+I:verifying file at index 1048
+I:verifying file at index 1049
+I:verifying file at index 1050
+I:verifying file at index 1051
+I:verifying file at index 1052
+I:verifying file at index 1053
+I:verifying file at index 1054
+I:verifying file at index 1055
+I:verifying file at index 1056
+I:verifying file at index 1057
+I:verifying file at index 1058
+I:verifying file at index 1059
+I:verifying file at index 1060
+I:verifying file at index 1061
+I:verifying file at index 1062
+I:verifying file at index 1063
+I:verifying file at index 1064
+I:verifying file at index 1065
+I:verifying file at index 1066
+I:verifying file at index 1067
+I:verifying file at index 1068
+I:verifying file at index 1069
+I:verifying file at index 1070
+I:verifying file at index 1071
+I:verifying file at index 1072
+I:verifying file at index 1073
+I:verifying file at index 1074
+I:verifying file at index 1075
+I:verifying file at index 1076
+I:verifying file at index 1077
+I:verifying file at index 1078
+I:verifying file at index 1079
+I:verifying file at index 1080
+I:verifying file at index 1081
+I:verifying file at index 1082
+I:verifying file at index 1083
+I:verifying file at index 1084
+I:verifying file at index 1085
+I:verifying file at index 1086
+I:verifying file at index 1087
+I:verifying file at index 1088
+I:verifying file at index 1089
+I:verifying file at index 1090
+I:verifying file at index 1091
+I:verifying file at index 1092
+I:verifying file at index 1093
+I:verifying file at index 1094
+I:verifying file at index 1095
+I:verifying file at index 1096
+I:verifying file at index 1097
+I:verifying file at index 1098
+I:verifying file at index 1099
+I:verifying file at index 1100
+I:verifying file at index 1101
+I:verifying file at index 1102
+I:verifying file at index 1103
+I:verifying file at index 1104
+I:verifying file at index 1105
+I:verifying file at index 1106
+I:verifying file at index 1107
+I:verifying file at index 1108
+I:verifying file at index 1109
+I:verifying file at index 1110
+I:verifying file at index 1111
+I:verifying file at index 1112
+I:verifying file at index 1113
+I:verifying file at index 1114
+I:verifying file at index 1115
+I:verifying file at index 1116
+I:verifying file at index 1117
+I:verifying file at index 1118
+I:verifying file at index 1119
+I:verifying file at index 1120
+I:verifying file at index 1121
+I:verifying file at index 1122
+I:verifying file at index 1123
+I:verifying file at index 1124
+I:verifying file at index 1125
+I:verifying file at index 1126
+I:verifying file at index 1127
+I:verifying file at index 1128
+I:verifying file at index 1129
+I:verifying file at index 1130
+I:verifying file at index 1131
+I:verifying file at index 1132
+I:verifying file at index 1133
+I:verifying file at index 1134
+I:verifying file at index 1135
+I:verifying file at index 1136
+I:verifying file at index 1137
+I:verifying file at index 1138
+I:verifying file at index 1139
+I:verifying file at index 1140
+I:verifying file at index 1141
+I:verifying file at index 1142
+I:verifying file at index 1143
+I:verifying file at index 1144
+I:verifying file at index 1145
+I:verifying file at index 1146
+I:verifying file at index 1147
+I:verifying file at index 1148
+I:verifying file at index 1149
+I:verifying file at index 1150
+I:verifying file at index 1151
+I:verifying file at index 1152
+I:verifying file at index 1153
+I:verifying file at index 1154
+I:verifying file at index 1155
+I:verifying file at index 1156
+I:verifying file at index 1157
+I:verifying file at index 1158
+I:verifying file at index 1159
+I:verifying file at index 1160
+I:verifying file at index 1161
+I:verifying file at index 1162
+I:verifying file at index 1163
+I:verifying file at index 1164
+I:verifying file at index 1165
+I:verifying file at index 1166
+I:verifying file at index 1167
+I:verifying file at index 1168
+I:verifying file at index 1169
+I:verifying file at index 1170
+I:verifying file at index 1171
+I:verifying file at index 1172
+I:verifying file at index 1173
+I:verifying file at index 1174
+I:verifying file at index 1175
+I:verifying file at index 1176
+I:verifying file at index 1177
+I:verifying file at index 1178
+I:verifying file at index 1179
+I:verifying file at index 1180
+I:verifying file at index 1181
+I:verifying file at index 1182
+I:verifying file at index 1183
+I:verifying file at index 1184
+I:verifying file at index 1185
+I:verifying file at index 1186
+I:verifying file at index 1187
+I:verifying file at index 1188
+I:verifying file at index 1189
+I:verifying file at index 1190
+I:verifying file at index 1191
+I:verifying file at index 1192
+I:verifying file at index 1193
+I:verifying file at index 1194
+I:verifying file at index 1195
+I:verifying file at index 1196
+I:verifying file at index 1197
+I:verifying file at index 1198
+I:verifying file at index 1199
+I:verifying file at index 1200
+I:verifying file at index 1201
+I:verifying file at index 1202
+I:verifying file at index 1203
+I:verifying file at index 1204
+I:verifying file at index 1205
+I:verifying file at index 1206
+I:verifying file at index 1207
+I:verifying file at index 1208
+I:verifying file at index 1209
+I:verifying file at index 1210
+I:verifying file at index 1211
+I:verifying file at index 1212
+I:verifying file at index 1213
+I:verifying file at index 1214
+I:verifying file at index 1215
+I:verifying file at index 1216
+I:verifying file at index 1217
+I:verifying file at index 1218
+I:verifying file at index 1219
+I:verifying file at index 1220
+I:verifying file at index 1221
+I:verifying file at index 1222
+I:verifying file at index 1223
+I:verifying file at index 1224
+I:verifying file at index 1225
+I:verifying file at index 1226
+I:verifying file at index 1227
+I:verifying file at index 1228
+I:verifying file at index 1229
+I:verifying file at index 1230
+I:verifying file at index 1231
+I:verifying file at index 1232
+I:verifying file at index 1233
+I:verifying file at index 1234
+I:verifying file at index 1235
+I:verifying file at index 1236
+I:verifying file at index 1237
+I:verifying file at index 1238
+I:verifying file at index 1239
+I:verifying file at index 1240
+I:verifying file at index 1241
+I:verifying file at index 1242
+I:verifying file at index 1243
+I:verifying file at index 1244
+I:verifying file at index 1245
+I:verifying file at index 1246
+I:verifying file at index 1247
+I:verifying file at index 1248
+I:verifying file at index 1249
+I:verifying file at index 1250
+I:verifying file at index 1251
+I:verifying file at index 1252
+I:verifying file at index 1253
+I:verifying file at index 1254
+I:verifying file at index 1255
+I:verifying file at index 1256
+I:verifying file at index 1257
+I:verifying file at index 1258
+I:verifying file at index 1259
+I:verifying file at index 1260
+I:verifying file at index 1261
+I:verifying file at index 1262
+I:verifying file at index 1263
+I:verifying file at index 1264
+I:verifying file at index 1265
+I:verifying file at index 1266
+I:verifying file at index 1267
+I:verifying file at index 1268
+I:verifying file at index 1269
+I:verifying file at index 1270
+I:verifying file at index 1271
+I:verifying file at index 1272
+I:verifying file at index 1273
+I:verifying file at index 1274
+I:verifying file at index 1275
+I:verifying file at index 1276
+I:verifying file at index 1277
+I:verifying file at index 1278
+I:verifying file at index 1279
+I:verifying file at index 1280
+I:verifying file at index 1281
+I:verifying file at index 1282
+I:verifying file at index 1283
+I:verifying file at index 1284
+I:verifying file at index 1285
+I:verifying file at index 1286
+I:verifying file at index 1287
+I:verifying file at index 1288
+I:verifying file at index 1289
+I:verifying file at index 1290
+I:verifying file at index 1291
+I:verifying file at index 1292
+I:verifying file at index 1293
+I:verifying file at index 1294
+I:verifying file at index 1295
+I:verifying file at index 1296
+I:verifying file at index 1297
+I:verifying file at index 1298
+I:verifying file at index 1299
+I:verifying file at index 1300
+I:verifying file at index 1301
+I:verifying file at index 1302
+I:verifying file at index 1303
+I:verifying file at index 1304
+I:verifying file at index 1305
+I:verifying file at index 1306
+I:verifying file at index 1307
+I:verifying file at index 1308
+I:verifying file at index 1309
+I:verifying file at index 1310
+I:verifying file at index 1311
+I:verifying file at index 1312
+I:verifying file at index 1313
+I:verifying file at index 1314
+I:verifying file at index 1315
+I:verifying file at index 1316
+I:verifying file at index 1317
+I:verifying file at index 1318
+I:verifying file at index 1319
+I:verifying file at index 1320
+I:verifying file at index 1321
+I:verifying file at index 1322
+I:verifying file at index 1323
+I:verifying file at index 1324
+I:verifying file at index 1325
+I:verifying file at index 1326
+I:verifying file at index 1327
+I:verifying file at index 1328
+I:verifying file at index 1329
+I:verifying file at index 1330
+I:verifying file at index 1331
+I:verifying file at index 1332
+I:verifying file at index 1333
+I:verifying file at index 1334
+I:verifying file at index 1335
+I:verifying file at index 1336
+I:verifying file at index 1337
+I:verifying file at index 1338
+I:verifying file at index 1339
+I:verifying file at index 1340
+I:verifying file at index 1341
+I:verifying file at index 1342
+I:verifying file at index 1343
+I:verifying file at index 1344
+I:verifying file at index 1345
+I:verifying file at index 1346
+I:verifying file at index 1347
+I:verifying file at index 1348
+I:verifying file at index 1349
+I:verifying file at index 1350
+I:verifying file at index 1351
+I:verifying file at index 1352
+I:verifying file at index 1353
+I:verifying file at index 1354
+I:verifying file at index 1355
+I:verifying file at index 1356
+I:verifying file at index 1357
+I:verifying file at index 1358
+I:verifying file at index 1359
+I:verifying file at index 1360
+I:verifying file at index 1361
+I:verifying file at index 1362
+I:verifying file at index 1363
+I:verifying file at index 1364
+I:verifying file at index 1365
+I:verifying file at index 1366
+I:verifying file at index 1367
+I:verifying file at index 1368
+I:verifying file at index 1369
+I:verifying file at index 1370
+I:verifying file at index 1371
+I:verifying file at index 1372
+I:verifying file at index 1373
+I:verifying file at index 1374
+I:verifying file at index 1375
+I:verifying file at index 1376
+I:verifying file at index 1377
+I:verifying file at index 1378
+I:verifying file at index 1379
+I:verifying file at index 1380
+I:verifying file at index 1381
+I:verifying file at index 1382
+I:verifying file at index 1383
+I:verifying file at index 1384
+I:verifying file at index 1385
+I:verifying file at index 1386
+I:verifying file at index 1387
+I:verifying file at index 1388
+I:verifying file at index 1389
+I:verifying file at index 1390
+I:verifying file at index 1391
+I:verifying file at index 1392
+I:verifying file at index 1393
+I:verifying file at index 1394
+I:verifying file at index 1395
+I:verifying file at index 1396
+I:verifying file at index 1397
+I:verifying file at index 1398
+I:verifying file at index 1399
+I:verifying file at index 1400
+I:verifying file at index 1401
+I:verifying file at index 1402
+I:verifying file at index 1403
+I:verifying file at index 1404
+I:verifying file at index 1405
+I:verifying file at index 1406
+I:verifying file at index 1407
+I:verifying file at index 1408
+I:verifying file at index 1409
+I:verifying file at index 1410
+I:verifying file at index 1411
+I:verifying file at index 1412
+I:verifying file at index 1413
+I:verifying file at inde[   21.179673] yaffs: dev is 32505870 name is "mtdblock14" rw
+x 1414
+I:verifying file at index 1415
+I:verifying file at in[   21.187028] yaffs: passed flags ""
+dex 1416
+I:verifying file at index 1417
+I:verifying file at index 1418
+I:verifying file at index 1419
+I:verifying file at index 1420
+I:verifying file at index 1421
+I:verifying file at index 1422
+I:verifying file at index 1423
+I:verifying file at index 1424
+I:verifying file at index 1425
+I:verifying file at index 1426
+I:verifying file at index 1427
+I:verifying file at index 1428
+I:verifying file at index 1429
+I:verifying file at index 1430
+I:verifying file at index 1431
+I:verifying file at index 1432
+I:verifying file at index 1433
+I:verifying file at index 1434
+I:verifying file at index 1435
+I:verifying file at index 1436
+I:verifying file at index 1437
+I:verifying file at index 1438
+I:verifying file at index 1439
+I:verifying file at index 1440
+I:verifying file at index 1441
+I:verifying file at index 1442
+I:verifying file at index 1443
+I:verifying file at index 1444
+I:verifying file at index 1445
+I:verifying file at index 1446
+I:verifying file at index 1447
+I:verifying file at index 1448
+I:verifying file at index 1449
+I:verifying file at index 1450
+I:verifying file at index 1451
+I:verifying file at index 1452
+I:verifying file at index 1453
+I:verifying file at index 1454
+I:verifying file at index 1455
+I:verifying file at index 1456
+I:verifying file at index 1457
+I:verifying file at index 1458
+I:verifying file at index 1459
+I:verifying file at index 1460
+I:verifying file at index 1461
+I:verifying file at index 1462
+I:verifying file at index 1463
+I:verifying file at index 1464
+I:verifying file at index 1465
+I:verifying file at index 1466
+I:verifying file at index 1467
+I:verifying file at index 1468
+I:verifying file at index 1469
+I:verifying file at index 1470
+I:verifying file at index 1471
+I:verifying file at index 1472
+I:verifying file at index 1473
+I:verifying file at index 1474
+I:verifying file at index 1475
+I:verifying file at index 1476
+I:verifying file at index 1477
+I:verifying file at index 1478
+I:verifying file at index 1479
+I:verifying file at index 1480
+I:verifying file at index 1481
+I:verifying file at index 1482
+I:verifying file at index 1483
+I:verifying file at index 1484
+I:verifying file at index 1485
+I:verifying file at index 1486
+I:verifying file at index 1487
+I:verifying file at index 1488
+I:verifying file at index 1489
+I:verifying file at index 1490
+I:verifying file at index 1491
+I:verifying file at index 1492
+I:verifying file at index 1493
+I:verifying file at index 1494
+I:verifying file at index 1495
+I:verifying file at index 1496
+I:verifying file at index 1497
+I:verifying file at index 1498
+I:verifying file at index 1499
+I:verifying file at index 1500
+I:verifying file at index 1501
+I:verifying file at index 1502
+I:verifying file at index 1503
+I:verifying file at index 1504
+I:verifying file at index 1505
+I:verifying file at index 1506
+I:verifying file at index 1507
+I:verifying file at index 1508
+I:verifying file at index 1509
+I:verifying file at index 1510
+I:verifying file at index 1511
+I:verifying file at index 1512
+I:verifying file at index 1513
+I:verifying file at index 1514
+I:verifying file at index 1515
+I:verifying file at index 1516
+I:verifying file at index 1517
+I:verifying file at index 1518
+I:verifying file at index 1519
+I:verifying file at index 1520
+I:verifying file at index 1521
+I:verifying file at index 1522
+I:verifying file at index 1523
+I:verifying file at index 1524
+I:verifying file at index 1525
+I:verifying file at index 1526
+I:verifying file at index 1527
+I:verifying file at index 1528
+I:verifying file at index 1529
+I:verifying file at index 1530
+I:verifying file at index 1531
+I:verifying file at index 1532
+I:verifying file at index 1533
+I:verifying file at index 1534
+I:verifying file at index 1535
+I:verifying file at index 1536
+I:verifying file at index 1537
+I:verifying file at index 1538
+I:verifying file at index 1539
+I:verifying file at index 1540
+I:verifying file at index 1541
+I:verifying file at index 1542
+I:verifying file at index 1543
+I:verifying file at index 1544
+I:verifying file at index 1545
+I:verifying file at index 1546
+I:verifying file at index 1547
+I:verifying file at index 1548
+I:verifying file at index 1549
+I:verifying file at index 1550
+I:verifying file at index 1551
+I:verifying file at index 1552
+I:verifying file at index 1553
+I:verifying file at index 1554
+I:verifying file at index 1555
+I:verifying file at index 1556
+I:try_update_binary(path(/cache/update.zip))
+I:No radio diff images found 
+Failed to mount /dev/mtdblock15 on /data: Device or resource busy
+mtd mount of userdata failed: Device or resource busy
+minzip: Extracted file "/system/__emptyfile__"
+minzip: Extracted file "/system/bin/__emptyfile__"
+minzip: Extracted file "/system/bin/busybox"
+minzip: Extracted file "/system/bin/mountpoint"
+minzip: Extracted file "/system/bin/tinylogin"
+minzip: Extracted file "/system/boot/__emptyfile__"
+minzip: Extracted file "/system/build.prop"
+minzip: Extracted file "/system/cache/__emptyfile__"
+minzip: Extracted file "/system/dev/__emptyfile__"
+minzip: Extracted file "/system/dev/apm_bios"
+minzip: Extracted file "/system/dev/console"
+minzip: Extracted file "/system/dev/fb0"
+minzip: Extracted file "/system/dev/hda"
+minzip: Extracted file "/system/dev/hda1"
+minzip: Extracted file "/system/dev/hda10"
+minzip: Extracted file "/system/dev/hda11"
+minzip: Extracted file "/system/dev/hda12"
+minzip: Extracted file "/system/dev/hda13"
+minzip: Extracted file "/system/dev/hda14"
+minzip: Extracted file "/system/dev/hda15"
+minzip: Extracted file "/system/dev/hda16"
+minzip: Extracted file "/system/dev/hda17"
+minzip: Extracted file "/system/dev/hda18"
+minzip: Extracted file "/system/dev/hda19"
+minzip: Extracted file "/system/dev/hda2"
+minzip: Extracted file "/system/dev/hda3"
+minzip: Extracted file "/system/dev/hda4"
+minzip: Extracted file "/system/dev/hda5"
+minzip: Extracted file "/system/dev/hda6"
+minzip: Extracted file "/system/dev/hda7"
+minzip: Extracted file "/system/dev/hda8"
+minzip: Extracted file "/system/dev/hda9"
+minzip: Extracted file "/system/dev/initctl"
+minzip: Extracted file "/system/dev/kmem"
+minzip: Extracted file "/system/dev/kmsg"
+minzip: Extracted file "/system/dev/mem"
+minzip: Extracted file "/system/dev/mtd0"
+minzip: Extracted file "/system/dev/mtd1"
+minzip: Extracted file "/system/dev/mtd2"
+minzip: Extracted file "/system/dev/mtd3"
+minzip: Extracted file "/system/dev/mtd4"
+minzip: Extracted file "/system/dev/mtd5"
+minzip: Extracted file "/system/dev/mtd6"
+minzip: Extracted file "/system/dev/mtd7"
+minzip: Extracted file "/system/dev/mtdblock0"
+minzip: Extracted file "/system/dev/mtdblock1"
+minzip: Extracted file "/system/dev/mtdblock2"
+minzip: Extracted file "/system/dev/mtdblock3"
+minzip: Extracted file "/system/dev/mtdblock4"
+minzip: Extracted file "/system/dev/mtdblock5"
+minzip: Extracted file "/system/dev/mtdblock6"
+minzip: Extracted file "/system/dev/mtdblock7"
+minzip: Extracted file "/system/dev/null"
+minzip: Extracted file "/system/dev/ram0"
+minzip: Extracted file "/system/dev/ram1"
+minzip: Extracted file "/system/dev/ram2"
+minzip: Extracted file "/system/dev/ram3"
+minzip: Extracted file "/system/dev/random"
+minzip: Extracted file "/system/dev/tty"
+minzip: Extracted file "/system/dev/tty0"
+minzip: Extracted file "/system/dev/tty1"
+minzip: Extracted file "/system/dev/tty2"
+minzip: Extracted file "/system/dev/tty3"
+minzip: Extracted file "/system/dev/tty4"
+minzip: Extracted file "/system/dev/tty5"
+minzip: Extracted file "/system/dev/tty6"
+minzip: Extracted file "/system/dev/tty7"
+minzip: Extracted file "/system/dev/tty8"
+minzip: Extracted file "/system/dev/ttyS0"
+minzip: Extracted file "/system/dev/ttySA0"
+minzip: Extracted file "/system/dev/urandom"
+minzip: Extracted file "/system/dev/zero"
+minzip: Extracted file "/system/etc/DATE_INFO"
+minzip: Extracted file "/system/etc/EXTERN_VER_NUM"
+minzip: Extracted file "/system/etc/GIT_INFO"
+minzip: Extracted file "/system/etc/INTERN_VER_NUM"
+minzip: Extracted file "/system/etc/__emptyfile__"
+minzip: Extracted file "/system/etc/bash_completion.d/__emptyfile__"
+minzip: Extracted file "/system/etc/bash_completion.d/gdbus-bash-completion.sh"
+minzip: Extracted file "/system/etc/bash_completion.d/gsettings-bash-completion.sh"
+minzip: Extracted file "/system/etc/busybox.links"
+minzip: Extracted file "/system/etc/default/__emptyfile__"
+minzip: Extracted file "/system/etc/default/busybox-syslog"
+minzip: Extracted file "/system/etc/default/devpts"
+minzip: Extracted file "/system/etc/default/hwclock"
+minzip: Extracted file "/system/etc/default/mountall.busybox"
+minzip: Extracted file "/system/etc/default/rcS"
+minzip: Extracted file "/system/etc/default/usbd"
+minzip: Extracted file "/system/etc/default/volatiles/00_core"
+minzip: Extracted file "/system/etc/default/volatiles/__emptyfile__"
+minzip: Extracted file "/system/etc/device_table"
+minzip: Extracted file "/system/etc/dnsmasq.conf"
+minzip: Extracted file "/system/etc/dnsmasq.d/__emptyfile__"
+minzip: Extracted file "/system/etc/filesystems"
+minzip: Extracted file "/system/etc/firmware/__emptyfile__"
+minzip: Extracted file "/system/etc/firmware/wcd9310/__emptyfile__"
+minzip: Extracted file "/system/etc/fstab"
+minzip: Extracted file "/system/etc/group"
+minzip: Extracted file "/system/etc/host.conf"
+minzip: Extracted file "/system/etc/hostapd.conf"
+minzip: Extracted file "/system/etc/hostname"
+minzip: Extracted file "/system/etc/hosts"
+minzip: Extracted file "/system/etc/init.d/QCMAP_ConnectionManager"
+minzip: Extracted file "/system/etc/init.d/__emptyfile__"
+minzip: Extracted file "/system/etc/init.d/adbd"
+minzip: Extracted file "/system/etc/init.d/alignment.sh"
+minzip: Extracted file "/system/etc/init.d/atfwd_daemon"
+minzip: Extracted file "/system/etc/init.d/banner.sh"
+minzip: Extracted file "/system/etc/init.d/bootlogd"
+minzip: Extracted file "/system/etc/init.d/bootmisc.sh"
+minzip: Extracted file "/system/etc/init.d/busybox-cron"
+minzip: Extracted file "/system/etc/init.d/checkroot.sh"
+minzip: Extracted file "/system/etc/init.d/chgrp-diag"
+minzip: Extracted file "/system/etc/init.d/csdserver"
+minzip: Extracted file "/system/etc/init.d/data-init"
+minzip: Extracted file "/system/etc/init.d/devpts.sh"
+minzip: Extracted file "/system/etc/init.d/diagrebootapp"
+minzip: Extracted file "/system/etc/init.d/dnsmasq"
+minzip: Extracted file "/system/etc/init.d/functions"
+minzip: Extracted file "/system/etc/init.d/gps_ctl_srv"
+minzip: Extracted file "/system/etc/init.d/halt"
+minzip: Extracted file "/system/etc/init.d/hostname.sh"
+minzip: Extracted file "/system/etc/init.d/hwclock.sh"
+minzip: Extracted file "/system/etc/init.d/ipthdme"
+minzip: Extracted file "/system/etc/init.d/keymap.sh"
+minzip: Extracted file "/system/etc/init.d/mbim"
+minzip: Extracted file "/system/etc/init.d/mdev"
+minzip: Extracted file "/system/etc/init.d/modem-shutdown"
+minzip: Extracted file "/system/etc/init.d/modutils.sh"
+minzip: Extracted file "/system/etc/init.d/mountall.sh"
+minzip: Extracted file "/system/etc/init.d/mountnfs.sh"
+minzip: Extracted file "/system/etc/init.d/netmgrd"
+minzip: Extracted file "/system/etc/init.d/networking"
+minzip: Extracted file "/system/etc/init.d/notifymgr"
+minzip: Extracted file "/system/etc/init.d/populate-volatile.sh"
+minzip: Extracted file "/system/etc/init.d/power_config"
+minzip: Extracted file "/system/etc/init.d/qmi_shutdown_modemd"
+minzip: Extracted file "/system/etc/init.d/qmuxd"
+minzip: Extracted file "/system/etc/init.d/qti"
+minzip: Extracted file "/system/etc/init.d/rc"
+minzip: Extracted file "/system/etc/init.d/rcS"
+minzip: Extracted file "/system/etc/init.d/reboot"
+minzip: Extracted file "/system/etc/init.d/reset_reboot_cookie"
+minzip: Extracted file "/system/etc/init.d/rmnologin.sh"
+minzip: Extracted file "/system/etc/init.d/run-postinsts"
+minzip: Extracted file "/system/etc/init.d/save-rtc.sh"
+minzip: Extracted file "/system/etc/init.d/sendsigs"
+minzip: Extracted file "/system/etc/init.d/shutdown"
+minzip: Extracted file "/system/etc/init.d/single"
+minzip: Extracted file "/system/etc/init.d/start_sleep_check"
+minzip: Extracted file "/system/etc/init.d/sysfs.sh"
+minzip: Extracted file "/system/etc/init.d/syslog.busybox"
+minzip: Extracted file "/system/etc/init.d/time_serviced"
+minzip: Extracted file "/system/etc/init.d/umountfs"
+minzip: Extracted file "/system/etc/init.d/umountnfs.sh"
+minzip: Extracted file "/system/etc/init.d/urandom"
+minzip: Extracted file "/system/etc/init.d/usb"
+minzip: Extracted file "/system/etc/init.d/wapfotadaemon"
+minzip: Extracted file "/system/etc/inittab"
+minzip: Extracted file "/system/etc/inputrc"
+minzip: Extracted file "/system/etc/iproute2/__emptyfile__"
+minzip: Extracted file "/system/etc/iproute2/ematch_map"
+minzip: Extracted file "/system/etc/iproute2/group"
+minzip: Extracted file "/system/etc/iproute2/rt_dsfield"
+minzip: Extracted file "/system/etc/iproute2/rt_protos"
+minzip: Extracted file "/system/etc/iproute2/rt_realms"
+minzip: Extracted file "/system/etc/iproute2/rt_scopes"
+minzip: Extracted file "/system/etc/iproute2/rt_tables"
+minzip: Extracted file "/system/etc/issue"
+minzip: Extracted file "/system/etc/issue.net"
+minzip: Extracted file "/system/etc/mdev.conf"
+minzip: Extracted file "/system/etc/mdev/__emptyfile__"
+minzip: Extracted file "/system/etc/mdev/find-touchscreen.sh"
+minzip: Extracted file "/system/etc/mdev/usb.sh"
+minzip: Extracted file "/system/etc/mobileap_cfg.xml"
+minzip: Extracted file "/system/etc/mobileap_cfg.xsd"
+minzip: Extracted file "/system/etc/mode.cfg"
+minzip: Extracted file "/system/etc/motd"
+minzip: Extracted file "/system/etc/network/__emptyfile__"
+minzip: Extracted file "/system/etc/network/if-down.d/__emptyfile__"
+minzip: Extracted file "/system/etc/network/if-post-down.d/__emptyfile__"
+minzip: Extracted file "/system/etc/network/if-pre-up.d/__emptyfile__"
+minzip: Extracted file "/system/etc/network/if-pre-up.d/nfsroot"
+minzip: Extracted file "/system/etc/network/if-up.d/__emptyfile__"
+minzip: Extracted file "/system/etc/network/interfaces"
+minzip: Extracted file "/system/etc/nsswitch.conf"
+minzip: Extracted file "/system/etc/passwd"
+minzip: Extracted file "/system/etc/pimd.conf"
+minzip: Extracted file "/system/etc/profile"
+minzip: Extracted file "/system/etc/profile.d/__emptyfile__"
+minzip: Extracted file "/system/etc/profile.d/empty"
+minzip: Extracted file "/system/etc/protocols"
+minzip: Extracted file "/system/etc/rc0.d/__emptyfile__"
+minzip: Extracted file "/system/etc/rc1.d/__emptyfile__"
+minzip: Extracted file "/system/etc/rc2.d/__emptyfile__"
+minzip: Extracted file "/system/etc/rc3.d/__emptyfile__"
+minzip: Extracted file "/system/etc/rc4.d/__emptyfile__"
+minzip: Extracted file "/system/etc/rc5.d/__emptyfile__"
+minzip: Extracted file "/system/etc/rc6.d/__emptyfile__"
+minzip: Extracted file "/system/etc/rcS.d/__emptyfile__"
+minzip: Extracted file "/system/etc/reboot-cookie"
+minzip: Extracted file "/system/etc/rpc"
+minzip: Extracted file "/system/etc/services"
+minzip: Extracted file "/system/etc/skel/.bashrc"
+minzip: Extracted file "/system/etc/skel/.profile"
+minzip: Extracted file "/system/etc/skel/__emptyfile__"
+minzip: Extracted file "/system/etc/snd_soc_msm/__emptyfile__"
+minzip: Extracted file "/system/etc/snd_soc_msm/snd_soc_msm"
+minzip: Extracted file "/system/etc/snd_soc_msm/snd_soc_msm_2x"
+minzip: Extracted file "/system/etc/snd_soc_msm/snd_soc_msm_2x_Fusion3"
+minzip: Extracted file "/system/etc/snd_soc_msm/snd_soc_msm_I2S"
+minzip: Extracted file "/system/etc/snd_soc_msm/snd_soc_msm_Sitar"
+minzip: Extracted file "/system/etc/timestamp"
+minzip: Extracted file "/system/etc/udev/__emptyfile__"
+minzip: Extracted file "/system/etc/udev/rules.d/50-log.rules"
+minzip: Extracted file "/system/etc/udev/rules.d/__emptyfile__"
+minzip: Extracted file "/system/etc/udhcpc.d/50default"
+minzip: Extracted file "/system/etc/udhcpc.d/__emptyfile__"
+minzip: Extracted file "/system/etc/udhcpc.d/udhcpc.script"
+minzip: Extracted file "/system/etc/version"
+minzip: Extracted file "/system/home/__emptyfile__"
+minzip: Extracted file "/system/home/root/__emptyfile__"
+minzip: Extracted file "/system/lib/__emptyfile__"
+minzip: Extracted file "/system/lib/firmware/__emptyfile__"
+minzip: Extracted file "/system/lib/firmware/ath6k/AR6003/__emptyfile__"
+minzip: Extracted file "/system/lib/firmware/ath6k/AR6003/hw2.1.1/__emptyfile__"
+minzip: Extracted file "/system/lib/firmware/ath6k/AR6003/hw2.1.1/athtcmd_ram.bin"
+minzip: Extracted file "/system/lib/firmware/ath6k/AR6003/hw2.1.1/athwlan_router.bin"
+minzip: Extracted file "/system/lib/firmware/ath6k/AR6003/hw2.1.1/bdata.SD31.bin"
+minzip: Extracted file "/system/lib/firmware/ath6k/AR6003/hw2.1.1/data.patch.hw3_0.bin"
+minzip: Extracted file "/system/lib/firmware/ath6k/AR6003/hw2.1.1/otp.bin"
+minzip: Extracted file "/system/lib/firmware/ath6k/__emptyfile__"
+minzip: Extracted file "/system/lib/ld-linux.so.3"
+minzip: Extracted file "/system/lib/libBrokenLocale.so.1"
+minzip: Extracted file "/system/lib/libanl.so.1"
+minzip: Extracted file "/system/lib/libc.so.6"
+minzip: Extracted file "/system/lib/libcrypt.so.1"
+minzip: Extracted file "/system/lib/libdl.so.2"
+minzip: Extracted file "/system/lib/libgcc_s.so.1"
+minzip: Extracted file "/system/lib/libm.so.6"
+minzip: Extracted file "/system/lib/libnsl.so.1"
+minzip: Extracted file "/system/lib/libnss_compat.so.2"
+minzip: Extracted file "/system/lib/libnss_dns.so.2"
+minzip: Extracted file "/system/lib/libnss_files.so.2"
+minzip: Extracted file "/system/lib/libpthread.so.0"
+minzip: Extracted file "/system/lib/libresolv.so.2"
+minzip: Extracted file "/system/lib/librt.so.1"
+minzip: Extracted file "/system/lib/libutil.so.1"
+minzip: Extracted file "/system/media/__emptyfile__"
+minzip: Extracted file "/system/media/card/__emptyfile__"
+minzip: Extracted file "/system/media/cf/__emptyfile__"
+minzip: Extracted file "/system/media/hdd/__emptyfile__"
+minzip: Extracted file "/system/media/mmc1/__emptyfile__"
+minzip: Extracted file "/system/media/net/__emptyfile__"
+minzip: Extracted file "/system/media/ram/__emptyfile__"
+minzip: Extracted file "/system/media/realroot/__emptyfile__"
+minzip: Extracted file "/system/media/union/__emptyfile__"
+minzip: Extracted file "/system/mnt/__emptyfile__"
+minzip: Extracted file "/system/proc/__emptyfile__"
+minzip: Extracted file "/system/sbin/__emptyfile__"
+minzip: Extracted file "/system/sbin/adbd"
+minzip: Extracted file "/system/sbin/artagent"
+minzip: Extracted file "/system/sbin/athtestcmd"
+minzip: Extracted file "/system/sbin/bootlogd"
+minzip: Extracted file "/system/sbin/fstab-decode"
+minzip: Extracted file "/system/sbin/ftmdaemon"
+minzip: Extracted file "/system/sbin/halt.sysvinit"
+minzip: Extracted file "/system/sbin/ifcfg"
+minzip: Extracted file "/system/sbin/init.sysvinit"
+minzip: Extracted file "/system/sbin/ip.iproute2"
+minzip: Extracted file "/system/sbin/iwconfig"
+minzip: Extracted file "/system/sbin/killall5"
+minzip: Extracted file "/system/sbin/ls"
+minzip: Extracted file "/system/sbin/powerapp"
+minzip: Extracted file "/system/sbin/reboot-bootloader"
+minzip: Extracted file "/system/sbin/reboot-daemon"
+minzip: Extracted file "/system/sbin/reboot-recovery"
+minzip: Extracted file "/system/sbin/recEvent"
+minzip: Extracted file "/system/sbin/routef"
+minzip: Extracted file "/system/sbin/routel"
+minzip: Extracted file "/system/sbin/rtmon"
+minzip: Extracted file "/system/sbin/rtpr"
+minzip: Extracted file "/system/sbin/runlevel"
+minzip: Extracted file "/system/sbin/set-console"
+minzip: Extracted file "/system/sbin/shutdown.sysvinit"
+minzip: Extracted file "/system/sbin/sys_reboot"
+minzip: Extracted file "/system/sbin/sys_shutdown"
+minzip: Extracted file "/system/sbin/tc"
+minzip: Extracted file "/system/sbin/wmiconfig"
+minzip: Extracted file "/system/share/__emptyfile__"
+minzip: Extracted file "/system/share/udhcpc/__emptyfile__"
+minzip: Extracted file "/system/share/udhcpc/default.script"
+minzip: Extracted file "/system/sys/__emptyfile__"
+minzip: Extracted file "/system/tmp/__emptyfile__"
+minzip: Extracted file "/system/usr/__emptyfile__"
+minzip: Extracted file "/system/var/__emptyfile__"
+minzip: Extracted file "/system/var/backups/__emptyfile__"
+minzip: Extracted file "/system/var/db/__emptyfile__"
+minzip: Extracted file "/system/var/lib/__emptyfile__"
+minzip: Extracted file "/system/var/lib/arpd/__emptyfile__"
+minzip: Extracted file "/system/var/lib/misc/__emptyfile__"
+minzip: Extracted file "/system/var/lib/opkg/__emptyfile__"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/["
+minzip: Extracted file "/system/var/lib/opkg/alternatives/[["
+minzip: Extracted file "/system/var/lib/opkg/alternatives/__emptyfile__"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/acpid"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/add-shell"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/addgroup"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/adduser"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/adjtimex"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/arp"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/arping"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/ash"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/awk"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/base64"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/basename"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/beep"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/blkid"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/blockdev"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/bootchartd"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/brctl"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/bunzip2"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/bzcat"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/bzip2"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/cal"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/cat"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/catv"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/chat"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/chattr"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/chgrp"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/chmod"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/chown"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/chpasswd"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/chpst"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/chroot"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/chrt"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/chvt"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/cksum"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/clear"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/cmp"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/comm"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/cp"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/cpio"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/crond"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/crontab"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/cryptpw"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/cttyhack"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/cut"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/date"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/dc"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/dd"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/deallocvt"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/default_mountall"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/delgroup"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/deluser"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/depmod"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/devmem"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/df"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/dhcprelay"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/diff"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/dirname"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/dmesg"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/dnsd"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/dnsdomainname"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/dos2unix"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/du"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/dumpkmap"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/dumpleases"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/echo"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/ed"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/egrep"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/eject"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/env"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/envdir"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/envuidgid"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/ether-wake"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/expand"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/expr"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/fakeidentd"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/false"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/fbset"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/fbsplash"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/fdflush"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/fdformat"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/fdisk"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/fgconsole"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/fgrep"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/find"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/findfs"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/flock"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/fold"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/free"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/freeramdisk"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/fsck"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/fsck.minix"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/fsync"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/ftpd"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/ftpget"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/ftpput"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/fuser"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/getopt"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/getty"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/grep"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/gunzip"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/gzip"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/halt"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/hd"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/hdparm"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/head"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/hexdump"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/hostid"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/hostname"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/httpd"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/hush"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/hwclock"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/id"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/ifconfig"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/ifdown"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/ifenslave"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/ifplugd"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/ifup"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/inetd"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/init"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/insmod"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/install"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/ionice"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/iostat"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/ip"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/ipaddr"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/ipcalc"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/ipcrm"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/ipcs"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/iplink"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/iproute"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/iprule"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/iptunnel"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/kbd_mode"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/kill"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/killall"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/killall5"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/klogd"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/last"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/length"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/less"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/linux32"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/linux64"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/linuxrc"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/ln"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/loadfont"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/loadkmap"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/logger"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/login"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/logname"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/logread"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/losetup"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/lpd"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/lpq"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/lpr"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/ls"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/lsattr"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/lsmod"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/lspci"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/lsusb"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/lzcat"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/lzma"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/lzop"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/lzopcat"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/makedevs"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/makemime"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/man"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/md5sum"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/mdev"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/mesg"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/microcom"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/mkdir"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/mkdosfs"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/mke2fs"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/mkfifo"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/mkfs.ext2"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/mkfs.minix"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/mkfs.vfat"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/mknod"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/mkpasswd"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/mkswap"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/mktemp"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/modinfo"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/modprobe"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/more"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/mount"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/mountpoint"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/mpstat"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/mt"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/mv"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/nameif"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/nbd-client"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/nc"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/netstat"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/nice"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/nmeter"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/nohup"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/nslookup"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/ntpd"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/od"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/openvt"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/passwd"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/patch"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/pgrep"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/pidof"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/ping"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/ping6"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/pipe_progress"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/pivot_root"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/pkill"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/pmap"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/popmaildir"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/poweroff"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/powertop"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/printenv"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/printf"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/ps"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/pscan"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/pwd"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/raidautorun"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/rdate"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/rdev"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/readahead"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/readlink"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/readprofile"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/realpath"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/reboot"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/reformime"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/remove-shell"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/renice"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/reset"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/resize"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/rev"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/rm"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/rmdir"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/rmmod"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/route"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/rpm"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/rpm2cpio"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/rtcwake"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/run-parts"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/runlevel"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/runsv"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/runsvdir"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/rx"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/script"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/scriptreplay"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/sed"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/sendmail"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/seq"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/setarch"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/setconsole"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/setfont"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/setkeycodes"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/setlogcons"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/setsid"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/setuidgid"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/sh"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/sha1sum"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/sha256sum"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/sha512sum"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/showkey"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/shutdown"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/slattach"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/sleep"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/smemcap"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/softlimit"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/sort"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/split"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/start-stop-daemon"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/stat"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/strings"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/stty"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/su"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/sulogin"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/sum"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/sv"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/svlogd"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/swapoff"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/swapon"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/switch_root"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/sync"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/sysctl"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/syslog-init"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/syslogd"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/tac"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/tail"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/tar"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/tcpsvd"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/tee"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/telnet"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/telnetd"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/test"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/tftp"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/tftpd"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/time"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/timeout"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/top"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/touch"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/tr"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/traceroute"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/traceroute6"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/true"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/tty"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/ttysize"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/tunctl"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/udhcpc"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/udhcpd"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/udpsvd"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/umount"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/uname"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/unexpand"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/uniq"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/unix2dos"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/unlzma"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/unlzop"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/unxz"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/unzip"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/uptime"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/usleep"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/uudecode"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/uuencode"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/vconfig"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/vi"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/vlock"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/volname"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/wall"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/watch"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/watchdog"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/wc"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/wget"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/which"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/who"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/whoami"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/xargs"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/xz"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/xzcat"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/yes"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/zcat"
+minzip: Extracted file "/system/var/lib/opkg/alternatives/zcip"
+minzip: Extracted file "/system/var/lib/opkg/info/__emptyfile__"
+minzip: Extracted file "/system/var/lib/opkg/info/alsa-intf.control"
+minzip: Extracted file "/system/var/lib/opkg/info/alsa-intf.list"
+minzip: Extracted file "/system/var/lib/opkg/info/atfwd-daemon.control"
+minzip: Extracted file "/system/var/lib/opkg/info/atfwd-daemon.list"
+minzip: Extracted file "/system/var/lib/opkg/info/atfwd-daemon.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/atfwd-daemon.postrm"
+minzip: Extracted file "/system/var/lib/opkg/info/atfwd-daemon.prerm"
+minzip: Extracted file "/system/var/lib/opkg/info/audcaltests.control"
+minzip: Extracted file "/system/var/lib/opkg/info/audcaltests.list"
+minzip: Extracted file "/system/var/lib/opkg/info/audio-ftm.control"
+minzip: Extracted file "/system/var/lib/opkg/info/audio-ftm.list"
+minzip: Extracted file "/system/var/lib/opkg/info/base-files.conffiles"
+minzip: Extracted file "/system/var/lib/opkg/info/base-files.control"
+minzip: Extracted file "/system/var/lib/opkg/info/base-files.list"
+minzip: Extracted file "/system/var/lib/opkg/info/base-passwd.control"
+minzip: Extracted file "/system/var/lib/opkg/info/base-passwd.list"
+minzip: Extracted file "/system/var/lib/opkg/info/base-passwd.preinst"
+minzip: Extracted file "/system/var/lib/opkg/info/busybox-mdev.control"
+minzip: Extracted file "/system/var/lib/opkg/info/busybox-mdev.list"
+minzip: Extracted file "/system/var/lib/opkg/info/busybox-mdev.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/busybox-mdev.postrm"
+minzip: Extracted file "/system/var/lib/opkg/info/busybox-mountall.control"
+minzip: Extracted file "/system/var/lib/opkg/info/busybox-mountall.list"
+minzip: Extracted file "/system/var/lib/opkg/info/busybox-mountall.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/busybox-mountall.prerm"
+minzip: Extracted file "/system/var/lib/opkg/info/busybox-syslog.conffiles"
+minzip: Extracted file "/system/var/lib/opkg/info/busybox-syslog.control"
+minzip: Extracted file "/system/var/lib/opkg/info/busybox-syslog.list"
+minzip: Extracted file "/system/var/lib/opkg/info/busybox-syslog.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/busybox-syslog.postrm"
+minzip: Extracted file "/system/var/lib/opkg/info/busybox-syslog.prerm"
+minzip: Extracted file "/system/var/lib/opkg/info/busybox.control"
+minzip: Extracted file "/system/var/lib/opkg/info/busybox.list"
+minzip: Extracted file "/system/var/lib/opkg/info/busybox.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/busybox.prerm"
+minzip: Extracted file "/system/var/lib/opkg/info/csd-server.control"
+minzip: Extracted file "/system/var/lib/opkg/info/csd-server.list"
+minzip: Extracted file "/system/var/lib/opkg/info/csd-server.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/csd-server.postrm"
+minzip: Extracted file "/system/var/lib/opkg/info/csd-server.prerm"
+minzip: Extracted file "/system/var/lib/opkg/info/cxm-apps.control"
+minzip: Extracted file "/system/var/lib/opkg/info/cxm-apps.list"
+minzip: Extracted file "/system/var/lib/opkg/info/data.control"
+minzip: Extracted file "/system/var/lib/opkg/info/data.list"
+minzip: Extracted file "/system/var/lib/opkg/info/data.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/dhcpcd.control"
+minzip: Extracted file "/system/var/lib/opkg/info/dhcpcd.list"
+minzip: Extracted file "/system/var/lib/opkg/info/diag-reboot-app.control"
+minzip: Extracted file "/system/var/lib/opkg/info/diag-reboot-app.list"
+minzip: Extracted file "/system/var/lib/opkg/info/diag-reboot-app.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/diag-reboot-app.postrm"
+minzip: Extracted file "/system/var/lib/opkg/info/diag-reboot-app.prerm"
+minzip: Extracted file "/system/var/lib/opkg/info/diag.control"
+minzip: Extracted file "/system/var/lib/opkg/info/diag.list"
+minzip: Extracted file "/system/var/lib/opkg/info/diag.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/diag.postrm"
+minzip: Extracted file "/system/var/lib/opkg/info/diag.prerm"
+minzip: Extracted file "/system/var/lib/opkg/info/dnsmasq.conffiles"
+minzip: Extracted file "/system/var/lib/opkg/info/dnsmasq.control"
+minzip: Extracted file "/system/var/lib/opkg/info/dnsmasq.list"
+minzip: Extracted file "/system/var/lib/opkg/info/dnsmasq.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/dnsmasq.postrm"
+minzip: Extracted file "/system/var/lib/opkg/info/dnsmasq.prerm"
+minzip: Extracted file "/system/var/lib/opkg/info/gdbserver.control"
+minzip: Extracted file "/system/var/lib/opkg/info/gdbserver.list"
+minzip: Extracted file "/system/var/lib/opkg/info/hostap.control"
+minzip: Extracted file "/system/var/lib/opkg/info/hostap.list"
+minzip: Extracted file "/system/var/lib/opkg/info/initscripts.control"
+minzip: Extracted file "/system/var/lib/opkg/info/initscripts.list"
+minzip: Extracted file "/system/var/lib/opkg/info/iproute2.control"
+minzip: Extracted file "/system/var/lib/opkg/info/iproute2.list"
+minzip: Extracted file "/system/var/lib/opkg/info/iproute2.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/iproute2.postrm"
+minzip: Extracted file "/system/var/lib/opkg/info/iptables.control"
+minzip: Extracted file "/system/var/lib/opkg/info/iptables.list"
+minzip: Extracted file "/system/var/lib/opkg/info/ipthdme.control"
+minzip: Extracted file "/system/var/lib/opkg/info/ipthdme.list"
+minzip: Extracted file "/system/var/lib/opkg/info/ipthdme.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/ipthdme.postrm"
+minzip: Extracted file "/system/var/lib/opkg/info/ipthdme.prerm"
+minzip: Extracted file "/system/var/lib/opkg/info/kbd.control"
+minzip: Extracted file "/system/var/lib/opkg/info/kbd.list"
+minzip: Extracted file "/system/var/lib/opkg/info/kbd.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/kbd.postrm"
+minzip: Extracted file "/system/var/lib/opkg/info/kernel-modules.control"
+minzip: Extracted file "/system/var/lib/opkg/info/kernel-modules.list"
+minzip: Extracted file "/system/var/lib/opkg/info/kernel-tests.control"
+minzip: Extracted file "/system/var/lib/opkg/info/kernel-tests.list"
+minzip: Extracted file "/system/var/lib/opkg/info/keymaps.control"
+minzip: Extracted file "/system/var/lib/opkg/info/keymaps.list"
+minzip: Extracted file "/system/var/lib/opkg/info/keymaps.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/keymaps.postrm"
+minzip: Extracted file "/system/var/lib/opkg/info/keymaps.prerm"
+minzip: Extracted file "/system/var/lib/opkg/info/libacdbloader1.control"
+minzip: Extracted file "/system/var/lib/opkg/info/libacdbloader1.list"
+minzip: Extracted file "/system/var/lib/opkg/info/libacdbmapper1.control"
+minzip: Extracted file "/system/var/lib/opkg/info/libacdbmapper1.list"
+minzip: Extracted file "/system/var/lib/opkg/info/libaudcal1.control"
+minzip: Extracted file "/system/var/lib/opkg/info/libaudcal1.list"
+minzip: Extracted file "/system/var/lib/opkg/info/libaudioalsa1.control"
+minzip: Extracted file "/system/var/lib/opkg/info/libaudioalsa1.list"
+minzip: Extracted file "/system/var/lib/opkg/info/libc6.control"
+minzip: Extracted file "/system/var/lib/opkg/info/libc6.list"
+minzip: Extracted file "/system/var/lib/opkg/info/libconfigdb0.control"
+minzip: Extracted file "/system/var/lib/opkg/info/libconfigdb0.list"
+minzip: Extracted file "/system/var/lib/opkg/info/libcrypto1.0.0.control"
+minzip: Extracted file "/system/var/lib/opkg/info/libcrypto1.0.0.list"
+minzip: Extracted file "/system/var/lib/opkg/info/libcutils0.control"
+minzip: Extracted file "/system/var/lib/opkg/info/libcutils0.list"
+minzip: Extracted file "/system/var/lib/opkg/info/libcutils0.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/libdsutils1.control"
+minzip: Extracted file "/system/var/lib/opkg/info/libdsutils1.list"
+minzip: Extracted file "/system/var/lib/opkg/info/libffi5.control"
+minzip: Extracted file "/system/var/lib/opkg/info/libffi5.list"
+minzip: Extracted file "/system/var/lib/opkg/info/libgcc1.control"
+minzip: Extracted file "/system/var/lib/opkg/info/libgcc1.list"
+minzip: Extracted file "/system/var/lib/opkg/info/libglib-2.0-0.control"
+minzip: Extracted file "/system/var/lib/opkg/info/libglib-2.0-0.list"
+minzip: Extracted file "/system/var/lib/opkg/info/libpcap.control"
+minzip: Extracted file "/system/var/lib/opkg/info/libpcap.list"
+minzip: Extracted file "/system/var/lib/opkg/info/libssl1.0.0.control"
+minzip: Extracted file "/system/var/lib/opkg/info/libssl1.0.0.list"
+minzip: Extracted file "/system/var/lib/opkg/info/libstdc++6.control"
+minzip: Extracted file "/system/var/lib/opkg/info/libstdc++6.list"
+minzip: Extracted file "/system/var/lib/opkg/info/libxml0.control"
+minzip: Extracted file "/system/var/lib/opkg/info/libxml0.list"
+minzip: Extracted file "/system/var/lib/opkg/info/libz1.control"
+minzip: Extracted file "/system/var/lib/opkg/info/libz1.list"
+minzip: Extracted file "/system/var/lib/opkg/info/loc-api.control"
+minzip: Extracted file "/system/var/lib/opkg/info/loc-api.list"
+minzip: Extracted file "/system/var/lib/opkg/info/loc-api.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/loc-api.postrm"
+minzip: Extracted file "/system/var/lib/opkg/info/loc-api.prerm"
+minzip: Extracted file "/system/var/lib/opkg/info/mbim.control"
+minzip: Extracted file "/system/var/lib/opkg/info/mbim.list"
+minzip: Extracted file "/system/var/lib/opkg/info/mbim.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/mbim.postrm"
+minzip: Extracted file "/system/var/lib/opkg/info/mbim.prerm"
+minzip: Extracted file "/system/var/lib/opkg/info/modem-shutdown.control"
+minzip: Extracted file "/system/var/lib/opkg/info/modem-shutdown.list"
+minzip: Extracted file "/system/var/lib/opkg/info/modem-shutdown.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/modem-shutdown.postrm"
+minzip: Extracted file "/system/var/lib/opkg/info/modem-shutdown.prerm"
+minzip: Extracted file "/system/var/lib/opkg/info/modutils-initscripts.control"
+minzip: Extracted file "/system/var/lib/opkg/info/modutils-initscripts.list"
+minzip: Extracted file "/system/var/lib/opkg/info/modutils-initscripts.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/modutils-initscripts.postrm"
+minzip: Extracted file "/system/var/lib/opkg/info/modutils-initscripts.prerm"
+minzip: Extracted file "/system/var/lib/opkg/info/netbase.conffiles"
+minzip: Extracted file "/system/var/lib/opkg/info/netbase.control"
+minzip: Extracted file "/system/var/lib/opkg/info/netbase.list"
+minzip: Extracted file "/system/var/lib/opkg/info/netbase.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/netbase.postrm"
+minzip: Extracted file "/system/var/lib/opkg/info/netbase.prerm"
+minzip: Extracted file "/system/var/lib/opkg/info/open-source-kernel-tests.control"
+minzip: Extracted file "/system/var/lib/opkg/info/open-source-kernel-tests.list"
+minzip: Extracted file "/system/var/lib/opkg/info/openssl.control"
+minzip: Extracted file "/system/var/lib/opkg/info/openssl.list"
+minzip: Extracted file "/system/var/lib/opkg/info/original-copy.control"
+minzip: Extracted file "/system/var/lib/opkg/info/original-copy.list"
+minzip: Extracted file "/system/var/lib/opkg/info/pimd.control"
+minzip: Extracted file "/system/var/lib/opkg/info/pimd.list"
+minzip: Extracted file "/system/var/lib/opkg/info/powerapp-powerconfig.control"
+minzip: Extracted file "/system/var/lib/opkg/info/powerapp-powerconfig.list"
+minzip: Extracted file "/system/var/lib/opkg/info/powerapp-powerconfig.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/powerapp-reboot.control"
+minzip: Extracted file "/system/var/lib/opkg/info/powerapp-reboot.list"
+minzip: Extracted file "/system/var/lib/opkg/info/powerapp-reboot.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/powerapp-shutdown.control"
+minzip: Extracted file "/system/var/lib/opkg/info/powerapp-shutdown.list"
+minzip: Extracted file "/system/var/lib/opkg/info/powerapp-shutdown.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/powerapp.control"
+minzip: Extracted file "/system/var/lib/opkg/info/powerapp.list"
+minzip: Extracted file "/system/var/lib/opkg/info/powerapp.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/qct.control"
+minzip: Extracted file "/system/var/lib/opkg/info/qct.list"
+minzip: Extracted file "/system/var/lib/opkg/info/qct.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/qmi-framework.control"
+minzip: Extracted file "/system/var/lib/opkg/info/qmi-framework.list"
+minzip: Extracted file "/system/var/lib/opkg/info/qmi-shutdown-modem.control"
+minzip: Extracted file "/system/var/lib/opkg/info/qmi-shutdown-modem.list"
+minzip: Extracted file "/system/var/lib/opkg/info/qmi-shutdown-modem.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/qmi-shutdown-modem.postrm"
+minzip: Extracted file "/system/var/lib/opkg/info/qmi-shutdown-modem.prerm"
+minzip: Extracted file "/system/var/lib/opkg/info/qmi.control"
+minzip: Extracted file "/system/var/lib/opkg/info/qmi.list"
+minzip: Extracted file "/system/var/lib/opkg/info/qmi.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/qmi.postrm"
+minzip: Extracted file "/system/var/lib/opkg/info/qmi.prerm"
+minzip: Extracted file "/system/var/lib/opkg/info/reboot-daemon.control"
+minzip: Extracted file "/system/var/lib/opkg/info/reboot-daemon.list"
+minzip: Extracted file "/system/var/lib/opkg/info/run-postinsts.control"
+minzip: Extracted file "/system/var/lib/opkg/info/run-postinsts.list"
+minzip: Extracted file "/system/var/lib/opkg/info/run-postinsts.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/run-postinsts.postrm"
+minzip: Extracted file "/system/var/lib/opkg/info/run-postinsts.prerm"
+minzip: Extracted file "/system/var/lib/opkg/info/system-core-adbd.control"
+minzip: Extracted file "/system/var/lib/opkg/info/system-core-adbd.list"
+minzip: Extracted file "/system/var/lib/opkg/info/system-core-adbd.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/system-core-liblog.control"
+minzip: Extracted file "/system/var/lib/opkg/info/system-core-liblog.list"
+minzip: Extracted file "/system/var/lib/opkg/info/system-core-liblog.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/system-core-mode-cfg.control"
+minzip: Extracted file "/system/var/lib/opkg/info/system-core-mode-cfg.list"
+minzip: Extracted file "/system/var/lib/opkg/info/system-core-mode-cfg.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/system-core-usb.control"
+minzip: Extracted file "/system/var/lib/opkg/info/system-core-usb.list"
+minzip: Extracted file "/system/var/lib/opkg/info/system-core-usb.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/sysvinit-inittab.conffiles"
+minzip: Extracted file "/system/var/lib/opkg/info/sysvinit-inittab.control"
+minzip: Extracted file "/system/var/lib/opkg/info/sysvinit-inittab.list"
+minzip: Extracted file "/system/var/lib/opkg/info/sysvinit-pidof.control"
+minzip: Extracted file "/system/var/lib/opkg/info/sysvinit-pidof.list"
+minzip: Extracted file "/system/var/lib/opkg/info/sysvinit-pidof.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/sysvinit-pidof.prerm"
+minzip: Extracted file "/system/var/lib/opkg/info/sysvinit.control"
+minzip: Extracted file "/system/var/lib/opkg/info/sysvinit.list"
+minzip: Extracted file "/system/var/lib/opkg/info/sysvinit.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/sysvinit.postrm"
+minzip: Extracted file "/system/var/lib/opkg/info/sysvinit.prerm"
+minzip: Extracted file "/system/var/lib/opkg/info/task-core-boot.control"
+minzip: Extracted file "/system/var/lib/opkg/info/task-core-boot.list"
+minzip: Extracted file "/system/var/lib/opkg/info/tcpdump.control"
+minzip: Extracted file "/system/var/lib/opkg/info/tcpdump.list"
+minzip: Extracted file "/system/var/lib/opkg/info/time-services.control"
+minzip: Extracted file "/system/var/lib/opkg/info/time-services.list"
+minzip: Extracted file "/system/var/lib/opkg/info/tinylogin.control"
+minzip: Extracted file "/system/var/lib/opkg/info/tinylogin.list"
+minzip: Extracted file "/system/var/lib/opkg/info/tinylogin.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/tinylogin.postrm"
+minzip: Extracted file "/system/var/lib/opkg/info/update-alternatives-cworth.control"
+minzip: Extracted file "/system/var/lib/opkg/info/update-alternatives-cworth.list"
+minzip: Extracted file "/system/var/lib/opkg/info/update-rc.d.control"
+minzip: Extracted file "/system/var/lib/opkg/info/update-rc.d.list"
+minzip: Extracted file "/system/var/lib/opkg/info/wap-fota-daemon.control"
+minzip: Extracted file "/system/var/lib/opkg/info/wap-fota-daemon.list"
+minzip: Extracted file "/system/var/lib/opkg/info/wap-fota-daemon.postinst"
+minzip: Extracted file "/system/var/lib/opkg/info/wap-fota-daemon.postrm"
+minzip: Extracted file "/system/var/lib/opkg/info/wap-fota-daemon.prerm"
+minzip: Extracted file "/system/var/lib/opkg/info/wireless-tools.control"
+minzip: Extracted file "/system/var/lib/opkg/info/wireless-tools.list"
+minzip: Extracted file "/system/var/lib/opkg/info/wlan-proprietary.control"
+minzip: Extracted file "/system/var/lib/opkg/info/wlan-proprietary.list"
+minzip: Extracted file "/system/var/lib/opkg/lists/__emptyfile__"
+minzip: Extracted file "/system/var/lib/opkg/status"
+minzip: Extracted file "/system/var/local/__emptyfile__"
+minzip: Extracted file "/system/var/spool/__emptyfile__"
+minzip: Extracted file "/system/var/volatile/__emptyfile__"
+minzip: Extracted file "/system/var/volatile/cache/__emptyfile__"
+minzip: Extracted file "/system/var/volatile/lock/__emptyfile__"
+minzip: Extracted file "/system/var/volatile/lock/subsys/__emptyfile__"
+minzip: Extracted file "/system/var/volatile/log/__emptyfile__"
+minzip: Extracted file "/system/var/volatile/run/__emptyfile__"
+minzip: Extracted file "/system/var/volatile/tmp/__emptyfile__"
+minzip: Extracted file "/data/__emptyfile__"
+minzip: Extracted file "/data/bin/PktRspTest"
+minzip: Extracted file "/data/bin/QCMAP_ConnectionManager"
+minzip: Extracted file "/data/bin/__emptyfile__"
+minzip: Extracted file "/data/bin/acdbtest"
+minzip: Extracted file "/data/bin/alsaucm_test"
+minzip: Extracted file "/data/bin/amix"
+minzip: Extracted file "/data/bin/aplay"
+minzip: Extracted file "/data/bin/arec"
+minzip: Extracted file "/data/bin/atfwd_daemon"
+minzip: Extracted file "/data/bin/audio_ftm"
+minzip: Extracted file "/data/bin/chvt.kbd"
+minzip: Extracted file "/data/bin/csd_server"
+minzip: Extracted file "/data/bin/cxmapp"
+minzip: Extracted file "/data/bin/deallocvt.kbd"
+minzip: Extracted file "/data/bin/diag_klog"
+minzip: Extracted file "/data/bin/diag_mdlog"
+minzip: Extracted file "/data/bin/diag_uart_log"
+minzip: Extracted file "/data/bin/diagrebootapp"
+minzip: Extracted file "/data/bin/dnsmasq"
+minzip: Extracted file "/data/bin/dumpkeys"
+minzip: Extracted file "/data/bin/fgconsole.kbd"
+minzip: Extracted file "/data/bin/gdbserver"
+minzip: Extracted file "/data/bin/getkeycodes"
+minzip: Extracted file "/data/bin/gps_ctl_srv"
+minzip: Extracted file "/data/bin/hostapd"
+minzip: Extracted file "/data/bin/hostapd_cli"
+minzip: Extracted file "/data/bin/hostapd_wps"
+minzip: Extracted file "/data/bin/i2cdetect"
+minzip: Extracted file "/data/bin/i2cdump"
+minzip: Extracted file "/data/bin/i2cget"
+minzip: Extracted file "/data/bin/i2cset"
+minzip: Extracted file "/data/bin/kbd_mode"
+minzip: Extracted file "/data/bin/kbdrate"
+minzip: Extracted file "/data/bin/klog_record_set"
+minzip: Extracted file "/data/bin/last.sysvinit"
+minzip: Extracted file "/data/bin/loadkeys"
+minzip: Extracted file "/data/bin/loadunimap"
+minzip: Extracted file "/data/bin/logcat"
+minzip: Extracted file "/data/bin/mapscrn"
+minzip: Extracted file "/data/bin/mbimd"
+minzip: Extracted file "/data/bin/mesg.sysvinit"
+minzip: Extracted file "/data/bin/netmgrd"
+minzip: Extracted file "/data/bin/notifymgr"
+minzip: Extracted file "/data/bin/openssl"
+minzip: Extracted file "/data/bin/openvt.kbd"
+minzip: Extracted file "/data/bin/pcap-config"
+minzip: Extracted file "/data/bin/psfxtable"
+minzip: Extracted file "/data/bin/qmi_ping_clnt_test_0000"
+minzip: Extracted file "/data/bin/qmi_ping_clnt_test_0001"
+minzip: Extracted file "/data/bin/qmi_ping_clnt_test_1000"
+minzip: Extracted file "/data/bin/qmi_ping_clnt_test_1001"
+minzip: Extracted file "/data/bin/qmi_ping_clnt_test_2000"
+minzip: Extracted file "/data/bin/qmi_ping_svc"
+minzip: Extracted file "/data/bin/qmi_ping_test"
+minzip: Extracted file "/data/bin/qmi_shutdown_modem"
+minzip: Extracted file "/data/bin/qmi_simple_ril_test"
+minzip: Extracted file "/data/bin/qmuxd"
+minzip: Extracted file "/data/bin/qti"
+minzip: Extracted file "/data/bin/radish"
+minzip: Extracted file "/data/bin/sendcal"
+minzip: Extracted file "/data/bin/serial_bridge"
+minzip: Extracted file "/data/bin/setfont"
+minzip: Extracted file "/data/bin/setkeycodes"
+minzip: Extracted file "/data/bin/setleds"
+minzip: Extracted file "/data/bin/setmetamode"
+minzip: Extracted file "/data/bin/showconsolefont"
+minzip: Extracted file "/data/bin/showkey"
+minzip: Extracted file "/data/bin/sleep_check"
+minzip: Extracted file "/data/bin/test_diag"
+minzip: Extracted file "/data/bin/time_daemon"
+minzip: Extracted file "/data/bin/unicode_start"
+minzip: Extracted file "/data/bin/unicode_stop"
+minzip: Extracted file "/data/bin/update-alternatives"
+minzip: Extracted file "/data/bin/usb/__emptyfile__"
+minzip: Extracted file "/data/bin/usb/compositions/9002"
+minzip: Extracted file "/data/bin/usb/compositions/900A"
+minzip: Extracted file "/data/bin/usb/compositions/901C"
+minzip: Extracted file "/data/bin/usb/compositions/9021"
+minzip: Extracted file "/data/bin/usb/compositions/9022"
+minzip: Extracted file "/data/bin/usb/compositions/9024"
+minzip: Extracted file "/data/bin/usb/compositions/9025"
+minzip: Extracted file "/data/bin/usb/compositions/9025_IPA"
+minzip: Extracted file "/data/bin/usb/compositions/9026"
+minzip: Extracted file "/data/bin/usb/compositions/902A"
+minzip: Extracted file "/data/bin/usb/compositions/902B"
+minzip: Extracted file "/data/bin/usb/compositions/902C"
+minzip: Extracted file "/data/bin/usb/compositions/902D"
+minzip: Extracted file "/data/bin/usb/compositions/902E"
+minzip: Extracted file "/data/bin/usb/compositions/9043"
+minzip: Extracted file "/data/bin/usb/compositions/9046"
+minzip: Extracted file "/data/bin/usb/compositions/9047"
+minzip: Extracted file "/data/bin/usb/compositions/9056"
+minzip: Extracted file "/data/bin/usb/compositions/9057"
+minzip: Extracted file "/data/bin/usb/compositions/9058"
+minzip: Extracted file "/data/bin/usb/compositions/9059"
+minzip: Extracted file "/data/bin/usb/compositions/905A"
+minzip: Extracted file "/data/bin/usb/compositions/905B"
+minzip: Extracted file "/data/bin/usb/compositions/9063"
+minzip: Extracted file "/data/bin/usb/compositions/9064"
+minzip: Extracted file "/data/bin/usb/compositions/9067"
+minzip: Extracted file "/data/bin/usb/compositions/9085"
+minzip: Extracted file "/data/bin/usb/compositions/__emptyfile__"
+minzip: Extracted file "/data/bin/usb/compositions/empty"
+minzip: Extracted file "/data/bin/usb/compositions/hsic_next"
+minzip: Extracted file "/data/bin/usb/compositions/hsusb_next"
+minzip: Extracted file "/data/bin/usb_composition"
+minzip: Extracted file "/data/bin/utmpdump"
+minzip: Extracted file "/data/bin/version_manager"
+minzip: Extracted file "/data/bin/wall.sysvinit"
+minzip: Extracted file "/data/bin/wapfotadaemon"
+minzip: Extracted file "/data/games/__emptyfile__"
+minzip: Extracted file "/data/include/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/cacheflush/README.txt"
+minzip: Extracted file "/data/kernel-tests/cacheflush/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/cacheflush/_cacheflush.sh"
+minzip: Extracted file "/data/kernel-tests/cacheflush/cacheflush"
+minzip: Extracted file "/data/kernel-tests/cacheflush/cacheflush.sh"
+minzip: Extracted file "/data/kernel-tests/cacheflush/loop.sh"
+minzip: Extracted file "/data/kernel-tests/cacheflush/run.sh"
+minzip: Extracted file "/data/kernel-tests/clk/README"
+minzip: Extracted file "/data/kernel-tests/clk/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/clk/clk_test.sh"
+minzip: Extracted file "/data/kernel-tests/clk/run.sh"
+minzip: Extracted file "/data/kernel-tests/clk/test_env_setup.sh"
+minzip: Extracted file "/data/kernel-tests/clocksource/README.txt"
+minzip: Extracted file "/data/kernel-tests/clocksource/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/clocksource/clocksourcetest.sh"
+minzip: Extracted file "/data/kernel-tests/clocksource/run.sh"
+minzip: Extracted file "/data/kernel-tests/cpu/README.txt"
+minzip: Extracted file "/data/kernel-tests/cpu/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/cpu/cpuhotplug_test.sh"
+minzip: Extracted file "/data/kernel-tests/cpu/cputest.sh"
+minzip: Extracted file "/data/kernel-tests/cpu/run.sh"
+minzip: Extracted file "/data/kernel-tests/cpu/test_env_setup.sh"
+minzip: Extracted file "/data/kernel-tests/cpufreq/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/cpufreq/cpufreq_test.sh"
+minzip: Extracted file "/data/kernel-tests/dmov/README.txt"
+minzip: Extracted file "/data/kernel-tests/dmov/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/dmov/dmov"
+minzip: Extracted file "/data/kernel-tests/dmov/msm_dma.sh"
+minzip: Extracted file "/data/kernel-tests/dmov/test_env_setup.sh"
+minzip: Extracted file "/data/kernel-tests/gpio_tlmm/README.txt"
+minzip: Extracted file "/data/kernel-tests/gpio_tlmm/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/gpio_tlmm/gpio_lib.conf"
+minzip: Extracted file "/data/kernel-tests/gpio_tlmm/gpio_lib.sh"
+minzip: Extracted file "/data/kernel-tests/gpio_tlmm/gpio_tlmm.conf"
+minzip: Extracted file "/data/kernel-tests/gpio_tlmm/gpio_tlmm.sh"
+minzip: Extracted file "/data/kernel-tests/gpio_tlmm/run.sh"
+minzip: Extracted file "/data/kernel-tests/gpio_tlmm/test_env_setup.sh"
+minzip: Extracted file "/data/kernel-tests/i2c-msm/README.txt"
+minzip: Extracted file "/data/kernel-tests/i2c-msm/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/i2c-msm/i2c-msm-test"
+minzip: Extracted file "/data/kernel-tests/i2c-msm/i2c-msm-test.sh"
+minzip: Extracted file "/data/kernel-tests/i2c-msm/run.sh"
+minzip: Extracted file "/data/kernel-tests/i2c-msm/test_env_setup.sh"
+minzip: Extracted file "/data/kernel-tests/irq/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/irq/irq_test.sh"
+minzip: Extracted file "/data/kernel-tests/modules/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/modules/lib/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/modules/lib/modules/3.0.21/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/modules/lib/modules/3.0.21/extra/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/modules/lib/modules/3.0.21/extra/msm_bus_ioctl.ko"
+minzip: Extracted file "/data/kernel-tests/modules/lib/modules/3.0.21/extra/msm_sps_test_module.ko"
+minzip: Extracted file "/data/kernel-tests/modules/lib/modules/3.0.21/extra/msm_watchdog_test_module.ko"
+minzip: Extracted file "/data/kernel-tests/modules/lib/modules/3.0.21/modules.alias"
+minzip: Extracted file "/data/kernel-tests/modules/lib/modules/3.0.21/modules.alias.bin"
+minzip: Extracted file "/data/kernel-tests/modules/lib/modules/3.0.21/modules.ccwmap"
+minzip: Extracted file "/data/kernel-tests/modules/lib/modules/3.0.21/modules.dep"
+minzip: Extracted file "/data/kernel-tests/modules/lib/modules/3.0.21/modules.dep.bin"
+minzip: Extracted file "/data/kernel-tests/modules/lib/modules/3.0.21/modules.devname"
+minzip: Extracted file "/data/kernel-tests/modules/lib/modules/3.0.21/modules.ieee1394map"
+minzip: Extracted file "/data/kernel-tests/modules/lib/modules/3.0.21/modules.inputmap"
+minzip: Extracted file "/data/kernel-tests/modules/lib/modules/3.0.21/modules.isapnpmap"
+minzip: Extracted file "/data/kernel-tests/modules/lib/modules/3.0.21/modules.ofmap"
+minzip: Extracted file "/data/kernel-tests/modules/lib/modules/3.0.21/modules.pcimap"
+minzip: Extracted file "/data/kernel-tests/modules/lib/modules/3.0.21/modules.seriomap"
+minzip: Extracted file "/data/kernel-tests/modules/lib/modules/3.0.21/modules.softdep"
+minzip: Extracted file "/data/kernel-tests/modules/lib/modules/3.0.21/modules.symbols"
+minzip: Extracted file "/data/kernel-tests/modules/lib/modules/3.0.21/modules.symbols.bin"
+minzip: Extracted file "/data/kernel-tests/modules/lib/modules/3.0.21/modules.usbmap"
+minzip: Extracted file "/data/kernel-tests/modules/lib/modules/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/mpp/README"
+minzip: Extracted file "/data/kernel-tests/mpp/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/mpp/mpp_test.sh"
+minzip: Extracted file "/data/kernel-tests/mpp/run.sh"
+minzip: Extracted file "/data/kernel-tests/mpp/test_env_setup.sh"
+minzip: Extracted file "/data/kernel-tests/msm_bus/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/msm_bus/msm_bus_test"
+minzip: Extracted file "/data/kernel-tests/msm_bus/msm_bus_test.sh"
+minzip: Extracted file "/data/kernel-tests/msm_bus/run.sh"
+minzip: Extracted file "/data/kernel-tests/msm_uart/README.txt"
+minzip: Extracted file "/data/kernel-tests/msm_uart/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/msm_uart/msm_uart_test"
+minzip: Extracted file "/data/kernel-tests/msm_uart/msm_uart_test.sh"
+minzip: Extracted file "/data/kernel-tests/msm_uart/probe_test.sh"
+minzip: Extracted file "/data/kernel-tests/msm_uart/run.sh"
+minzip: Extracted file "/data/kernel-tests/msm_uart/test_env_setup.sh"
+minzip: Extracted file "/data/kernel-tests/msm_uart_hs/README.txt"
+minzip: Extracted file "/data/kernel-tests/msm_uart_hs/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/msm_uart_hs/run.sh"
+minzip: Extracted file "/data/kernel-tests/msm_uart_hs/test_env_setup.sh"
+minzip: Extracted file "/data/kernel-tests/msm_uart_hs/uarttest.sh"
+minzip: Extracted file "/data/kernel-tests/mtd/README.txt"
+minzip: Extracted file "/data/kernel-tests/mtd/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/mtd/geoinfo_flash"
+minzip: Extracted file "/data/kernel-tests/mtd/mtd_driver_test.sh"
+minzip: Extracted file "/data/kernel-tests/mtd/mtd_test.sh"
+minzip: Extracted file "/data/kernel-tests/mtd/mtd_yaffs2_test.sh"
+minzip: Extracted file "/data/kernel-tests/pctest/README"
+minzip: Extracted file "/data/kernel-tests/pctest/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/pctest/pc-compound-test.sh"
+minzip: Extracted file "/data/kernel-tests/pctest/pctest"
+minzip: Extracted file "/data/kernel-tests/pctest/run.sh"
+minzip: Extracted file "/data/kernel-tests/pctest/test_env_setup.sh"
+minzip: Extracted file "/data/kernel-tests/pmem/README.txt"
+minzip: Extracted file "/data/kernel-tests/pmem/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/pmem/_pmem_test"
+minzip: Extracted file "/data/kernel-tests/pmem/pmem_test.sh"
+minzip: Extracted file "/data/kernel-tests/pmem/run.sh"
+minzip: Extracted file "/data/kernel-tests/pmem/test_env_setup.sh"
+minzip: Extracted file "/data/kernel-tests/sdcc/README.txt"
+minzip: Extracted file "/data/kernel-tests/sdcc/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/sdcc/run.sh"
+minzip: Extracted file "/data/kernel-tests/sdcc/sd_test.sh"
+minzip: Extracted file "/data/kernel-tests/sdcc/test_env_setup.sh"
+minzip: Extracted file "/data/kernel-tests/smd/README"
+minzip: Extracted file "/data/kernel-tests/smd/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/smd/smd_pkt_loopback_test"
+minzip: Extracted file "/data/kernel-tests/smd/smd_tty_loopback_test"
+minzip: Extracted file "/data/kernel-tests/smd/smem_log_test"
+minzip: Extracted file "/data/kernel-tests/socinfo/README.txt"
+minzip: Extracted file "/data/kernel-tests/socinfo/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/socinfo/socinfotest.sh"
+minzip: Extracted file "/data/kernel-tests/spi/README.txt"
+minzip: Extracted file "/data/kernel-tests/spi/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/spi/spidevtest"
+minzip: Extracted file "/data/kernel-tests/spi/spidevtest.sh"
+minzip: Extracted file "/data/kernel-tests/spi/spiethernettest.sh"
+minzip: Extracted file "/data/kernel-tests/spi/spitest"
+minzip: Extracted file "/data/kernel-tests/spi/spitest.sh"
+minzip: Extracted file "/data/kernel-tests/sps/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/sps/msm_sps_test"
+minzip: Extracted file "/data/kernel-tests/sps/run.sh"
+minzip: Extracted file "/data/kernel-tests/test_env_setup.sh"
+minzip: Extracted file "/data/kernel-tests/timer/README.txt"
+minzip: Extracted file "/data/kernel-tests/timer/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/timer/run.sh"
+minzip: Extracted file "/data/kernel-tests/timer/timertest.sh"
+minzip: Extracted file "/data/kernel-tests/vfp/README.txt"
+minzip: Extracted file "/data/kernel-tests/vfp/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/vfp/run.sh"
+minzip: Extracted file "/data/kernel-tests/vfp/test_env_setup.sh"
+minzip: Extracted file "/data/kernel-tests/vfp/vfp.sh"
+minzip: Extracted file "/data/kernel-tests/vfp/vfptest"
+minzip: Extracted file "/data/kernel-tests/vreg/README"
+minzip: Extracted file "/data/kernel-tests/vreg/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/vreg/run.sh"
+minzip: Extracted file "/data/kernel-tests/vreg/test_env_setup.sh"
+minzip: Extracted file "/data/kernel-tests/vreg/vreg_test.sh"
+minzip: Extracted file "/data/kernel-tests/watchdog/__emptyfile__"
+minzip: Extracted file "/data/kernel-tests/watchdog/msm_watchdog_test.sh"
+minzip: Extracted file "/data/kernel-tests/watchdog/run.sh"
+minzip: Extracted file "/data/lib/__emptyfile__"
+minzip: Extracted file "/data/lib/libacdbloader.so.1"
+minzip: Extracted file "/data/lib/libacdbmapper.so.1"
+minzip: Extracted file "/data/lib/libalsa_intf.so.1"
+minzip: Extracted file "/data/lib/libaudcal.so.1"
+minzip: Extracted file "/data/lib/libaudioalsa.so.1"
+minzip: Extracted file "/data/lib/libconfigdb.so.0"
+minzip: Extracted file "/data/lib/libcrypto.so.1.0.0"
+minzip: Extracted file "/data/lib/libcutils.so.0"
+minzip: Extracted file "/data/lib/libdiag.so.1"
+minzip: Extracted file "/data/lib/libdsnet.so.1"
+minzip: Extracted file "/data/lib/libdssnew.so.1"
+minzip: Extracted file "/data/lib/libdsstest.so.1"
+minzip: Extracted file "/data/lib/libdsutils.so.1"
+minzip: Extracted file "/data/lib/libffi.so.5"
+minzip: Extracted file "/data/lib/libgio-2.0.so.0"
+minzip: Extracted file "/data/lib/libglib-2.0.so.0"
+minzip: Extracted file "/data/lib/libgmodule-2.0.so.0"
+minzip: Extracted file "/data/lib/libgobject-2.0.so.0"
+minzip: Extracted file "/data/lib/libgps_api_so.so.1"
+minzip: Extracted file "/data/lib/libgps_utils_so.so.1"
+minzip: Extracted file "/data/lib/libgthread-2.0.so.0"
+minzip: Extracted file "/data/lib/libip4tc.so.0"
+minzip: Extracted file "/data/lib/libip6tc.so.0"
+minzip: Extracted file "/data/lib/libiptc.so.0"
+minzip: Extracted file "/data/lib/libloc_adapter_so.so.1"
+minzip: Extracted file "/data/lib/libloc_api.so.1"
+minzip: Extracted file "/data/lib/liblog.so.0"
+minzip: Extracted file "/data/lib/libnetmgr.so.0"
+minzip: Extracted file "/data/lib/libpcap.so.1"
+minzip: Extracted file "/data/lib/libqcci_legacy.so.1"
+minzip: Extracted file "/data/lib/libqcmap_cm.so.1"
+minzip: Extracted file "/data/lib/libqmi.so.1"
+minzip: Extracted file "/data/lib/libqmi_cci.so.1"
+minzip: Extracted file "/data/lib/libqmi_client_qmux.so.1"
+minzip: Extracted file "/data/lib/libqmi_common_so.so.1"
+minzip: Extracted file "/data/lib/libqmi_csi.so.1"
+minzip: Extracted file "/data/lib/libqmi_encdec.so.1"
+minzip: Extracted file "/data/lib/libqmi_sap.so.1"
+minzip: Extracted file "/data/lib/libqmiidl.so.1"
+minzip: Extracted file "/data/lib/libqmiservices.so.1"
+minzip: Extracted file "/data/lib/libssl.so.1.0.0"
+minzip: Extracted file "/data/lib/libstdc++.so.6"
+minzip: Extracted file "/data/lib/libxml.so.0"
+minzip: Extracted file "/data/lib/libxtables.so.7"
+minzip: Extracted file "/data/lib/libz.so.1"
+minzip: Extracted file "/data/lib/modules/3.0.21/__emptyfile__"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/__emptyfile__"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/arch/__emptyfile__"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/arch/arm/__emptyfile__"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/arch/arm/common/__emptyfile__"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/arch/arm/common/cpaccess.ko"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/arch/arm/mach-msm/__emptyfile__"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/arch/arm/mach-msm/dma_test.ko"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/block/__emptyfile__"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/block/test-iosched.ko"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/drivers/__emptyfile__"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/drivers/input/__emptyfile__"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/drivers/input/evbug.ko"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/drivers/mmc/__emptyfile__"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/drivers/mmc/card/__emptyfile__"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/drivers/mmc/card/mmc_block_test.ko"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/drivers/mmc/card/mmc_test.ko"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/drivers/mtd/__emptyfile__"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/drivers/mtd/tests/__emptyfile__"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/drivers/mtd/tests/mtd_erasepart.ko"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/drivers/mtd/tests/mtd_nandecctest.ko"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/drivers/mtd/tests/mtd_oobtest.ko"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/drivers/mtd/tests/mtd_pagetest.ko"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/drivers/mtd/tests/mtd_readtest.ko"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/drivers/mtd/tests/mtd_speedtest.ko"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/drivers/mtd/tests/mtd_stresstest.ko"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/drivers/mtd/tests/mtd_subpagetest.ko"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/drivers/mtd/tests/mtd_torturetest.ko"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/drivers/scsi/__emptyfile__"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/drivers/scsi/scsi_wait_scan.ko"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/drivers/spi/__emptyfile__"
+minzip: Extracted file "/data/lib/modules/3.0.21/kernel/drivers/spi/spidev.ko"
+minzip: Extracted file "/data/lib/modules/3.0.21/modules.alias"
+minzip: Extracted file "/data/lib/modules/3.0.21/modules.alias.bin"
+minzip: Extracted file "/data/lib/modules/3.0.21/modules.builtin"
+minzip: Extracted file "/data/lib/modules/3.0.21/modules.builtin.bin"
+minzip: Extracted file "/data/lib/modules/3.0.21/modules.ccwmap"
+minzip: Extracted file "/data/lib/modules/3.0.21/modules.dep"
+minzip: Extracted file "/data/lib/modules/3.0.21/modules.dep.bin"
+minzip: Extracted file "/data/lib/modules/3.0.21/modules.devname"
+minzip: Extracted file "/data/lib/modules/3.0.21/modules.ieee1394map"
+minzip: Extracted file "/data/lib/modules/3.0.21/modules.inputmap"
+minzip: Extracted file "/data/lib/modules/3.0.21/modules.isapnpmap"
+minzip: Extracted file "/data/lib/modules/3.0.21/modules.ofmap"
+minzip: Extracted file "/data/lib/modules/3.0.21/modules.order"
+minzip: Extracted file "/data/lib/modules/3.0.21/modules.pcimap"
+minzip: Extracted file "/data/lib/modules/3.0.21/modules.seriomap"
+minzip: Extracted file "/data/lib/modules/3.0.21/modules.softdep"
+minzip: Extracted file "/data/lib/modules/3.0.21/modules.symbols"
+minzip: Extracted file "/data/lib/modules/3.0.21/modules.symbols.bin"
+minzip: Extracted file "/data/lib/modules/3.0.21/modules.usbmap"
+minzip: Extracted file "/data/lib/modules/__emptyfile__"
+minzip: Extracted file "/data/lib/ssl/__emptyfile__"
+minzip: Extracted file "/data/lib/ssl/certs/__emptyfile__"
+minzip: Extracted file "/data/lib/ssl/private/__emptyfile__"
+minzip: Extracted file "/data/lib/xtables/__emptyfile__"
+minzip: Extracted file "/data/lib/xtables/libip6t_HL.so"
+minzip: Extracted file "/data/lib/xtables/libip6t_LOG.so"
+minzip: Extracted file "/data/lib/xtables/libip6t_REJECT.so"
+minzip: Extracted file "/data/lib/xtables/libip6t_ah.so"
+minzip: Extracted file "/data/lib/xtables/libip6t_dst.so"
+minzip: Extracted file "/data/lib/xtables/libip6t_eui64.so"
+minzip: Extracted file "/data/lib/xtables/libip6t_frag.so"
+minzip: Extracted file "/data/lib/xtables/libip6t_hbh.so"
+minzip: Extracted file "/data/lib/xtables/libip6t_hl.so"
+minzip: Extracted file "/data/lib/xtables/libip6t_icmp6.so"
+minzip: Extracted file "/data/lib/xtables/libip6t_ipv6header.so"
+minzip: Extracted file "/data/lib/xtables/libip6t_mh.so"
+minzip: Extracted file "/data/lib/xtables/libip6t_rt.so"
+minzip: Extracted file "/data/lib/xtables/libipt_CLUSTERIP.so"
+minzip: Extracted file "/data/lib/xtables/libipt_DNAT.so"
+minzip: Extracted file "/data/lib/xtables/libipt_ECN.so"
+minzip: Extracted file "/data/lib/xtables/libipt_LOG.so"
+minzip: Extracted file "/data/lib/xtables/libipt_MASQUERADE.so"
+minzip: Extracted file "/data/lib/xtables/libipt_MIRROR.so"
+minzip: Extracted file "/data/lib/xtables/libipt_NETMAP.so"
+minzip: Extracted file "/data/lib/xtables/libipt_REDIRECT.so"
+minzip: Extracted file "/data/lib/xtables/libipt_REJECT.so"
+minzip: Extracted file "/data/lib/xtables/libipt_SAME.so"
+minzip: Extracted file "/data/lib/xtables/libipt_SNAT.so"
+minzip: Extracted file "/data/lib/xtables/libipt_TTL.so"
+minzip: Extracted file "/data/lib/xtables/libipt_ULOG.so"
+minzip: Extracted file "/data/lib/xtables/libipt_addrtype.so"
+minzip: Extracted file "/data/lib/xtables/libipt_ah.so"
+minzip: Extracted file "/data/lib/xtables/libipt_ecn.so"
+minzip: Extracted file "/data/lib/xtables/libipt_icmp.so"
+minzip: Extracted file "/data/lib/xtables/libipt_realm.so"
+minzip: Extracted file "/data/lib/xtables/libipt_ttl.so"
+minzip: Extracted file "/data/lib/xtables/libipt_unclean.so"
+minzip: Extracted file "/data/lib/xtables/libxt_AUDIT.so"
+minzip: Extracted file "/data/lib/xtables/libxt_CHECKSUM.so"
+minzip: Extracted file "/data/lib/xtables/libxt_CLASSIFY.so"
+minzip: Extracted file "/data/lib/xtables/libxt_CONNMARK.so"
+minzip: Extracted file "/data/lib/xtables/libxt_CONNSECMARK.so"
+minzip: Extracted file "/data/lib/xtables/libxt_CT.so"
+minzip: Extracted file "/data/lib/xtables/libxt_DSCP.so"
+minzip: Extracted file "/data/lib/xtables/libxt_IDLETIMER.so"
+minzip: Extracted file "/data/lib/xtables/libxt_LED.so"
+minzip: Extracted file "/data/lib/xtables/libxt_MARK.so"
+minzip: Extracted file "/data/lib/xtables/libxt_NFLOG.so"
+minzip: Extracted file "/data/lib/xtables/libxt_NFQUEUE.so"
+minzip: Extracted file "/data/lib/xtables/libxt_NOTRACK.so"
+minzip: Extracted file "/data/lib/xtables/libxt_RATEEST.so"
+minzip: Extracted file "/data/lib/xtables/libxt_SECMARK.so"
+minzip: Extracted file "/data/lib/xtables/libxt_SET.so"
+minzip: Extracted file "/data/lib/xtables/libxt_TCPMSS.so"
+minzip: Extracted file "/data/lib/xtables/libxt_TCPOPTSTRIP.so"
+minzip: Extracted file "/data/lib/xtables/libxt_TEE.so"
+minzip: Extracted file "/data/lib/xtables/libxt_TOS.so"
+minzip: Extracted file "/data/lib/xtables/libxt_TPROXY.so"
+minzip: Extracted file "/data/lib/xtables/libxt_TRACE.so"
+minzip: Extracted file "/data/lib/xtables/libxt_cluster.so"
+minzip: Extracted file "/data/lib/xtables/libxt_comment.so"
+minzip: Extracted file "/data/lib/xtables/libxt_connbytes.so"
+minzip: Extracted file "/data/lib/xtables/libxt_connlimit.so"
+minzip: Extracted file "/data/lib/xtables/libxt_connmark.so"
+minzip: Extracted file "/data/lib/xtables/libxt_conntrack.so"
+minzip: Extracted file "/data/lib/xtables/libxt_cpu.so"
+minzip: Extracted file "/data/lib/xtables/libxt_dccp.so"
+minzip: Extracted file "/data/lib/xtables/libxt_devgroup.so"
+minzip: Extracted file "/data/lib/xtables/libxt_dscp.so"
+minzip: Extracted file "/data/lib/xtables/libxt_esp.so"
+minzip: Extracted file "/data/lib/xtables/libxt_hashlimit.so"
+minzip: Extracted file "/data/lib/xtables/libxt_helper.so"
+minzip: Extracted file "/data/lib/xtables/libxt_iprange.so"
+minzip: Extracted file "/data/lib/xtables/libxt_ipvs.so"
+minzip: Extracted file "/data/lib/xtables/libxt_length.so"
+minzip: Extracted file "/data/lib/xtables/libxt_limit.so"
+minzip: Extracted file "/data/lib/xtables/libxt_mac.so"
+minzip: Extracted file "/data/lib/xtables/libxt_mark.so"
+minzip: Extracted file "/data/lib/xtables/libxt_multiport.so"
+minzip: Extracted file "/data/lib/xtables/libxt_osf.so"
+minzip: Extracted file "/data/lib/xtables/libxt_owner.so"
+minzip: Extracted file "/data/lib/xtables/libxt_physdev.so"
+minzip: Extracted file "/data/lib/xtables/libxt_pkttype.so"
+minzip: Extracted file "/data/lib/xtables/libxt_policy.so"
+minzip: Extracted file "/data/lib/xtables/libxt_quota.so"
+minzip: Extracted file "/data/lib/xtables/libxt_rateest.so"
+minzip: Extracted file "/data/lib/xtables/libxt_recent.so"
+minzip: Extracted file "/data/lib/xtables/libxt_sctp.so"
+minzip: Extracted file "/data/lib/xtables/libxt_set.so"
+minzip: Extracted file "/data/lib/xtables/libxt_socket.so"
+minzip: Extracted file "/data/lib/xtables/libxt_standard.so"
+minzip: Extracted file "/data/lib/xtables/libxt_state.so"
+minzip: Extracted file "/data/lib/xtables/libxt_statistic.so"
+minzip: Extracted file "/data/lib/xtables/libxt_string.so"
+minzip: Extracted file "/data/lib/xtables/libxt_tcp.so"
+minzip: Extracted file "/data/lib/xtables/libxt_tcpmss.so"
+minzip: Extracted file "/data/lib/xtables/libxt_time.so"
+minzip: Extracted file "/data/lib/xtables/libxt_tos.so"
+minzip: Extracted file "/data/lib/xtables/libxt_u32.so"
+minzip: Extracted file "/data/lib/xtables/libxt_udp.so"
+minzip: Extracted file "/data/libexec/__emptyfile__"
+minzip: Extracted file "/data/libexec/dhcpcd-hooks/01-test"
+minzip: Extracted file "/data/libexec/dhcpcd-hooks/02-dump"
+minzip: Extracted file "/data/libexec/dhcpcd-hooks/10-mtu"
+minzip: Extracted file "/data/libexec/dhcpcd-hooks/20-resolv.conf"
+minzip: Extracted file "/data/libexec/dhcpcd-hooks/29-lookup-hostname"
+minzip: Extracted file "/data/libexec/dhcpcd-hooks/30-hostname"
+minzip: Extracted file "/data/libexec/dhcpcd-hooks/__emptyfile__"
+minzip: Extracted file "/data/libexec/dhcpcd-run-hooks"
+minzip: Extracted file "/data/libexec/pt_chown"
+minzip: Extracted file "/data/sbin/__emptyfile__"
+minzip: Extracted file "/data/sbin/dhcpcd"
+minzip: Extracted file "/data/sbin/pimd"
+minzip: Extracted file "/data/sbin/restart_mbimd"
+minzip: Extracted file "/data/sbin/tcpdump"
+minzip: Extracted file "/data/sbin/update-rc.d"
+minzip: Extracted file "/data/sbin/wpa_cli"
+minzip: Extracted file "/data/sbin/wpa_passphrase"
+minzip: Extracted file "/data/sbin/wpa_supplicant"
+minzip: Extracted file "/data/sbin/xtables-multi"
+minzip: Extracted file "/data/share/__emptyfile__"
+minzip: Extracted file "/data/share/common-licenses/__emptyfile__"
+minzip: Extracted file "/data/share/dict/__emptyfile__"
+minzip: Extracted file "/data/share/doc/__emptyfile__"
+minzip: Extracted file "/data/share/doc/base-files-1.0/__emptyfile__"
+minzip: Extracted file "/data/share/glib-2.0/__emptyfile__"
+minzip: Extracted file "/data/share/glib-2.0/schemas/__emptyfile__"
+minzip: Extracted file "/data/share/glib-2.0/schemas/gschema.dtd"
+minzip: Extracted file "/data/share/info/__emptyfile__"
+minzip: Extracted file "/data/share/man/__emptyfile__"
+minzip: Extracted file "/data/share/misc/__emptyfile__"
+minzip: Extracted file "/data/share/run-postinsts/__emptyfile__"
+minzip: Extracted file "/data/share/run-postinsts/run-postinsts.awk"
+minzip: Extracted file "/data/src/__emptyfile__"
+minzip: Extracted file "/data/src/debug/__emptyfile__"
+minzip: Extracted file "/data/tests/__emptyfile__"
+minzip: Extracted file "/data/tests/dss_test_netc"
+minzip: Extracted file "/data/tests/dssnetc.sh"
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000000000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000020000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000040000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000060000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000080000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b50000a0000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b50000c0000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b50000e0000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000100000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000120000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000140000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000160000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000180000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b50001a0000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b50001c0000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b50001e0000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000200000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000220000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000240000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000260000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000280000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b50002a0000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b50002c0000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b50002e0000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000300000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000320000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000340000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000360000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000380000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b50003a0000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b50003c0000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b50003e0000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000400000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000420000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000440000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000460000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000480000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b50004a0000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b50004c0000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b50004e0000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000500000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000520000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000540000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000560000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b5000580000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b50005a0000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b50005c0000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b50005e0000
+[FORGE]GET BAD BLOCK exit------------------>
+mtd: successfully wrote block at bec31b3000600000
+wrote boot partition
+script result was [/system]
+I:found full mbn dsp1.mbn
+mtd: not writing bad block at 0x00000000 (ret -1 errno 5)
+mtd: not writing bad block at 0x00020000 (ret -1 errno 5)
+mtd: not writing bad block at 0x00040000 (ret -1 errno 5)
+mtd: not writing bad block at 0x00060000 (ret -1 errno 5)
+mtd: not writing bad block at 0x00080000 (ret -1 errno 5)
+mtd: not writing bad block at 0x000a0000 (ret -1 errno 5)
+mtd: not writing bad block at 0x000c0000 (ret -1 errno 5)
+mtd: not writing bad block at 0x000e0000 (ret -1 errno 5)
+mtd: not writing bad block at 0x00100000 (ret -1 errno 5)
+mtd: not writing bad block at 0x00120000 (ret -1 errno 5)
+mtd: not writing bad block at 0x00140000 (ret -1 errno 5)
+mtd: not writing bad block at 0x00160000 (ret -1 errno 5)
+mtd: not writing bad block at 0x00180000 (ret -1 errno 5)
+mtd: not writing bad block at 0x001a0000 (ret -1 errno 5)
+mtd: not writing bad block at 0x001c0000 (ret -1 errno 5)
+mtd: not writing bad block at 0x001e0000 (ret -1 errno 5)
+mtd: not writing bad block at 0x00200000 (ret -1 errno 5)[   42.426918] yaffs: dev is 32505865 name is "mtdblock9" rw
+[   42.437570] yaffs: passed flags ""
+
+mtd: not writing bad block at 0x00220000 (ret -1 errno 5)
+mtd: not writing bad block at 0x00240000 (ret -1 errno 5)
+mtd: not writing bad block at 0x00260000 (ret -1 errno 5)
+mtd: not writing bad block at 0x00280000 (ret -1 errno 5)
+mtd: not writing bad block at 0x002a0000 (ret -1 errno 5)
+mtd: not writing bad block at 0x002c0000 (ret -1 errno 5)
+mtd: not writing bad block at 0x002e0000 (ret -1 errno 5)
+mtd: not writing bad block at 0x00300000 (ret -1 errno 5)
+mtd: not writing bad block at 0x00320000 (ret -1 errno 5)
+mtd: not writing bad block at 0x00340000 (ret -1 errno 5)
+mtd: not writing bad block at 0x00360000 (ret -1 errno 5)
+mtd: not writ[   42.496841] yaffs: dev is 32505865 name is "mtdblock9" rw
+[   42.504959] yaffs: passed flags ""
+ing bad block at 0x00380000 (ret -1 errno 5)
+mtd: not writing bad block at 0x003a0000 (ret -1 errno 5)
+mtd: not writing bad block at 0x003c0000 (ret -1 errno 5)
+mtd: not writing bad block at 0x003e0000 (ret -1 errno 5)
+mtd: not writing bad block at 0x00400000 (ret -1 errno 5)
+mtd: not writing bad block at 0x00420000 (ret -1 errno 5)
+mtd: not writing bad block at 0x00440000 (ret -1 errno 5)
+mtd: not writing bad block at 0x00460000 (ret -1 errno 5)
+E:error writing buffer: return value -1, expected 32768
+minzip: Process function elected to fail (in inflat[   42.557271] Restarting system.
+[   42.561910] Going down for res[0] welcome to lk
+
+[0] calling constructors
+[0] initializing heap
+[0] initializing threads
+[0] initializing dpc
+[0] initializing timers
+[0] creating bootstrap completion thread
+[10] top of bootstrap2()
+[10] initializing platform
+[10] platform_init()
+[10] initializing target
+[10] target_init()
+[10] 0: 0:MIBIB offs=0x00000000 size=0x0000000a attr: 0x00ffffff
+[10] 1: 0:SBL2 offs=0x0000000a size=0x0000001b attr: 0x0000ffff
+[10] 2: 0:RPM offs=0x00000025 size=0x0000001b attr: 0x0000ffff
+[10] 3: 0:EFS2 offs=0x00000040 size=0x0000002c attr: 0x00ffffff
+[10] 4: 0:DSP1 offs=0x0000006c size=0x00000024 attr: 0x0000ffff
+[10] 5: 0:DSP3 offs=0x00000090 size=0x00000052 attr: 0x0000ffff
+[20] 6: 0:DSP2 offs=0x000000e2 size=0x00000196 attr: 0x0000ffff
+[20] 7: 0:APPSBL offs=0x00000278 size=0x00000007 attr: 0x0000ffff
+[20] 8: 0:APPS offs=0x0000027f size=0x00000052 attr: 0x0000ffff
+[20] 9: 0:CACHE offs=0x000002d1 size=0x00000203 attr: 0x00ffffff
+[20] 10: 0:MISC offs=0x000004d4 size=0x0000000b attr: 0x00ffffff
+[20] 11: 0:RECOVERY offs=0x000004df size=0x00000053 attr: 0x00ffffff
+[20] 12: 0:FOTA offs=0x00000532 size=0x0000000b attr: 0x00ffffff
+[30] 13: 0:RECOVERYFS offs=0x0000053d size=0x000000b7 attr: 0x00ffffff
+[30] 14: 0:SYSTEM offs=0x000005f4 size=0x000000b7 attr: 0x00ffffff
+[30] 15: 0:USERDATA offs=0x000006ab size=0xffffffff attr: 0x00ffffff
+[30] smem ptable found: ver: 3 len: 16
+[30] nandcfg: 0 0 (initial)
+[30] nandcfg(Apps): a8d408c0 4745c (used)
+[30] nandcfg(Modem): aad400c0 4745c (used)
+[30] ptn 0 name='mibib' start=00000000 len=0000000a flags=00000000 type=Modem Writable=Yes
+[40] ptn 1 name='sbl2' start=0000000a len=0000001b flags=00000000 type=Modem Writable=Yes
+[40] ptn 2 name='rpm' start=00000025 len=0000001b flags=00000000 type=Modem Writable=Yes
+[40] ptn 3 name='efs2' start=00000040 len=0000002c flags=00000000 type=Modem Writable=Yes
+[40] ptn 4 name='dsp1' start=0000006c len=00000024 flags=00000000 type=Modem Writable=Yes
+[40] ptn 5 name='dsp3' start=00000090 len=00000052 flags=00000000 type=Modem Writable=Yes
+[50] ptn 6 name='dsp2' start=000000e2 len=00000196 flags=00000000 type=Modem Writable=Yes
+[50] ptn 7 name='aboot' start=00000278 len=00000007 flags=00000000 type=Modem Writable=Yes
+[50] ptn 8 name='boot' start=0000027f len=00000052 flags=00000000 type=Apps Writable=Yes
+[50] ptn 9 name='cache' start=000002d1 len=00000203 flags=00000000 type=Apps Writable=Yes
+[50] ptn 10 name='misc' start=000004d4 len=0000000b flags=00000000 type=Apps Writable=Yes
+[60] ptn 11 name='recovery' start=000004df len=00000053 flags=00000000 type=Apps Writable=Yes
+[60] ptn 12 name='fota' start=00000532 len=0000000b flags=00000000 type=Apps Writable=Yes
+[60] ptn 13 name='recoveryfs' start=0000053d len=000000b7 flags=00000000 type=Apps Writable=Yes
+[60] ptn 14 name='system' start=000005f4 len=000000b7 flags=00000000 type=Apps Writable=Yes
+[60] ptn 15 name='userdata' start=000006ab len=00000155 flags=00000000 type=Apps Writable=Yes
+[70] calling apps_init()
+[70] serial number: MDM9615
+[FORGE] gpio get gpio = 12, gpio_value = 1, readl addr = 8392900.
+[70] [Forge]gpio12 value is = 1
+[FORGE] gpio get gpio = 13, gpio_value = 0, readl addr = 8392916.
+[70] [Forge]gpio13 value is = 0
+[FORGE] gpio get gpio = 50, gpio_value = 0, readl addr = 8393508.
+[70] [Forge]gpio50 value is = 0
+[FORGE] gpio get gpio = 24, gpio_value = 1, readl addr = 8393092.
+[80] [Forge]gpio24 value is = 1
+[80] flash_read_image: success (0 errors)
+[80] ***upgrade flag: 0 ***
+[80] flash_read_image: success (0 errors)
+[80] [FORGE]Flash read buf ====== 
+[80] [FORGE]Recovery msg.command = 
+[80] [FORGE]recovery_init valid_command = 0
+[80] flash_read_image: success (0 errors)
+[1940] flash_read_image: success (0 errors)
+[1940] flash_read_image: success (0 errors)
+[1940] Loading boot image (6356992): done
+[1940] 
+kernel  @ 40808000 (6356680 bytes)
+[1940] ramdisk @ 40fc9000 (0 bytes)
+[1940] cmdline = 'noinitrd root=/dev/mtdblock14 rw rootfstype=yaffs2 console=ttyHSL0,115200,n8 androidboot.hardware=qcom'
+[1940] 
+Booting Linux
+[1940] smem ram ptable found: ver: 0 len: 5
+[1950] booting linux @ 0x40808000, ramdisk @ 0x40fc9000 (0)
+[1950] cmdline: noinitrd root=/dev/mtdblock14 rw rootfstype=yaffs2 console=ttyHSL0,115200,n8 androidboot.hardware=qcom androidboot.serialno=MDM9615 androidboot.baseband=msm
+[    0.000000] Initializing cgroup subsys cpu
+[    0.000000] Linux version 3.0.21 (wuguang@ubuntu-194) (gcc version 4.6.3 20111117 (prerelease) (GCC) ) #1 PREEMPT Mon Jul 27 14:00:13 CST 2015
+[    0.000000] CPU: ARMv7 Processor [410fc051] revision 1 (ARMv7), cr=10c5387d
+[    0.000000] CPU: VIPT nonaliasing data cache, VIPT aliasing instruction cache
+[    0.000000] Machine: QCT MSM9615 CDP
+[    0.000000] Partition (from atag) boot -- Offset:27f Size:52
+[    0.000000] Partition (from atag) sbl2 -- Offset:a Size:1b
+[    0.000000] Partition (from atag) rpm -- Offset:25 Size:1b
+[    0.000000] Partition (from atag) efs2 -- Offset:40 Size:2c
+[    0.000000] Partition (from atag) dsp1 -- Offset:6c Size:24
+[    0.000000] Partition (from atag) dsp3 -- Offset:90 Size:52
+[    0.000000] Partition (from atag) dsp2 -- Offset:e2 Size:196
+[    0.000000] Partition (from atag) aboot -- Offset:278 Size:7
+[    0.000000] Partition (from atag) mibib -- Offset:0 Size:a
+[    0.000000] Partition (from atag) cache -- Offset:2d1 Size:203
+[    0.000000] Partition (from atag) misc -- Offset:4d4 Size:b
+[    0.000000] Partition (from atag) recovery -- Offset:4df Size:53
+[    0.000000] Partition (from atag) fota -- Offset:532 Size:b
+[    0.000000] Partition (from atag) recoveryfs -- Offset:53d Size:b7
+[    0.000000] Partition (from atag) system -- Offset:5f4 Size:b7
+[    0.000000] Partition (from atag) userdata -- Offset:6ab Size:155
+[    0.000000] memory pool 3 (start 46e00000 size 100000) initialized
+[    0.000000] Memory policy: ECC disabled, Data cache writeback
+[    0.000000] L310 cache controller enabled
+[    0.000000] l2x0: 8 ways, CACHE_ID 0x410000c8, AUX_CTRL 0x00540000, Cache size: 262144 B
+[    0.000000] socinfo_init: v7, id=107, ver=3.0, raw_id=1856, raw_ver=1856, hw_plat=0, hw_plat_ver=65536
+[    0.000000]  accessory_chip=0, hw_plat_subtype=0, pmic_model=19, pmic_die_revision=3
+[    0.000000] Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 9266
+[    0.000000] Kernel command line: noinitrd root=/dev/mtdblock14 rw rootfstype=yaffs2 console=ttyHSL0,115200,n8 androidboot.hardware=qcom androidboot.serialno=MDM9615 androidboot.baseband=msm
+[    0.000000] PID hash table entries: 256 (order: -2, 1024 bytes)
+[    0.000000] Dentry cache hash table entries: 8192 (order: 3, 32768 bytes)
+[    0.000000] Inode-cache hash table entries: 4096 (order: 2, 16384 bytes)
+[    0.000000] Memory: 15MB 22MB = 37MB total
+[    0.000000] Memory: 29492k/29492k available, 9420k reserved, 0K highmem
+[    0.000000] Virtual kernel memory layout:
+[    0.000000]     vector  : 0xffff0000 - 0xffff1000   (   4 kB)
+[    0.000000]     fixmap  : 0xfff00000 - 0xfffe0000   ( 896 kB)
+[    0.000000]     DMA     : 0xff000000 - 0xffe00000   (  14 MB)
+[    0.000000]     vmalloc : 0xc6800000 - 0xfa000000   ( 824 MB)
+[    0.000000]     lowmem  : 0xc0000000 - 0xc6700000   ( 103 MB)
+[    0.000000]     pkmap   : 0xbfe00000 - 0xc0000000   (   2 MB)
+[    0.000000]     modules : 0xbf000000 - 0xbfe00000   (  14 MB)
+[    0.000000]       .init : 0xc0008000 - 0xc0031000   ( 164 kB)
+[    0.000000]       .text : 0xc0031000 - 0xc05ab188   (5609 kB)
+[    0.000000]       .data : 0xc05ac000 - 0xc0617e88   ( 432 kB)
+[    0.000000]        .bss : 0xc0617ec8 - 0xc07c8550   (1730 kB)
+[    0.000000] SLUB: Genslabs=13, HWalign=32, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+[    0.000000] Preemptible hierarchical RCU implementation.
+[    0.000000] NR_IRQS:681
+[    0.000000] sched_clock: 32 bits at 32kHz, resolution 30520ns, wraps every 131084001ms
+[    0.000000] Console: colour dummy device 80x30
+[    0.150221] Calibrating delay using timer specific routine.. 9.62 BogoMIPS (lpj=48104)
+[    0.150251] pid_max: default: 32768 minimum: 301
+[    0.150740] Mount-cache hash table entries: 512
+[    0.151381] Initializing cgroup subsys debug
+[    0.151411] Initializing cgroup subsys cpuacct
+[    0.151472] Initializing cgroup subsys freezer
+[    0.151533] CPU: Testing write buffer coherency: ok
+[    0.157759] print_constraints: dummy: 
+[    0.158156] NET: Registered protocol family 16
+[    0.158339] AXI: msm_bus_fabric_init_driver(): msm_bus_fabric_init_driver
+[    0.159560] msm_rpm_init: RPM firmware 3.0.16842958
+[    0.172470] pm8018_probe: PMIC revision 1: F3
+[    0.172501] pm8018_probe: PMIC revision 2: 08
+[    0.172531] pm8018_probe: PMIC version: PM8018 rev 2.1
+[    0.172562] pm8018_probe: PMIC Restart Reason: Triggered from KPD (power key press)
+[    0.173599] pm_gpio_probe: OK: base=88, ngpio=6
+[    0.173874] pm8xxx_mpp_probe: OK: base=94, ngpio=6
+[    0.181138] cpufreq_table_init: CPU: 4 scaling frequencies supported.
+[    0.184526] sps:REVISION of BAM 0xc6818000 is 0x5.
+[    0.184587] sps:BAM 0x12244000 is registered.
+[    0.185014] sps:sps is ready.
+[    0.207569] bio: create slab <bio-0> at 0
+[    0.208301] ION heap vmalloc created
+[    0.208332] ION heap iommu created
+[    0.208393] ION heap audio created at 46e01000 with size af000
+[    0.208820] pm8xxx_pwm_probe: OK
+[    0.209400] SCSI subsystem initialized
+[    0.209613] sps:REVISION of BAM 0xc6824000 is 0x12.
+[    0.209705] sps:BAM 0x28084000 is registered.
+[    0.210987] usbcore: registered new interface driver usbfs
+[    0.211139] usbcore: registered new interface driver hub
+[    0.211353] usbcore: registered new device driver usb
+[    0.212696] Advanced Linux Sound Architecture Driver Version 1.0.24.
+[    0.213520] Switching to clocksource gp_timer
+[    0.223744] NET: Registered protocol family 2
+[    0.223958] IP route cache hash table entries: 1024 (order: 0, 4096 bytes)
+[    0.224324] TCP established hash table entries: 2048 (order: 2, 16384 bytes)
+[    0.224416] TCP bind hash table entries: 2048 (order: 1, 8192 bytes)
+[    0.224477] TCP: Hash tables configured (established 2048 bind 2048)
+[    0.224507] TCP reno registered
+[    0.224507] UDP hash table entries: 256 (order: 0, 4096 bytes)
+[    0.224568] UDP-Lite hash table entries: 256 (order: 0, 4096 bytes)
+[    0.225301] NET: Registered protocol family 1
+[    0.231527] Notify: smsm init
+[    0.238455] NET: Registered protocol family 27
+[    0.239249] apr_tal:Q6 Is Up
+[    0.239707] apr_tal:Modem Is Up
+[    0.240927] modem_8960_init: modem fatal driver init'ed.
+[    0.241233] lpass_fatal_init: lpass SSR driver init'ed.
+[    0.241721] msm_rpm_log_probe: OK
+[    0.254478] msgmni has been set to 57
+[    0.256218] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 250)
+[    0.256249] io scheduler noop registered
+[    0.256279] io scheduler deadline registered
+[    0.256340] io scheduler cfq registered (default)
+[    0.420967] msm_serial: driver initialized
+[    0.421150] msm_serial_hsl: detected port #0
+[    0.421364] msm_serial_hsl.0: ttyHSL0 at MMIO 0x16340000 (irq = 184) is a MSM
+[    0.421486] msm_serial_hsl: console setup on port #0
+[    1.021638] console [ttyHSL0] enabled
+[    1.044193] msm_serial_hsl: detected port #1
+[    1.047611] msm_serial_hsl.1: ttyHSL1 at MMIO 0x16440000 (irq = 186) is a MSM
+[    1.074317] msm_serial_hsl: driver initialized
+[    1.086342] brd: module loaded
+[    1.092263] loop: module loaded
+[    1.094582] tabla2x-slim tabla2x-slim: Initialized slim device tabla2x-slim
+[    1.194536] fail to get slimbus logical address -6
+[    1.200091] i2c-core: driver [tabla-i2c-core] using legacy suspend method
+[    1.205859] i2c-core: driver [tabla-i2c-core] using legacy resume method
+[    1.213917] SCSI Media Changer driver v0.25 
+[    1.218098] msm_nand_probe: phys addr 0x1b400000 
+[    1.221852] msm_nand_probe: dmac 0x3
+[    1.225515] msm_nand_probe: allocated dma buffer at ffdfc000, dma_addr 46a50000
+[    1.232931] ONFI probe : Found a nonONFI Compliant device 
+[    1.238272] status: c00020
+[    1.240866] nandid: 1590aac8 maker c8 device aa
+[    1.245444] Found a supported NAND device
+[    1.249381] NAND Controller ID : 0x4030
+[    1.253197] NAND Device ID  : 0x1590aac8
+[    1.257134] Buswidth : 8 Bits
+[    1.260064] Density  : 256 MByte
+[    1.263268] Pagesize : 2048 Bytes
+[    1.266595] Erasesize: 131072 Bytes
+[    1.270044] Oobsize  : 64 Bytes
+[    1.273157] CFG0 Init  : 0xa8d408c0
+[    1.276667] CFG1 Init  : 0x0004745c
+[    1.280115] ECCBUFCFG  : 0x00000203
+[    1.283595] Creating 16 MTD partitions on "msm_nand":
+[    1.288661] 0x000004fe0000-0x000005a20000 : "boot"
+[    1.295254] 0x000000140000-0x0000004a0000 : "sbl2"
+[    1.300473] 0x0000004a0000-0x000000800000 : "rpm"
+[    1.305631] 0x000000800000-0x000000d80000 : "efs2"
+[    1.310758] 0x000000d80000-0x000001200000 : "dsp1"
+[    1.316038] 0x000001200000-0x000001c40000 : "dsp3"
+[    1.321196] 0x000001c40000-0x000004f00000 : "dsp2"
+[    1.326384] 0x000004f00000-0x000004fe0000 : "aboot"
+[    1.331542] 0x000000000000-0x000000140000 : "mibib"
+[    1.336792] 0x000005a20000-0x000009a80000 : "cache"
+[    1.342011] 0x000009a80000-0x000009be0000 : "misc"
+[    1.347321] 0x000009be0000-0x00000a640000 : "recovery"
+[    1.352876] 0x00000a640000-0x00000a7a0000 : "fota"
+[    1.358187] 0x00000a7a0000-0x00000be80000 : "recoveryfs"
+[    1.364016] 0x00000be80000-0x00000d560000 : "system"
+[    1.369540] 0x00000d560000-0x000010000000 : "userdata"
+[    1.375522] rmnet_init: BAM devices[8]
+[    1.383641] msm_otg msm_otg: msm_otg probe
+[    1.386845] msm_otg msm_otg: failed to get phy_clk
+[    1.391545] msm_otg msm_otg: OTG regs = c6832000
+[    1.398290] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+[    1.418007] Initializing USB Mass Storage driver...
+[    1.422035] usbcore: registered new interface driver usb-storage
+[    1.427956] USB Mass Storage support registered.
+[    1.432565] usbcore: registered new interface driver ums-alauda
+[    1.438486] usbcore: registered new interface driver ums-cypress
+[    1.444468] usbcore: registered new interface driver ums-datafab
+[    1.450480] usbcore: registered new interface driver ums-freecom
+[    1.456432] usbcore: registered new interface driver ums-isd200
+[    1.462322] usbcore: registered new interface driver ums-jumpshot
+[    1.468426] usbcore: registered new interface driver ums-karma
+[    1.474225] usbcore: registered new interface driver ums-onetouch
+[    1.480299] usbcore: registered new interface driver ums-sddr09
+[    1.486220] usbcore: registered new interface driver ums-sddr55
+[    1.492079] usbcore: registered new interface driver ums-usbat
+[    1.497939] usbcore: registered new interface driver usb_ehset_test
+[    1.504471] msm_hsic_peripheral msm_hsic_peripheral: HSIC Peripheral regs = c6834000
+[    1.524889] msm_otg msm_otg: phy_reset: success
+[    1.529436] msm_hsusb msm_hsusb: [ci13xxx_start] hw_ep_max = 32
+[    1.534686] mbim_init: initialize 1 instances
+[    1.539417] mbim_init: Initialized 1 ports
+[    1.546528] rndis_qc_init: initialize rndis QC instance
+[    1.551381] android_usb gadget: Mass Storage Function, version: 2009/09/11
+[    1.557637] android_usb gadget: Number of LUNs=1
+[    1.562185]  lun0: LUN: removable read only CD-ROM file: (no medium)
+[    1.569082] android_usb gadget: android_usb ready
+[    1.573477] msm_hsic_peripheral msm_hsic_peripheral: [ci13xxx_start] hw_ep_max = 32
+[    1.581077] android_usb gadget: android_usb ready
+[    1.585594] msm_hsic_peripheral msm_hsic_peripheral: CI13XXX_CONTROLLER_RESET_EVENT received
+[    1.593956] msm_hsic_peripheral msm_hsic_peripheral: CI13XXX_CONTROLLER_UDC_STARTED_EVENT received
+[    1.604730] android_work: android_work: did not send uevent (0 0   (null))
+[    1.613062] msm_hsic_peripheral msm_hsic_peripheral: HSIC-USB in low power mode
+[    1.627193] diagchar initialized now
+[    1.634488] couldn't get usb power supply
+[    1.638089] input: gpio-keys as /devices/platform/gpio-keys/input/input0
+[    1.652403] diag: Invalid Msg type 12 proc 2
+[    1.655943] gpio_keys_report_event:349 Debug Information...
+[    1.661193] gpio_keys_report_event:349 Debug Information...
+[    1.684846] input: pmic8xxx_pwrkey as /devices/platform/msm_ssbi.0/pm8018-core/pm8xxx-pwrkey/input/input1
+[    1.694674] w_disable_init
+[    1.696352] [w_disable_init]irq is 299,gpio is 11
+[    1.701785] rtc-pm8xxx rtc-pm8xxx: rtc core: registered pm8xxx_rtc as rtc0
+[    1.708255] i2c /dev entries driver
+[    1.712528] pm8xxx_adc_probe: failed to request pa_therm vreg with error -19
+[    1.739783] pm8xxx_tm_probe: OK
+[    1.742255] cpuidle: using governor ladder
+[    1.746039] cpuidle: using governor menu
+[    1.750709] mmc0: mci-version: 18
+[    1.753303] msmsdcc_vreg_init_reg: regulator_get(sdc_vdd) failed. rc=-19
+[    1.759926] msmsdcc_probe: msmsdcc_vreg_init() failed (-19)
+[    1.766580] mmc0: mci-version: 18
+[    1.768899] mmc0: bam physical base=0x12142000
+[    1.773294] mmc0: bam virtual base=0xc683c000
+[    1.777689] sps:BAM 0x12142000 is registered.
+[    1.781779] mmc0: BAM device registered. bam_handle=0xc63caa00
+[    1.788005] sps:REVISION of BAM 0xc683c000 is 0x5.
+[    1.793224] mmc0: Qualcomm MSM SDCC-BAM at 0x0000000012142000 irq 129
+[    1.799023] mmc0: Qualcomm MSM SDCC-DML at 0x0000000012140800
+[    1.804944] mmc0: No card detect facilities available
+[    1.811414] mmc0: Qualcomm MSM SDCC-core at 0x0000000012140000 irq 135,0 dma -1 dmacrcri -1
+[    1.818861] mmc0: 8 bit data mode disabled
+[    1.822890] mmc0: 4 bit data mode enabled
+[    1.826827] mmc0: polling status mode disabled
+[    1.831222] mmc0: MMC clock 400000 -> 48000000 Hz, PCLK 0 Hz
+[    1.837417] mmc0: Slot eject status = 0
+[    1.840683] mmc0: Power save feature enable = 1
+[    1.845231] mmc0: SPS-BAM data transfer mode available
+[    1.869525] logger: created 256K log 'log_main'
+[    1.883320] logger: created 256K log 'log_events'
+[    1.897329] logger: created 256K log 'log_radio'
+[    1.911185] logger: created 256K log 'log_system'
+[    1.925347] odm_notify_init:netlink_init.
+[    1.933801] odm_notify_init:creat socket ok.
+[    1.938928] voice_allocate_shared_memory: ION memory allocation failed
+[    1.944849] msm_pcm_probe: dev name msm-voip-dsp
+[    1.950312] msm_pcm_probe: dev name msm-pcm-dsp
+[    1.953944] msm_pcm_probe: dev name msm-multi-ch-pcm-dsp
+[    1.960262] mdm9615_audio_init: Interface Type = -1
+[    1.964108] running1 ##############
+[    1.967648] running0 ##############
+[    1.979368] msm_dai_q6_dai_sec_auxpcm_probe
+[    1.982542] msm_dai_q6_dai_sec_auxpcm_probe
+[    1.987974] asoc: null-codec-dai <-> MultiMedia1 mapping ok
+[    1.993682] asoc: null-codec-dai <-> MultiMedia2 mapping ok
+[    1.999389] asoc: null-codec-dai <-> CS-VOICE mapping ok
+[    2.004822] asoc: null-codec-dai <-> VoIP mapping ok
+[    2.009919] asoc: null-codec-dai <-> SLIMBUS0_HOSTLESS mapping ok
+[    2.016053] asoc: msm-stub-rx <-> msm-dai-q6.241 mapping ok
+[    2.021638] asoc: msm-stub-tx <-> msm-dai-q6.240 mapping ok
+[    2.027346] asoc: null-codec-dai <-> AUXPCM_HOSTLESS mapping ok
+[    2.033328] asoc: null-codec-dai <-> VoLTE mapping ok
+[    2.038547] asoc: null-codec-dai <-> DTMF_RX_HOSTLESS mapping ok
+[    2.044590] asoc: msm-stub-tx <-> msm-dai-stub mapping ok
+[    2.050114] asoc: msm-stub-rx <-> msm-dai-q6.12288 mapping ok
+[    2.055913] asoc: msm-stub-tx <-> msm-dai-q6.12289 mapping ok
+[    2.061681] asoc: msm-stub-rx <-> msm-dai-q6.224 mapping ok
+[    2.067297] asoc: msm-stub-tx <-> msm-dai-q6.225 mapping ok
+[    2.072943] asoc: msm-stub-rx <-> msm-dai-q6.2 mapping ok
+[    2.078376] asoc: msm-stub-tx <-> msm-dai-q6.3 mapping ok
+[    2.083778] asoc: msm-stub-rx <-> msm-dai-q6.12 mapping ok
+[    2.089272] asoc: msm-stub-tx <-> msm-dai-q6.13 mapping ok
+[    2.094765] asoc: msm-stub-rx <-> msm-dai-q6.32773 mapping ok
+[    2.100534] asoc: msm-stub-tx <-> msm-dai-q6.32772 mapping ok
+[    2.106302] asoc: msm-stub-tx <-> msm-dai-q6.32771 mapping ok
+[    2.119945] ALSA device list:
+[    2.121867]   #0: mdm9615-tabla-snd-card
+[    2.126751] Netfilter messages via NETLINK v0.30.
+[    2.130688] nf_conntrack version 0.5.0 (460 buckets, 1840 max)
+[    2.137494] ip_set: protocol 6
+[    2.139752] ip_tables: (C) 2000-2006 Netfilter Core Team
+[    2.145246] TCP cubic registered
+[    2.149458] NET: Registered protocol family 10
+[    2.155959] ip6_tables: (C) 2000-2006 Netfilter Core Team
+[    2.160628] NET: Registered protocol family 17
+[    2.164810] VFP support v0.3: implementor 41 architecture 2 part 30 variant 5 rev 1
+[    2.172409] Registering SWP/SWPB emulation handler
+[    2.180619] clock_late_init() disabled 44 unused clocks
+[    2.187242] sps:BAM 0x124c2000 is registered.
+[    2.194719] MSM Watchdog Initialized
+[    2.197741] no pmic restart interrupt specified
+[    2.204059] rtc-pm8xxx rtc-pm8xxx: setting system clock to 1970-01-01 10:14:29 UTC (36869)    2.212604] yaffs: dev is 32505870 name is "mtdblock14" rw
+[    2.217152] yaffs: passed flags ""
+[    2.246665] VFS: Mounted root (yaffs2 filesystem) on device 31:14.
+[    2.252372] Freeing init memory: 164K
+[    2.314512] msm_hsusb msm_hsusb: CI13XXX_CONTROLLER_RESET_EVENT received
+[    6.377201] yaffs: dev is 32505871 name is "mtdblock15" rw
+[    6.381657] yaffs: passed flags ""
+[    6.443216] yaffs: dev is 32505865 name is "mtdblock9" rw
+[    6.447794] yaffs: passed flags ""
+[    7.365634] sps:BAM 0x12502000 is registered.
+[    7.369082] enable_store: android_usb: already disabled
+[    7.375400] android_enable_function,1723,name =android_usb,num = 1
+[    7.380558] android_enable_function,1723,name =android_usb,num = 1
+[    7.386754] android_enable_function,1723,name =android_usb,num = 1
+[    7.392888] android_enable_function,1723,name =android_usb,num = 1
+[    7.399236] 1 enable idVendor = 1478,idProduct=36901,bcdDevice=562,bDeviceClass = 0,bDeviceSubClass=0,bDeviceProtocol=0,enable_store,1922
+[    7.429299] frmnet_bind: RmNet(0) dual Speed, IN:ep8in OUT:ep5out
+[    7.434365] adb_bind_config
+[    7.555775] msm_otg msm_otg: Failed notifying 1 charger type to PMIC
+[    7.561300] android_work: android_work: did not send uevent (0 0   (null))
+INIT: [    7.596825] android_work: android_work: sent uevent USB_STATE=CONNECTED
+[    7.602441] msm_otg msm_otg: Failed notifying 1 charger type to PMIC
+[    7.612910] android_work: android_work: sent uevent USB_STATE=DISCONNECTED
+Entering runlevel: 5
+[    7.662841] android_work: android_work: sent uevent USB_STATE=CONNECTED
+Starting time_services: done
+Starting wapfotadaemon: done
+starting DNS forwarder and DHCP server: dnsmasq... done.
+Starting notifymgr: done
+Starting qti: done
+Starting syslogd/klogd: done
+Starting atreset: done
+Starting diagrebootapp: done
+Starting atfwd_daemon: done
+Starting QCMAP_ConnectionManager: done
+Starting sleep_check ...: done
+Starting qmuxd: done
+starting ipth dme
+done starting ipth_dme
+Starting csdserver: done
+Starting mbimd: done
+Starting netmgrd: done
+Starting qmi_shutdown_modem: done
+Starting pm: done
+Stopping Bootlog daemon: bootlogd.
+[    8.985899] mbim_open: Open mbim driver
+[    8.988737] mbim_open: Lock mbim_dev->open_excl for open
+[    9.037143] mbim_open: USB cable not connected
+[    9.066229] mbim_open: Exit, mbim file opened
+
+OpenEmbedded Linux 9615-cdp ttyHSL0
+
+msm 20150727 9615-cdp ttyHSL0
+

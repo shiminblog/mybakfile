@@ -1,0 +1,41 @@
+From 690043f781a501290e3dedb3f74a88f7d5c14d53 Mon Sep 17 00:00:00 2001
+From: chenx <chenxiang0527@thundersoft.com>
+Date: Mon, 8 Dec 2014 16:42:25 +0800
+Subject: [PATCH 2/3] ARM:dts:msm: support bmp280 devicetree
+
+Devicetree support bmp280
+
+Change-Id: I29a38e3b94585800c83ab86798f301969004021e
+Signed-off-by: Xiang Chen <chenxiang0527@thundersoft.com>
+---
+ arch/arm/boot/dts/qcom/msm8939-qrd-skuk.dtsi |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
+ mode change 100755 => 100644 arch/arm/boot/dts/qcom/msm8939-qrd-skuk.dtsi
+
+diff --git a/arch/arm/boot/dts/qcom/msm8939-qrd-skuk.dtsi b/arch/arm/boot/dts/qcom/msm8939-qrd-skuk.dtsi
+old mode 100755
+new mode 100644
+index 8691993..4d57368
+--- a/arch/arm/boot/dts/qcom/msm8939-qrd-skuk.dtsi
++++ b/arch/arm/boot/dts/qcom/msm8939-qrd-skuk.dtsi
+@@ -61,6 +61,17 @@
+ };
+ 
+ &i2c_0 { /* BLSP1 QUP2 */
++	bmp280@76 {
++		status = "okay";
++		reg = <0x76>;
++		compatible = "bosch,bmp280";
++		vdd-supply = <&pm8916_l17>;
++		vio-supply = <&pm8916_l6>;
++		bosch,bmp_filter_default = <3>;
++		bosch,duration = <1>;
++		bosch,default_delay = <200>;
++	};
++
+ 	avago@39 { /* Ambient light and proximity sensor */
+ 		compatible = "avago,apds9930";
+ 		reg = <0x39>;
+-- 
+1.7.9.5
+

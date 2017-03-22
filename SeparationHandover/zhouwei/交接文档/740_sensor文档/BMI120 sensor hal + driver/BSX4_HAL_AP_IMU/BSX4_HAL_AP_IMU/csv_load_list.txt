@@ -1,0 +1,1 @@
+bsx4configSerialization_IMU_INPUT_MAG_25HZ_ACC_GYRO_200HZ_OUTPUT_DEFAULT.csv

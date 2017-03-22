@@ -1,0 +1,1 @@
+文件一般放在kernel\drivers\input\misc\bosch目录下面

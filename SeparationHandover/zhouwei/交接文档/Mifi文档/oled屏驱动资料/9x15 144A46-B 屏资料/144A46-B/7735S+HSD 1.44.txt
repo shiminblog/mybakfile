@@ -1,0 +1,123 @@
+void init()
+{
+	RESET = 1;                //set the P4^1 as 1 for the reset
+	delay_ms(1);           // Delay 1ms
+	RESET = 0;                 //set the P4^1 as 0 for the reset
+	delay_ms(100);          // Delay 10ms
+	RESET = 1;                //set the P4^1 as 1 for the reset
+	delay_ms(550);         // Delay 200ms                                                                                   
+                                                                                             
+
+
+//--------------------------------End ST7735S Reset Sequence --------------------------------------//
+Write(Command ,0x11); //Sleep out
+Delays (120); //Delay 120ms
+//------------------------------------ST7735S Frame Rate-----------------------------------------//
+Write(Command ,0xB1);
+Write(Parameter ,0x02);
+Write(Parameter ,0x35);
+Write(Parameter ,0x36);
+Write(Command ,0xB2);
+Write(Parameter ,0x02);
+Write(Parameter ,0x35);
+Write(Parameter ,0x36);
+Write(Command ,0xB3);
+Write(Parameter ,0x02);
+Write(Parameter ,0x35);
+Write(Parameter ,0x36);
+Write(Parameter ,0x02);
+Write(Parameter ,0x35);
+Write(Parameter ,0x36);
+//------------------------------------End ST7735S Frame Rate-----------------------------------------//
+Write(Command ,0xB4); //Dot inversion
+Write(Parameter ,0x03);
+//------------------------------------ST7735S Power Sequence-----------------------------------------//
+Write(Command ,0xC0);
+Write(Parameter ,0xA2);
+Write(Parameter ,0x02);
+Write(Parameter ,0x84);
+Write(Command ,0xC1);
+Write(Parameter ,0XC5);
+Write(Command ,0xC2);
+Write(Parameter ,0x0D);
+Write(Parameter ,0x00);
+Write(Command ,0xC3);
+Write(Parameter ,0x8D);
+Write(Parameter ,0x2A);
+Write(Command ,0xC4);
+Write(Parameter ,0x8D);
+Write(Parameter ,0xEE);
+//---------------------------------End ST7735S Power Sequence-------------------------------------//
+Write(Command ,0xC5); //VCOM
+Write(Parameter ,0x0D);
+Write(Command ,0x36); //MX, MY, RGB mode
+Write(Parameter ,0xC8);
+//------------------------------------ST7735S Gamma Sequence-----------------------------------------//
+Write(Command ,0xE0);
+Write(Parameter ,0x03);
+Write(Parameter ,0x1B);
+Write(Parameter ,0x12);
+Write(Parameter ,0x11);
+Write(Parameter ,0x3F);
+Write(Parameter ,0x3A);
+Write(Parameter ,0x32);
+Write(Parameter ,0x34);
+Write(Parameter ,0x2F);
+Write(Parameter ,0x2B);
+Write(Parameter ,0x30);
+Write(Parameter ,0x3A);
+Write(Parameter ,0x00);
+Write(Parameter ,0x01);
+Write(Parameter ,0x02);
+Write(Parameter ,0x05);
+Write(Command ,0xE1);
+Write(Parameter ,0x03);
+Write(Parameter ,0x1B);
+Write(Parameter ,0x12);
+Write(Parameter ,0x11);
+Write(Parameter ,0x32);
+Write(Parameter ,0x2F);
+Write(Parameter ,0x2A);
+Write(Parameter ,0x2F);
+Write(Parameter ,0x2E);
+Write(Parameter ,0x2C);
+Write(Parameter ,0x35);
+Write(Parameter ,0x3F);
+Write(Parameter ,0x00);
+Write(Parameter ,0x00);
+Write(Parameter ,0x01);
+Write(Parameter ,0x05);
+//------------------------------------End ST7735S Gamma Sequence-----------------------------------------//
+
+Write(Command ,0x3A); //65k mode
+Write(Parameter ,0x05);
+Write(Command ,0x29); //Display on
+Write(Command ,0x2C); //Display on
+}
+void set_windows_x(uint x_strat_add,uint x_end_add,uint y_strat_add,uint y_end_add)
+{
+
+	write_comm(0x2A);
+	write_data(x_strat_add>>8);
+	write_data(x_strat_add&0xFF);
+	write_data(x_end_add>>8);
+	write_data(x_end_add&0xFF);
+
+	write_comm(0x2B);
+	write_data(y_strat_add>>8);
+	write_data(y_strat_add&0x00FF);
+	write_data(y_end_add>>8);
+	write_data(y_end_add&0x00FF);
+}
+void enter_sleep()
+{
+write_comm(0x28);
+write_comm(0x10);
+dealy_ms(120);
+}
+void enter_sleep()
+{
+write_comm(0x11);
+dealy_ms(180);
+write_comm(0x29);
+}

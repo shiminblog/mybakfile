@@ -1,0 +1,1 @@
+使用ElanOpticalSensor.apk测试光感距感是否可用，可以通过“epl2182 APK测试说明.jpg”这张照片查看使用以及说明

@@ -1,0 +1,15 @@
+"美国高通技术公司
+Please copy and paste the following URL into your browser to download the driver.
+
+https://chipcode.qti.qualcomm.com/shenzhen-forge-precise-instrument-co-ltd/gcdb-la-1-0_amss_oem/tree/r00011.1/GCDB/camera/ov5670_oin5a13/patches-8916-pre-cs-20140923
+开源
+请将以下URL复制粘贴到浏览器中，以下载驱动程序。 您即将离开Qualcomm CreatePoint，进入第三方网站。
+
+Kernel
+https://www.codeaurora.org/cgit/external/thundersoft/ihvjointlab/gcdb-kernel/tree/camera/ov5670-oin5a13/patches-8916pre-cs-20140814/0001-ARM-dts-msm-Add-ov5670-camera-dtsi.patch
+
+User Space
+N/A
+
+Kernel
+Porting Guide Doucument Number: 80-NL239-32"

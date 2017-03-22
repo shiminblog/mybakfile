@@ -1,0 +1,44 @@
+[SOLUTION]
+# SOLUTION_MDOF       0
+# SOLUTION_ECOMPASS   1
+# SOLUTION_IMU        2
+# SOLUTION_M4G        3
+# SOLUTION_ACC        4
+solution = 0
+
+
+[DRIVER]
+#ACC_CHIP_BMI160      0
+#ACC_CHIP_BMA2x2      1
+acceleration_chip = 0
+
+#GYR_CHIP_BMI160      0
+#GYR_CHIP_BMG160      1
+gyroscope_chip = 0
+
+#MAG_CHIP_BMI160      0
+#MAG_CHIP_AKM09912    1
+#MAG_CHIP_BMM150      2
+#MAG_CHIP_AKM09911    3
+magnetic_chip = 0
+
+
+[AXIS_REMAP]
+#BMI160 on Engineer phone, accl & gyro =3
+accl=3
+gyro=3
+
+#BMM150 on Engineer phone, magn=0
+#AKM099xx on Engineer phone, magn=6
+magn=0
+
+
+[DEBUG]
+#data_log_enable = 1
+
+#LOG_LEVEL_N 0x10, LOG_LEVEL_E 0x08, LOG_LEVEL_W 0x04, LOG_LEVEL_I 0x02, LOG_LEVEL_D 0x01
+trace_level = 0x1C
+
+
+#logcat = 1
+

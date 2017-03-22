@@ -1,0 +1,72 @@
+1.	串口打印配置：
+--- a/apps_proc/kernel/arch/arm/configs/msm9615_defconfig
++++ b/apps_proc/kernel/arch/arm/configs/msm9615_defconfig
+@@ -180,8 +180,8 @@ CONFIG_SERIO_LIBPS2=y
+ CONFIG_SERIAL_MSM=y
+ CONFIG_SERIAL_MSM_CONSOLE=y
+ # CONFIG_SERIAL_MSM_CLOCK_CONTROL is not set
+-CONFIG_SERIAL_MSM_HSL=y
+-CONFIG_SERIAL_MSM_HSL_CONSOLE=y
++CONFIG_SERIAL_MSM_HSL=n
++CONFIG_SERIAL_MSM_HSL_CONSOLE=n
+ CONFIG_DIAG_CHAR=y
+ CONFIG_HW_RANDOM=y
+ CONFIG_HW_RANDOM_MSM=y
+diff --git a/apps_proc/oe-core/meta-msm/recipes/images/9615-cdp-bootimg.inc b/apps_proc/oe-core/meta-msm/re
+old mode 100644
+new mode 100755
+index 1fa6abc..90c6068
+--- a/apps_proc/oe-core/meta-msm/recipes/images/9615-cdp-bootimg.inc
++++ b/apps_proc/oe-core/meta-msm/recipes/images/9615-cdp-bootimg.inc
+@@ -22,7 +22,7 @@ do_rootfs_append() {
+ 
+        ${STAGING_DIR_NATIVE}/usr/bin/mkbootimg --kernel ${STAGING_DIR_TARGET}/boot/Image-${ver} \
+                --ramdisk /dev/null \
+-               --cmdline "noinitrd root=/dev/mtdblock14 rw rootfstype=yaffs2 console=ttyHSL0,115200,n8 and
++               --cmdline "noinitrd root=/dev/mtdblock14 rw rootfstype=yaffs2 androidboot.hardware=qcom" \
+                --base 0x40800000 \
+                --ramdisk_offset $kernelsize \
+                --output ${DEPLOY_DIR_IMAGE}/boot-oe-msm9615.img
+
+2.	串口密码修改
+mifi02/mf02-3030/apps_proc/oe-core/meta-msm/recipes/base-passwd/base-passwd-3.5.22/add-hash.patch
+diff --git a/passwd.master b/passwd.master
+index a01a6aa..2a8585f 100644
+--- a/passwd.master
++++ b/passwd.master
+@@ -1,4 +1,4 @@
+-root::0:0:root:/home/root:/bin/sh
++root::0:0:root:/home/root:/bin/sh
+ daemon:*:1:1:daemon:/usr/sbin:/bin/sh
+ bin:*:2:2:bin:/bin:/bin/sh
+ sys:*:3:3:sys:/dev:/bin/sh 周卫 10:18:23
+  -代表删除 +代表添加吗
+刘明军 10:18:40
+  这个patch格式
+刘明军 10:18:48
+  你对比下源码
+周卫 10:18:58
+  嗯
+周卫 10:29:25
+  apps_proc/oe-core/meta-msm/re
+
+周卫 10:29:35
+  没有这个文件
+刘明军 10:30:12
+  mifi02/mf02-3030/apps_proc/oe-core/meta-msm/recipes/base-passwd/base-passwd-3.5.22$/add-hash.patch
+diff --git a/passwd.master b/passwd.master
+index a01a6aa..2a8585f 100644
+--- a/passwd.master
++++ b/passwd.master
+@@ -1,4 +1,4 @@
+-root::0:0:root:/home/root:/bin/sh
++root::0:0:root:/home/root:/bin/sh
+ daemon:*:1:1:daemon:/usr/sbin:/bin/sh
+ bin:*:2:2:bin:/bin:/bin/sh
+ sys:*:3:3:sys:/dev:/bin/sh 周卫 10:32:43
+  配置文件中根本不存在+-号
+周卫 10:49:24
+  +root:C98ULvDZe7zQ2:0:0:root:/home/root:/bin/sh  是不是要删掉  这个好像是加密后的密码
+ bitbake -c cleanall base-passwd
+
+/etc# cat inittab  S:2345:respawn:/sbin/getty -L ttyHSL0 115200 console(./meta-msm/recipes/sysvinit/sysvinit-inittab_2.88dsf.bb)

@@ -1,0 +1,175 @@
+/* Copyright (c) 2014, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+/dts-v1/;
+
+#include "msm8916-qrd-skui-slm753-public.dtsi"
+#include "msm8916-memory.dtsi"
+
+/ {
+	model = "Qualcomm Technologies, Inc. MSM 8916 QRD SKUI slm753 public";
+	compatible = "qcom,msm8916-qrd-skui", "qcom,msm8916-qrd", "qcom,msm8916", "qcom,qrd";
+	qcom,board-id = <0x1010b 0x4a>;
+};
+
+&soc {
+	i2c@78b8000 {
+		smb1360_otg_supply: smb1360-chg-fg@14 {
+			compatible = "qcom,smb1360-chg-fg";
+			reg = <0x14>;
+			interrupt-parent = <&msm_gpio>;
+			interrupts = <62 8>;
+			pinctrl-names = "default";
+			pinctrl-0 = <&smb_int_default>;
+			qcom,chg-inhibit-disabled;
+			//zouwubin modify 2A for parallel charger 2016.03.03
+			qcom,float-voltage-mv = <4300>;
+			qcom,iterm-ma = <200>;
+			qcom,charging-timeout	= <768>;
+			qcom,recharge-thresh-mv = <100>;
+			//zouwubin modify 2A for parallel charger 2016.03.03
+			qcom,thermal-mitigation = <2000 700 600 0>;
+			qcom,fg-auto-recharge-soc = <99>;
+			//zouwubin add for i2c_4 power off 2016.03.01
+            vcc-i2c-supply = <&pm8916_l6>;
+			//zouwubin add for parallel charger 2016.03.03
+            qcom,rsense-10mhom;
+            qcom,parallel-charging-enabled;
+            qcom,max-parallel-current-ma = <630>;
+			regulator-name = "smb1360_otg_vreg";
+			/* add pop800 charger. zouwubin 2016.1.19*/
+			status = "disabled";
+		};
+	};
+
+	i2c@78b9000 { /* BLSP1 QUP5 */
+		goodix@5d {
+            compatible = "goodix,gt9xx";
+            reg = <0x5d>;
+            interrupt-parent = <&msm_gpio>;
+            interrupts = <13 0x2008>;
+            reset-gpios = <&msm_gpio 21 0x00>;
+            interrupt-gpios = <&msm_gpio 13 0x00>;
+            vdd-supply = <&pm8916_l17>;
+            vcc-i2c-supply = <&pm8916_l6>;
+            goodix,button-map = <139 102 158>;
+            goodix,panel-coords = <0 0 1280 800>;
+            goodix,display-coords = <0 0 1280 800>;
+            goodix,product-id = "928";
+            goodix,num_max_touches = <5>;
+            goodix,soft_rst_dly = <20>;
+            goodix,fw_name = "gtp_fw.bin";
+            goodix,fw-vkey-support;
+            goodix,i2c-pull-up;
+            goodix,no-force-update;
+            pinctrl-names = "pmx_ts_active","pmx_ts_suspend","pmx_ts_release";
+            pinctrl-0 = <&ts_int_active &ts_reset_active>;
+            pinctrl-1 = <&ts_int_suspend &ts_reset_suspend>;
+            pinctrl-2 = <&ts_release>;
+        };
+
+/*		focaltech@38 {
+			compatible = "focaltech,5x06";
+			reg = <0x38>;
+			interrupt-parent = <&msm_gpio>;
+			interrupts = <13 0x2>;
+			vdd-supply = <&pm8916_l17>;
+			vcc_i2c-supply = <&pm8916_l6>;
+			pinctrl-names = "pmx_ts_active","pmx_ts_suspend","pmx_ts_release";
+			pinctrl-0 = <&ts_int_active &ts_reset_active>;
+			pinctrl-1 = <&ts_int_suspend &ts_reset_suspend>;
+			pinctrl-2 = <&ts_release>;
+			focaltech,name = "ft6436";
+			focaltech,family-id = <0x36>;
+			focaltech,reset-gpio = <&msm_gpio 12 0x0>;
+			focaltech,irq-gpio = <&msm_gpio 13 0x0>;
+			focaltech,display-coords = <0 0 480 854>;
+			focaltech,panel-coords = <0 0 480 950>;
+			focaltech,button-map= <139 102 158>;
+			focaltech,no-force-update;
+			focaltech,i2c-pull-up;
+			focaltech,group-id = <1>;
+			focaltech,hard-reset-delay-ms = <20>;
+			focaltech,soft-reset-delay-ms = <200>;
+			focaltech,num-max-touches = <5>;
+			focaltech,fw-delay-aa-ms = <30>;
+			focaltech,fw-delay-55-ms = <30>;
+			focaltech,fw-upgrade-id1 = <0x79>;
+			focaltech,fw-upgrade-id2 = <0x18>;
+			focaltech,fw-delay-readid-ms = <10>;
+			focaltech,fw-delay-era-flsh-ms = <2000>;
+			focaltech,fw-auto-cal;
+			focaltech,ignore-id-check;
+		};*/
+	};
+
+	gen-vkeys {
+		compatible = "qcom,gen-vkeys";
+		label = "ft5x06_ts";
+		qcom,disp-maxx = <480>;
+		qcom,disp-maxy = <854>;
+		qcom,panel-maxx = <480>;
+		qcom,panel-maxy = <946>;
+		qcom,key-codes = <139 172 158>;
+		qcom,y-offset = <0>;
+	};
+
+	/* Use pmic to detect usb hotplug temporality add by jason*/
+	usb_detect {
+	   compatible = "qcom,qpnp-usbdetect";
+	   interrupt-parent = <&spmi_bus>;
+	   interrupts = <0x0 0x13 0x1>;
+	   interrupt-names = "vbus_det_irq";
+	};
+	/* add pop800 charger. zouwubin 2016.1.19*/
+	pop800_chg {
+		compatible = "pop800,chg";
+		interrupt-parent = <&msm_gpio>;
+		interrupts = <0 10 0>,<0 11 0>,<0 36 0>;
+		chg_type_gpio = <&msm_gpio 10 0x0>;
+		chg_usb_in_gpio = <&msm_gpio 11 0x0>;
+		chg_done_gpio = <&msm_gpio 36 0x0>;
+		pinctrl-names = "chg_default";
+		pinctrl-0 = <&chg_default>;
+		qcom,chg-vadc = <&pm8916_vadc>;
+		qcom,bms-psy-name = "bms";
+	};
+};
+
+/* add pop800 charger. zouwubin 2016.1.19*/
+&pm8916_chg {
+	status = "disabled";
+	qcom,use-external-charger;
+};
+
+/ {
+	qrd_batterydata: qcom,battery-data {
+		qcom,rpull-up-kohm = <100>;
+		qcom,vref-batt-therm = <1800000>;
+
+		#include "batterydata-qrd-skui-4v35-10000mah.dtsi"
+	};
+};
+
+&pm8916_bms {
+	status = "ok";
+	qcom,resume-soc = <99>;
+	qcom,battery-data = <&qrd_batterydata>;
+};
+
+&usb_otg {
+	qcom,hsusb-otg-mode = <3>;
+	qcom,usbid-gpio = <&msm_gpio 110 0>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&usbid_default>;
+	/*vbus_otg-supply = <&smb1360_otg_supply>;*/
+};

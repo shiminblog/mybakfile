@@ -1,0 +1,13 @@
+"请使用以下URL下载驱动程序 Samsung-S5K3L8(PDAF)-O-Film-OMIBA12
+
+美国高通技术公司
+Please copy and paste the following URL into your browser to download the driver.
+
+https://chipcode.qti.qualcomm.com/shenzhen-forge-precise-instrument-co-ltd/gcdb-la-1-0_amss_oem/tree/r00018.1/GCDB/camera/S5K3L8-4lane/patches-8939-cs-20151028
+
+请使用以下URL下载驱动程序 Samsung-S5K3M2-Truly Semiconductor-CMA160-B1300BA-E
+
+美国高通技术公司
+Please copy and paste the following URL into your browser to download the driver.
+
+https://chipcode.qti.qualcomm.com/shenzhen-forge-precise-instrument-co-ltd/gcdb-la-1-0_amss_oem/tree/r00013.1/GCDB/camera/3M2_8939/patches-8939-CS-1130-20150209"

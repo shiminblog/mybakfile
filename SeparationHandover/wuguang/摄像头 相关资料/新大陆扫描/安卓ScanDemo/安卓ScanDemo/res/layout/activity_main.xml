@@ -1,0 +1,45 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    
+    <!-- 如果 扫描结果被 EditText 捕获后，其它地方将无法获取 扫描结果 -->
+    <EditText
+        android:id="@+id/et_scan_result"
+        android:layout_width="fill_parent"
+        android:layout_height="100dip" 
+        android:maxHeight="100dip"
+        android:scrollbars="vertical"
+        android:textColor="@android:color/black"/>
+
+    <TextView
+        android:id="@+id/tv_scan_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/scan_desc"/>
+
+    <TextView
+        android:id="@+id/tv_scan_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/scan_resut"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:id="@+id/bt_start_scan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dip"
+        android:layout_gravity="center_horizontal"
+        android:text="Start_Stop_Scan" />
+    
+    <TextView
+        android:id="@+id/tv_deviceinfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dip"
+        android:textSize="18sp"
+        android:layout_gravity="center_horizontal"/>
+
+</LinearLayout>

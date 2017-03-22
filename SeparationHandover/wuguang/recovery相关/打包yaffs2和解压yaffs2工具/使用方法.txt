@@ -1,0 +1,5 @@
+mkyaffs2image使用：
+./mkyaffs2image 目录 XXX.yaffs2
+
+unyaffs使用
+unyaffs XXX.yaffs2
