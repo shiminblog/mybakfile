@@ -1,0 +1,872 @@
+/* Copyright (c) 2015-2016, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * 
+ * version:1.0
+ * data:2017.9.9
+ * function description : mipi-2-rgb (icn6211) device driver which tranfer msg via i2c
+ *
+ */
+#include <linux/types.h>
+#include <linux/kernel.h>
+#include <linux/module.h>
+#include <linux/init.h>
+#include <linux/device.h>
+#include <linux/platform_device.h>
+#include <linux/fs.h>
+#include <linux/delay.h>
+#include <linux/i2c.h>
+#include <linux/gpio.h>
+#include <linux/interrupt.h>
+#include <linux/of_gpio.h>
+#include <linux/of_irq.h>
+#include <linux/pm.h>
+#include <linux/pm_runtime.h>
+//#include "msm_dba_internal.h"
+#include <linux/mdss_io_util.h>
+#include <linux/slab.h>
+
+/********************************** simulated spi & initialize rgb lcd via spi  begein ***********************************************/
+/* GPIO126 / GPIO60 / GPIO38 / GPIO31 / GPIO32 */
+#define DISP_CSX	(126) /* cs */
+#define DISP_WRX	(38)  /* scl */
+#define DISP_SDO	(31)  /* sdo */
+#define DISP_SDI	(32)  /* sdi */
+#define DISP_RST	(60)  /* rst */
+
+
+#define LCD_W  800
+#define LCD_H  480
+
+/**************************************************************
+	otm8019 lcd  -->zzd
+	
+***************************************************************/
+#define SET_SPI_CS_HIGH()	gpio_direction_output(DISP_CSX, 1)//CS
+#define SET_SPI_CS_LOW()	gpio_direction_output(DISP_CSX, 0)//CS
+	
+#define SET_SPI_CLK_HIGH()	gpio_direction_output(DISP_WRX, 1)//CLK
+#define SET_SPI_CLK_LOW()	gpio_direction_output(DISP_WRX, 0)//CLK
+	
+#define SET_SPI_MOSI_HIGH() gpio_direction_output(DISP_SDI, 1)//MOSI
+#define SET_SPI_MOSI_LOW()	gpio_direction_output(DISP_SDI, 0)//MOSI
+
+#define SET_SPI_MISO()		gpio_direction_input(DISP_SDO)//MISO
+
+#define RESET_SCREEN()		{ gpio_direction_output(DISP_RST, 1);gpio_direction_output(DISP_RST, 0);udelay(100);gpio_direction_output(DISP_RST, 1);udelay(100);}
+
+#define OTM8018B_WCMDH 	0x20
+#define OTM8018B_WCMDL 	0x00
+#define OTM8018B_WDATA 	0x40
+#define LCD_DELAY_1MS    15000          // Sufficient under 1Ghz
+#define SPI_DELAY        200
+#define ICN6211_SLAVE_ADD	0x2C
+
+
+void lcd_gpio_init(void)
+{
+	int ret = 0;
+
+	pr_info("[spilcd] %s, begin...\n",__func__);
+
+	ret = gpio_request(DISP_RST, "display-spi-rst");
+	if (ret) {
+		pr_err("DISP_RST gpio request failed111\n");
+		return;
+	}
+	gpio_direction_output(DISP_RST, 1);
+
+	ret = gpio_request(DISP_WRX, "display-spi-clk");
+	if (ret) {
+		pr_err("DISP_WRX gpio request failed111\n");
+		return;
+	}
+	SET_SPI_CLK_HIGH();
+
+	ret = gpio_request(DISP_SDO, "display-spi-sdo");
+	if (ret) {
+		pr_err("DISP_SDO gpio request failed111\n");
+		return;
+	}
+	SET_SPI_MOSI_HIGH();
+
+	ret = gpio_request(DISP_CSX, "display-spi-cs");
+	if (ret) { 
+		pr_err("DISP_CSX gpio request failed111\n");
+		return;
+	}
+	SET_SPI_CS_HIGH();
+
+	ret = gpio_request(DISP_SDI, "display-spi-sdi");
+	if (ret) {
+		pr_err("DISP_SDI gpio request failed111\n");
+		return;
+	}
+	SET_SPI_MISO();
+	pr_info("[spilcd] %s, end...\n",__func__);
+
+	return ;
+}
+
+static void delay_loop(int delay)
+{
+    volatile int j,i;
+    for(j = 0; j < delay; j++)
+		i++;
+}
+
+void Spi_Write_Byte( unsigned char ddat )
+{
+    unsigned char i;
+
+    for (i = 0; i< 8; i++){
+ 	//SCL0=0;//IM3=0
+	//delay(10);
+       SET_SPI_CLK_LOW();
+       if (ddat&0x80) {
+           SET_SPI_MOSI_HIGH();
+       } else {
+           SET_SPI_MOSI_LOW();
+       }
+
+       //SET_SPI_CLK_LOW();
+       delay_loop(SPI_DELAY);
+       SET_SPI_CLK_HIGH();
+       delay_loop(SPI_DELAY);
+       //SCL0=0;//IM3=0
+       //SCL0=1;
+	  //delay(10);
+       //ddat=(ddat<<=1);
+	   ddat <<= 1;
+    }
+	return ;
+}
+
+void SPI_Write_CMD_OTM8018B(unsigned short SPI_data)//word
+{
+          
+    SET_SPI_CS_LOW();
+    Spi_Write_Byte(OTM8018B_WCMDH);
+    Spi_Write_Byte((SPI_data&0xFF00) >> 8);
+ //CSB=1;//
+    SET_SPI_CS_LOW();
+    Spi_Write_Byte(OTM8018B_WCMDL);
+    Spi_Write_Byte(SPI_data & 0x00FF);
+    SET_SPI_CS_HIGH();
+}
+
+void SPI_Write_DATA_OTM8018B(unsigned char  SPI_data)
+{
+    SET_SPI_CS_LOW();
+    Spi_Write_Byte(OTM8018B_WDATA);
+    Spi_Write_Byte(SPI_data);
+    SET_SPI_CS_HIGH();
+}
+
+
+void otm8019_ldi_init(void)
+{	
+	SET_SPI_CLK_LOW();
+ 
+	SPI_Write_CMD_OTM8018B(0xFF00); SPI_Write_DATA_OTM8018B(0x80); 
+	SPI_Write_CMD_OTM8018B(0xFF01); SPI_Write_DATA_OTM8018B(0x19); 
+	SPI_Write_CMD_OTM8018B(0xFF02); SPI_Write_DATA_OTM8018B(0x01); 
+
+	SPI_Write_CMD_OTM8018B(0xFF80); SPI_Write_DATA_OTM8018B(0x80); 
+	SPI_Write_CMD_OTM8018B(0xFF81); SPI_Write_DATA_OTM8018B(0x19); 
+
+	SPI_Write_CMD_OTM8018B(0xC48A); SPI_Write_DATA_OTM8018B(0x40); 
+
+	SPI_Write_CMD_OTM8018B(0xB3A6); SPI_Write_DATA_OTM8018B(0x20);		//
+	SPI_Write_CMD_OTM8018B(0xB3A7); SPI_Write_DATA_OTM8018B(0x01); 
+
+	SPI_Write_CMD_OTM8018B(0xC090); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xC091); SPI_Write_DATA_OTM8018B(0x15); 
+	SPI_Write_CMD_OTM8018B(0xC092); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xC093); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xC094); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xC095); SPI_Write_DATA_OTM8018B(0x03); 
+
+	SPI_Write_CMD_OTM8018B(0xC0B4); SPI_Write_DATA_OTM8018B(0x70); 
+
+	SPI_Write_CMD_OTM8018B(0xC181); SPI_Write_DATA_OTM8018B(0x33); 
+
+	SPI_Write_CMD_OTM8018B(0xC481); SPI_Write_DATA_OTM8018B(0x81); 
+
+	SPI_Write_CMD_OTM8018B(0xC487); SPI_Write_DATA_OTM8018B(0x00); 
+
+	SPI_Write_CMD_OTM8018B(0xC489); SPI_Write_DATA_OTM8018B(0x00); 
+
+	SPI_Write_CMD_OTM8018B(0xC582); SPI_Write_DATA_OTM8018B(0xB0); 
+
+	SPI_Write_CMD_OTM8018B(0xC590); SPI_Write_DATA_OTM8018B(0x4E); 
+	SPI_Write_CMD_OTM8018B(0xC591); SPI_Write_DATA_OTM8018B(0x34); 
+	SPI_Write_CMD_OTM8018B(0xC592); SPI_Write_DATA_OTM8018B(0x06); 
+	SPI_Write_CMD_OTM8018B(0xC593); SPI_Write_DATA_OTM8018B(0x91); 
+	SPI_Write_CMD_OTM8018B(0xC594); SPI_Write_DATA_OTM8018B(0x33); 
+	SPI_Write_CMD_OTM8018B(0xC595); SPI_Write_DATA_OTM8018B(0x34); 
+	SPI_Write_CMD_OTM8018B(0xC596); SPI_Write_DATA_OTM8018B(0x23); 
+
+	SPI_Write_CMD_OTM8018B(0xC5B1); SPI_Write_DATA_OTM8018B(0xA8); 
+
+	SPI_Write_CMD_OTM8018B(0xD800); SPI_Write_DATA_OTM8018B(0x6F); 
+	SPI_Write_CMD_OTM8018B(0xD801); SPI_Write_DATA_OTM8018B(0x6F); 
+
+	SPI_Write_CMD_OTM8018B(0xD900); SPI_Write_DATA_OTM8018B(0x23);
+	SPI_Write_CMD_OTM8018B(0xCE80); SPI_Write_DATA_OTM8018B(0x86); 
+	SPI_Write_CMD_OTM8018B(0xCE81); SPI_Write_DATA_OTM8018B(0x01); 
+	SPI_Write_CMD_OTM8018B(0xCE82); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCE83); SPI_Write_DATA_OTM8018B(0x85); 
+	SPI_Write_CMD_OTM8018B(0xCE84); SPI_Write_DATA_OTM8018B(0x01); 
+	SPI_Write_CMD_OTM8018B(0xCE85); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCE86); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCE87); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCE88); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCE89); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCE8A); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCE8B); SPI_Write_DATA_OTM8018B(0x00); 
+
+	SPI_Write_CMD_OTM8018B(0xCEA0); SPI_Write_DATA_OTM8018B(0x18); 
+	SPI_Write_CMD_OTM8018B(0xCEA1); SPI_Write_DATA_OTM8018B(0x05); 
+	SPI_Write_CMD_OTM8018B(0xCEA2); SPI_Write_DATA_OTM8018B(0x83); 
+	SPI_Write_CMD_OTM8018B(0xCEA3); SPI_Write_DATA_OTM8018B(0x39); 
+	SPI_Write_CMD_OTM8018B(0xCEA4); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCEA5); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCEA6); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCEA7); SPI_Write_DATA_OTM8018B(0x18); 
+	SPI_Write_CMD_OTM8018B(0xCEA8); SPI_Write_DATA_OTM8018B(0x04); 
+	SPI_Write_CMD_OTM8018B(0xCEA9); SPI_Write_DATA_OTM8018B(0x83); 
+	SPI_Write_CMD_OTM8018B(0xCEAA); SPI_Write_DATA_OTM8018B(0x3A); 
+	SPI_Write_CMD_OTM8018B(0xCEAB); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCEAC); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCEAD); SPI_Write_DATA_OTM8018B(0x00); 
+
+	SPI_Write_CMD_OTM8018B(0xCEB0); SPI_Write_DATA_OTM8018B(0x18); 
+	SPI_Write_CMD_OTM8018B(0xCEB1); SPI_Write_DATA_OTM8018B(0x03); 
+	SPI_Write_CMD_OTM8018B(0xCEB2); SPI_Write_DATA_OTM8018B(0x83); 
+	SPI_Write_CMD_OTM8018B(0xCEB3); SPI_Write_DATA_OTM8018B(0x3B); 
+	SPI_Write_CMD_OTM8018B(0xCEB4); SPI_Write_DATA_OTM8018B(0x86); 
+	SPI_Write_CMD_OTM8018B(0xCEB5); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCEB6); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCEB7); SPI_Write_DATA_OTM8018B(0x18); 
+	SPI_Write_CMD_OTM8018B(0xCEB8); SPI_Write_DATA_OTM8018B(0x02); 
+	SPI_Write_CMD_OTM8018B(0xCEB9); SPI_Write_DATA_OTM8018B(0x83); 
+	SPI_Write_CMD_OTM8018B(0xCEBA); SPI_Write_DATA_OTM8018B(0x3C); 
+	SPI_Write_CMD_OTM8018B(0xCEBB); SPI_Write_DATA_OTM8018B(0x88); 
+	SPI_Write_CMD_OTM8018B(0xCEBC); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCEBD); SPI_Write_DATA_OTM8018B(0x00); 
+
+	SPI_Write_CMD_OTM8018B(0xCFC0); SPI_Write_DATA_OTM8018B(0x01); 
+	SPI_Write_CMD_OTM8018B(0xCFC1); SPI_Write_DATA_OTM8018B(0x01); 
+	SPI_Write_CMD_OTM8018B(0xCFC2); SPI_Write_DATA_OTM8018B(0x20); 
+	SPI_Write_CMD_OTM8018B(0xCFC3); SPI_Write_DATA_OTM8018B(0x20); 
+	SPI_Write_CMD_OTM8018B(0xCFC4); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCFC5); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCFC6); SPI_Write_DATA_OTM8018B(0x01); 
+	SPI_Write_CMD_OTM8018B(0xCFC7); SPI_Write_DATA_OTM8018B(0x02); 
+	SPI_Write_CMD_OTM8018B(0xCFC8); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCFC9); SPI_Write_DATA_OTM8018B(0x00); 
+
+	SPI_Write_CMD_OTM8018B(0xCFD0); SPI_Write_DATA_OTM8018B(0x00); 
+	
+	SPI_Write_CMD_OTM8018B(0xCBC0); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCBC1); SPI_Write_DATA_OTM8018B(0x01); 
+	SPI_Write_CMD_OTM8018B(0xCBC2); SPI_Write_DATA_OTM8018B(0x01); 
+	SPI_Write_CMD_OTM8018B(0xCBC3); SPI_Write_DATA_OTM8018B(0x01); 
+	SPI_Write_CMD_OTM8018B(0xCBC4); SPI_Write_DATA_OTM8018B(0x01); 
+	SPI_Write_CMD_OTM8018B(0xCBC5); SPI_Write_DATA_OTM8018B(0x01); 
+	SPI_Write_CMD_OTM8018B(0xCBC6); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCBC7); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCBC8); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCBC9); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCBCA); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCBCB); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCBCC); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCBCD); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCBCE); SPI_Write_DATA_OTM8018B(0x00); 
+	
+	SPI_Write_CMD_OTM8018B(0xCBD0); SPI_Write_DATA_OTM8018B(0x00); 
+	
+	SPI_Write_CMD_OTM8018B(0xCBD5); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCBD6); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCBD7); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCBD8); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCBD9); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCBDA); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCBDB); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCBDC); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCBDD); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCBDE); SPI_Write_DATA_OTM8018B(0x00); 
+	
+	SPI_Write_CMD_OTM8018B(0xCBE0); SPI_Write_DATA_OTM8018B(0x01); 
+	SPI_Write_CMD_OTM8018B(0xCBE1); SPI_Write_DATA_OTM8018B(0x01); 
+	SPI_Write_CMD_OTM8018B(0xCBE2); SPI_Write_DATA_OTM8018B(0x01); 
+	SPI_Write_CMD_OTM8018B(0xCBE3); SPI_Write_DATA_OTM8018B(0x01); 
+	SPI_Write_CMD_OTM8018B(0xCBE4); SPI_Write_DATA_OTM8018B(0x01); 
+	SPI_Write_CMD_OTM8018B(0xCBE5); SPI_Write_DATA_OTM8018B(0x00); 
+	
+	SPI_Write_CMD_OTM8018B(0xCC80); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCC81); SPI_Write_DATA_OTM8018B(0x26); 
+	SPI_Write_CMD_OTM8018B(0xCC82); SPI_Write_DATA_OTM8018B(0x09); 
+	SPI_Write_CMD_OTM8018B(0xCC83); SPI_Write_DATA_OTM8018B(0x0B); 
+	SPI_Write_CMD_OTM8018B(0xCC84); SPI_Write_DATA_OTM8018B(0x01); 
+	SPI_Write_CMD_OTM8018B(0xCC85); SPI_Write_DATA_OTM8018B(0x25); 
+	SPI_Write_CMD_OTM8018B(0xCC86); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCC87); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCC88); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCC89); SPI_Write_DATA_OTM8018B(0x00); 
+	
+	SPI_Write_CMD_OTM8018B(0xCC90); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCC91); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCC92); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCC93); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCC94); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCC95); SPI_Write_DATA_OTM8018B(0x00); 
+	
+	SPI_Write_CMD_OTM8018B(0xCC9A); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCC9B); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCC9C); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCC9D); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCC9E); SPI_Write_DATA_OTM8018B(0x00); 
+	
+	SPI_Write_CMD_OTM8018B(0xCCA0); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCCA1); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCCA2); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCCA3); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCCA4); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCCA5); SPI_Write_DATA_OTM8018B(0x25); 
+	SPI_Write_CMD_OTM8018B(0xCCA6); SPI_Write_DATA_OTM8018B(0x02); 
+	SPI_Write_CMD_OTM8018B(0xCCA7); SPI_Write_DATA_OTM8018B(0x0C); 
+	SPI_Write_CMD_OTM8018B(0xCCA8); SPI_Write_DATA_OTM8018B(0x0A); 
+	SPI_Write_CMD_OTM8018B(0xCCA9); SPI_Write_DATA_OTM8018B(0x26); 
+	SPI_Write_CMD_OTM8018B(0xCCAA); SPI_Write_DATA_OTM8018B(0x00); 
+	
+	SPI_Write_CMD_OTM8018B(0xCCB0); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCCB1); SPI_Write_DATA_OTM8018B(0x25); 
+	SPI_Write_CMD_OTM8018B(0xCCB2); SPI_Write_DATA_OTM8018B(0x0C); 
+	SPI_Write_CMD_OTM8018B(0xCCB3); SPI_Write_DATA_OTM8018B(0x0A); 
+	SPI_Write_CMD_OTM8018B(0xCCB4); SPI_Write_DATA_OTM8018B(0x02); 
+	SPI_Write_CMD_OTM8018B(0xCCB5); SPI_Write_DATA_OTM8018B(0x26); 
+	SPI_Write_CMD_OTM8018B(0xCCB6); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCCB7); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCCB8); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCCB9); SPI_Write_DATA_OTM8018B(0x00); 
+	
+	SPI_Write_CMD_OTM8018B(0xCCC0); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCCC1); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCCC2); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCCC3); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCCC4); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCCC5); SPI_Write_DATA_OTM8018B(0x00); 
+	
+	SPI_Write_CMD_OTM8018B(0xCCCA); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCCCB); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCCCC); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCCCD); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCCCE); SPI_Write_DATA_OTM8018B(0x00); 
+	
+	SPI_Write_CMD_OTM8018B(0xCCD0); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCCD1); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCCD2); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCCD3); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCCD4); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xCCD5); SPI_Write_DATA_OTM8018B(0x26); 
+	SPI_Write_CMD_OTM8018B(0xCCD6); SPI_Write_DATA_OTM8018B(0x01); 
+	SPI_Write_CMD_OTM8018B(0xCCD7); SPI_Write_DATA_OTM8018B(0x09); 
+	SPI_Write_CMD_OTM8018B(0xCCD8); SPI_Write_DATA_OTM8018B(0x0B); 
+	SPI_Write_CMD_OTM8018B(0xCCD9); SPI_Write_DATA_OTM8018B(0x25); 
+	SPI_Write_CMD_OTM8018B(0xCCDA); SPI_Write_DATA_OTM8018B(0x00); 
+	
+	SPI_Write_CMD_OTM8018B(0xE100); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xE101); SPI_Write_DATA_OTM8018B(0x07); 
+	SPI_Write_CMD_OTM8018B(0xE102); SPI_Write_DATA_OTM8018B(0x10); 
+	SPI_Write_CMD_OTM8018B(0xE103); SPI_Write_DATA_OTM8018B(0x22); 
+	SPI_Write_CMD_OTM8018B(0xE104); SPI_Write_DATA_OTM8018B(0x40); 
+	SPI_Write_CMD_OTM8018B(0xE105); SPI_Write_DATA_OTM8018B(0x56); 
+	SPI_Write_CMD_OTM8018B(0xE106); SPI_Write_DATA_OTM8018B(0x66); 
+	SPI_Write_CMD_OTM8018B(0xE107); SPI_Write_DATA_OTM8018B(0x99); 
+	SPI_Write_CMD_OTM8018B(0xE108); SPI_Write_DATA_OTM8018B(0x88); 
+	SPI_Write_CMD_OTM8018B(0xE109); SPI_Write_DATA_OTM8018B(0x9F); 
+	SPI_Write_CMD_OTM8018B(0xE10A); SPI_Write_DATA_OTM8018B(0x6A); 
+	SPI_Write_CMD_OTM8018B(0xE10B); SPI_Write_DATA_OTM8018B(0x5A); 
+	SPI_Write_CMD_OTM8018B(0xE10C); SPI_Write_DATA_OTM8018B(0x74); 
+	SPI_Write_CMD_OTM8018B(0xE10D); SPI_Write_DATA_OTM8018B(0x61); 
+	SPI_Write_CMD_OTM8018B(0xE10E); SPI_Write_DATA_OTM8018B(0x68); 
+	SPI_Write_CMD_OTM8018B(0xE10F); SPI_Write_DATA_OTM8018B(0x61); 
+	SPI_Write_CMD_OTM8018B(0xE110); SPI_Write_DATA_OTM8018B(0x5B); 
+	SPI_Write_CMD_OTM8018B(0xE111); SPI_Write_DATA_OTM8018B(0x4E); 
+	SPI_Write_CMD_OTM8018B(0xE112); SPI_Write_DATA_OTM8018B(0x44); 
+	SPI_Write_CMD_OTM8018B(0xE113); SPI_Write_DATA_OTM8018B(0x00); 
+	
+	SPI_Write_CMD_OTM8018B(0xE200); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xE201); SPI_Write_DATA_OTM8018B(0x07); 
+	SPI_Write_CMD_OTM8018B(0xE202); SPI_Write_DATA_OTM8018B(0x10); 
+	SPI_Write_CMD_OTM8018B(0xE203); SPI_Write_DATA_OTM8018B(0x22); 
+	SPI_Write_CMD_OTM8018B(0xE204); SPI_Write_DATA_OTM8018B(0x40); 
+	SPI_Write_CMD_OTM8018B(0xE205); SPI_Write_DATA_OTM8018B(0x56); 
+	SPI_Write_CMD_OTM8018B(0xE206); SPI_Write_DATA_OTM8018B(0x66); 
+	SPI_Write_CMD_OTM8018B(0xE207); SPI_Write_DATA_OTM8018B(0x99); 
+	SPI_Write_CMD_OTM8018B(0xE208); SPI_Write_DATA_OTM8018B(0x88); 
+	SPI_Write_CMD_OTM8018B(0xE209); SPI_Write_DATA_OTM8018B(0x9F); 
+	SPI_Write_CMD_OTM8018B(0xE20A); SPI_Write_DATA_OTM8018B(0x6A); 
+	SPI_Write_CMD_OTM8018B(0xE20B); SPI_Write_DATA_OTM8018B(0x5A); 
+	SPI_Write_CMD_OTM8018B(0xE20C); SPI_Write_DATA_OTM8018B(0x74); 
+	SPI_Write_CMD_OTM8018B(0xE20D); SPI_Write_DATA_OTM8018B(0x61); 
+	SPI_Write_CMD_OTM8018B(0xE20E); SPI_Write_DATA_OTM8018B(0x68); 
+	SPI_Write_CMD_OTM8018B(0xE20F); SPI_Write_DATA_OTM8018B(0x61); 
+	SPI_Write_CMD_OTM8018B(0xE210); SPI_Write_DATA_OTM8018B(0x5B); 
+	SPI_Write_CMD_OTM8018B(0xE211); SPI_Write_DATA_OTM8018B(0x4E); 
+	SPI_Write_CMD_OTM8018B(0xE212); SPI_Write_DATA_OTM8018B(0x44); 
+	SPI_Write_CMD_OTM8018B(0xE213); SPI_Write_DATA_OTM8018B(0x00); 
+	
+	SPI_Write_CMD_OTM8018B(0xC480); SPI_Write_DATA_OTM8018B(0x30); 
+
+	SPI_Write_CMD_OTM8018B(0xC098); SPI_Write_DATA_OTM8018B(0x00); 
+
+	SPI_Write_CMD_OTM8018B(0xC0A9); SPI_Write_DATA_OTM8018B(0x0A); 
+
+	SPI_Write_CMD_OTM8018B(0xC1B0); SPI_Write_DATA_OTM8018B(0x20); 
+	SPI_Write_CMD_OTM8018B(0xC1B1); SPI_Write_DATA_OTM8018B(0x00); 
+	SPI_Write_CMD_OTM8018B(0xC1B2); SPI_Write_DATA_OTM8018B(0x00); 
+	
+	SPI_Write_CMD_OTM8018B(0xC0E1); SPI_Write_DATA_OTM8018B(0x40); 
+	SPI_Write_CMD_OTM8018B(0xC0E2); SPI_Write_DATA_OTM8018B(0x30); 
+
+	SPI_Write_CMD_OTM8018B(0xC180); SPI_Write_DATA_OTM8018B(0x03); 
+	SPI_Write_CMD_OTM8018B(0xC181); SPI_Write_DATA_OTM8018B(0x33); 
+
+	SPI_Write_CMD_OTM8018B(0xC1A0); SPI_Write_DATA_OTM8018B(0xE8); 
+
+	SPI_Write_CMD_OTM8018B(0xB690); SPI_Write_DATA_OTM8018B(0xB4); 
+	//delay_loop_1ms(10); 
+	mdelay(10);
+
+	SPI_Write_CMD_OTM8018B(0xFB00); SPI_Write_DATA_OTM8018B(0x01); 
+
+	SPI_Write_CMD_OTM8018B(0xFF00); SPI_Write_DATA_OTM8018B(0xFF); 
+	SPI_Write_CMD_OTM8018B(0xFF01); SPI_Write_DATA_OTM8018B(0xFF); 
+	SPI_Write_CMD_OTM8018B(0xFF02); SPI_Write_DATA_OTM8018B(0xFF); 
+
+	SPI_Write_CMD_OTM8018B(0x3600); SPI_Write_DATA_OTM8018B(0xc0); 
+	SPI_Write_CMD_OTM8018B(0x3A00); SPI_Write_DATA_OTM8018B(0x70); 
+
+	SPI_Write_CMD_OTM8018B(0x1100); SPI_Write_DATA_OTM8018B(0x00); 
+	//delay_loop_1ms(120); 
+	mdelay(120);
+	SPI_Write_CMD_OTM8018B(0x2900); SPI_Write_DATA_OTM8018B(0x00); 
+}
+
+void lcd_otm8019_init(void)
+{
+	pr_info("[spilcd] %s,starting...\n",__func__);
+	lcd_gpio_init();
+
+	/* LCD reset*/
+	RESET_SCREEN();
+
+	/*LCD driver init*/
+	otm8019_ldi_init();
+	pr_info("[spilcd] %s,end...\n",__func__);
+}
+/********************************** simulated spi & initialize rgb lcd via spi  end ***********************************************/
+
+
+struct icn6211 {
+	int enable_gpio;
+	struct i2c_client *client;
+	struct regulator *vdd1;
+	struct regulator *vdd2;
+	struct regulator *vdd3;
+	struct regulator *vcc_i2c;
+	struct mutex icn6211_mutex;
+};
+
+struct icn6211_cmd {
+	char reg_add;
+	char reg_val;
+};
+
+static const struct icn6211_cmd cmd_table[] = {
+#if 0
+	{0x20, 0xE0},
+	{0x21, 0x20},
+	{0x22, 0x31},
+	{0x23, 0xA0},
+	{0x24, 0x30},
+	{0x25, 0x28},
+	{0x26, 0x00},
+	{0x27, 0x0D},
+	{0x28, 0x03},
+	{0x29, 0x1D},
+	{0x34, 0x80},
+	{0x36, 0xA0},
+	{0xB5, 0xA0},
+	{0x5C, 0xFF},
+	{0x2A, 0x01},
+	{0x56, 0x90},
+	{0x6B, 0x71},
+	{0x69, 0x2E},
+	{0x10, 0x40},
+	{0x11, 0x88},
+	{0xB6, 0x20},
+	{0x51, 0x20},
+	//{0x14, 0x43},
+	//{0x2a, 0x49},
+	{0x09, 0x10}
+#endif
+	{0x20, 0xE0},
+	{0x21, 0x20},
+	{0x22, 0x31},
+	{0x23, 0x30},
+	{0x24, 0x04},
+	{0x25, 0x2C},
+	{0x26, 0x00},
+	{0x27, 0x0F},
+	{0x28, 0x01},
+	{0x29, 0x10},
+	{0x34, 0x80},
+	{0x36, 0x30},
+	{0xB5, 0xA0},
+	{0x5C, 0xFF},
+	{0x2A, 0x01},
+	{0x56, 0x90},
+	{0x6B, 0x71},
+	{0x69, 0x21},
+	{0x10, 0x45},
+	{0x11, 0x88},
+	{0xB6, 0x20},
+	{0x51, 0x20},
+	/*register 0x14 & 0x2a are test mode register*/
+	//{0x14, 0x43},
+	//{0x2a, 0x49},
+	{0x09, 0x10}
+};
+
+#define ICN6211_CMD_CNT (sizeof(cmd_table)/sizeof(cmd_table[0]))
+
+static int icn6211_i2c_write(struct icn6211 *pdata)
+{
+	int rc = 0;
+	int i = 0;
+	const struct icn6211_cmd *cmd_list = cmd_table;
+
+	mutex_lock(&pdata->icn6211_mutex);
+	if (pdata->client) {
+		for (i = 0; i < ICN6211_CMD_CNT; i++)
+		{
+			pr_info("ICN6211 write: reg_add=0x%X, reg_val=0x%X\n", 
+					(cmd_list+i)->reg_add, (cmd_list+i)->reg_val);
+
+			rc = i2c_smbus_write_byte_data(pdata->client, (cmd_list+i)->reg_add, (cmd_list+i)->reg_val);
+			if (rc < 0) {
+				mutex_unlock(&pdata->icn6211_mutex);
+				return rc;
+			}
+		}
+	}
+
+	mutex_unlock(&pdata->icn6211_mutex);
+	return rc;
+}
+
+static int icn6211_i2c_read(struct icn6211 *pdata)
+{
+	int rc = 0;
+	int i = 0;
+	const struct icn6211_cmd *cmd_list = cmd_table;
+
+	mutex_lock(&pdata->icn6211_mutex);
+	if (pdata->client) {
+		for (i = 0; i < ICN6211_CMD_CNT; i++)
+		{
+			rc = i2c_smbus_read_byte_data(pdata->client, (cmd_list+i)->reg_add);
+			if (rc < 0) {
+				mutex_unlock(&pdata->icn6211_mutex);
+				return rc;
+			}
+			pr_info("ICN6211 read : reg_add=0x%X, reg_val=0x%X\n", 
+					(cmd_list+i)->reg_add, rc);
+		}
+		rc = i2c_smbus_read_byte_data(pdata->client, 0x00);
+		pr_info("ICN6211 read : reg_add=0x00, reg_val=0x%X\n", rc);
+	}
+
+	mutex_unlock(&pdata->icn6211_mutex);
+	return rc;
+}
+
+static void icn6211_mipi_test(struct icn6211 *pdata)
+{
+	int rc = 0;
+	mutex_lock(&pdata->icn6211_mutex);
+	rc = i2c_smbus_write_byte_data(pdata->client, 0x88, 0x80);
+	if (rc < 0) {
+		pr_err("%s, i2c_smbus_write_byte_data error!\n",__func__);
+		mutex_unlock(&pdata->icn6211_mutex);
+		return ;
+	}
+
+	pr_info("%s, rc=%d\n", __func__,rc);
+	rc = 5;
+
+	rc = i2c_smbus_read_byte_data(pdata->client, 0x80);
+	pr_info("ICN6211 read : reg_add=0x80, reg_val=0x%X\n", rc);
+	rc = i2c_smbus_read_byte_data(pdata->client, 0x81);
+	pr_info("ICN6211 read : reg_add=0x81, reg_val=0x%X\n", rc);
+	mutex_unlock(&pdata->icn6211_mutex);
+	return ;
+
+}
+
+static int icn6211_power_on(struct icn6211 *pdata, int on)
+{
+	int ret = 0;
+
+	if (on) {
+		if (!IS_ERR(pdata->vdd1)) {
+			ret = regulator_enable(pdata->vdd1);
+			if (ret) {
+				dev_err(&pdata->client->dev,
+						"Regulator vdd1 enable failed ret=%d\n", ret);
+				goto err_enable_vdd1;
+			}
+		}
+
+		if (!IS_ERR(pdata->vdd2)) {
+			ret = regulator_enable(pdata->vdd2);
+			if (ret) {
+				dev_err(&pdata->client->dev,
+						"Regulator vdd2 enable failed ret=%d\n", ret);
+				goto err_enable_vdd2;
+			}
+		}
+
+		if (!IS_ERR(pdata->vdd3)) {
+			ret = regulator_enable(pdata->vdd3);
+			if (ret) {
+				dev_err(&pdata->client->dev,
+						"Regulator vdd3 enable failed ret=%d\n", ret);
+				goto err_enable_vdd3;
+			}
+		}
+	} else {
+		if (!IS_ERR(pdata->vdd1))
+			ret = regulator_disable(pdata->vdd1);
+		if (!IS_ERR(pdata->vdd2))
+			ret = regulator_disable(pdata->vdd2);
+		if (!IS_ERR(pdata->vdd3))
+			ret = regulator_disable(pdata->vdd3);
+	}
+
+	return ret;
+
+err_enable_vdd3:
+	if (!IS_ERR(pdata->vdd2))
+		regulator_disable(pdata->vdd2);
+err_enable_vdd2:
+	if (!IS_ERR(pdata->vdd1))
+		regulator_disable(pdata->vdd1);
+err_enable_vdd1:
+
+	return ret;
+
+}
+
+static int icn6211_power_init(struct icn6211 *pdata)
+{
+	int ret = 0;
+
+	pdata->vdd1 = regulator_get(&pdata->client->dev, "vdd1");
+	if (IS_ERR(pdata->vdd1)) {
+		ret = PTR_ERR(pdata->vdd1);
+		dev_info(&pdata->client->dev,
+				"Regulator get failed avdd ret=%d\n", ret);
+	}
+
+	pdata->vdd2 = regulator_get(&pdata->client->dev, "vdd2");
+	if (IS_ERR(pdata->vdd2)) {
+		ret = PTR_ERR(pdata->vdd2);
+		dev_info(&pdata->client->dev,
+				"Regulator get failed avdd ret=%d\n", ret);
+	}
+
+	pdata->vdd3 = regulator_get(&pdata->client->dev, "vdd3");
+	if (IS_ERR(pdata->vdd3)) {
+		ret = PTR_ERR(pdata->vdd3);
+		dev_info(&pdata->client->dev,
+				"Regulator get failed avdd ret=%d\n", ret);
+	}
+
+	return ret;
+}
+
+static int icn6211_gpio_init(struct icn6211 *pdata)
+{
+	int ret = 0;
+
+	pr_info("%s, icn6211-engpio is %d\n",
+			__func__,pdata->enable_gpio);
+
+	if (!gpio_is_valid(pdata->enable_gpio)) {
+		pr_err("%s,enable gpio [%d] is invalid!\n",
+				__func__, pdata->enable_gpio);
+		return -1;
+	}
+
+	ret = gpio_request(pdata->enable_gpio, "icn6211-en-gpio");
+	if (ret) {
+		pr_err("%s, Unable to request icn6211 en-gpio\n",__func__);
+	}
+
+	ret = gpio_direction_output(pdata->enable_gpio, 1);
+	if (ret) {
+		pr_err("%s, Unable to pull up icn6211 en-gpio\n",__func__);
+	}
+	mdelay(5);
+	ret = gpio_direction_output(pdata->enable_gpio, 0);
+	if (ret) {
+		pr_err("%s, Unable to pull up icn6211 en-gpio\n",__func__);
+	}
+	mdelay(15);
+	ret = gpio_direction_output(pdata->enable_gpio, 1);
+	if (ret) {
+		pr_err("%s, Unable to pull up icn6211 en-gpio\n",__func__);
+	}
+
+	return ret;
+}
+
+static int icn6211_parse_dt(struct device *dev, struct icn6211 *pdata)
+{
+	int rc = 0;
+	struct device_node *np = dev->of_node;
+
+	pdata->enable_gpio = of_get_named_gpio(np, "icn6211-en-gp", 0);
+
+	return rc;
+}
+
+static int icn6211_probe(struct i2c_client *client,
+	 const struct i2c_device_id *id)
+{
+	struct icn6211 *pdata;
+	int ret = 0;
+
+	pr_err("ICN6211:%s\n",__func__);
+	if (!client || !client->dev.of_node) {
+		dev_err(&client->dev, "%s: invalid input\n\n",__func__);
+		return -EINVAL;
+	}
+
+	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
+		dev_err(&client->dev, "icn6211  I2C not supported\n");
+		return -ENODEV;
+	}
+
+	pdata = devm_kzalloc(&client->dev,
+		sizeof(struct icn6211), GFP_KERNEL);
+	if (!pdata)
+		return -ENOMEM;
+
+	ret = icn6211_parse_dt(&client->dev, pdata);
+	if (ret) {
+		pr_err("%s: Failed to parse DT\n", __func__);
+		goto err_dt_parse;
+	}
+
+	pdata->client = client;
+
+	ret = icn6211_gpio_init(pdata);
+	if (ret) {
+		pr_err("%s: Failed to configure GPIOs\n", __func__);
+		goto err_gpio_cfg;
+	}
+
+	if (0)
+		ret = icn6211_power_init(pdata);
+
+	if (0) {
+		ret = icn6211_power_on(pdata, 1);
+		if (ret) {
+			pr_err("%s, power on faild !\n",__func__);
+			goto err_power_on;
+		}
+	}
+
+	mutex_init(&pdata->icn6211_mutex);
+	dev_set_drvdata(&client->dev, pdata);
+	
+	mutex_lock(&pdata->icn6211_mutex);
+	lcd_otm8019_init();
+	mutex_unlock(&pdata->icn6211_mutex);
+	mdelay(5);
+	
+	icn6211_i2c_write(pdata);
+	mdelay(5);
+	icn6211_i2c_read(pdata);
+	msleep(2000);
+	icn6211_mipi_test(pdata);
+
+	return 0;
+err_power_on:
+err_gpio_cfg:
+err_dt_parse:
+	devm_kfree(&client->dev, pdata);
+	return ret;
+}
+
+
+static int icn6211_resume(struct device *tdev) 
+{
+	    return 0;
+}
+
+static int icn6211_suspend(struct device *tdev) 
+{
+	    return 0;
+}
+static int icn6211_remove(struct i2c_client *client) 
+{
+	    return 0;
+}
+
+static const struct of_device_id icn6211_mipi_rgb_of_match[] = {
+	    { .compatible = "qcom,icn6211_mipi_rgb",},
+		    {},
+};
+
+static const struct i2c_device_id icn6211_id[] = {
+	    {"icn6211_mipi_rgb", 0},
+		    {},
+};
+
+static const struct dev_pm_ops icn6211_pm_ops = { 
+	.suspend = icn6211_suspend,
+	.resume = icn6211_resume, 
+};
+
+static struct i2c_driver icn6211_driver = {
+	.driver = {
+		.name = "qcom,icn6211_mipi_rgb",
+		.owner    = THIS_MODULE,
+		.of_match_table = icn6211_mipi_rgb_of_match,
+		.pm = &icn6211_pm_ops,
+	},
+	.probe    = icn6211_probe,
+	.remove   = icn6211_remove,
+	.id_table = icn6211_id,
+};
+
+module_i2c_driver(icn6211_driver);
+MODULE_DESCRIPTION("ICN6211 MIPI-RGB driver");
+MODULE_LICENSE("GPL");
+MODULE_ALIAS("i2c:icn6211_mipi_rgb");
+
