@@ -1,0 +1,1098 @@
+/* Copyright (c) 2015-2016, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * 
+ * version:1.0
+ * data:2017.9.9
+ * function description : mipi-2-rgb (icn6211) device driver which tranfer msg via i2c
+ *
+ */
+#include <linux/types.h>
+#include <linux/kernel.h>
+#include <linux/module.h>
+#include <linux/init.h>
+#include <linux/device.h>
+#include <linux/platform_device.h>
+#include <linux/fs.h>
+#include <linux/delay.h>
+#include <linux/i2c.h>
+#include <linux/gpio.h>
+#include <linux/interrupt.h>
+#include <linux/of_gpio.h>
+#include <linux/of_irq.h>
+#include <linux/pm.h>
+#include <linux/pm_runtime.h>
+#include <linux/mdss_io_util.h>
+#include <linux/slab.h>
+
+struct icn6211 {
+	int en_gp;
+	int lcd_rst_gp;
+	unsigned char slave_addr;
+	int iic_scl_gp;
+	int iic_sda_gp;
+	int spi_sdi_gp;
+	int spi_sdo_gp;
+	int spi_csx_gp;
+	int spi_sck_gp;
+	int rgb_or_lvds; /* 1:rgb, 0, lvds */
+	struct mutex icn6211_mutex;
+};
+
+struct init_cmd {
+	char reg_add;
+	char reg_val;
+};
+
+static const struct init_cmd icn6211_cmd_table[] = {
+#if 0
+	{0x20, 0x20},
+	{0x21, 0xE0},
+	{0x22, 0x13},
+	{0x23, 0xA0},
+	{0x24, 0x30},
+	{0x25, 0x28},
+	{0x26, 0x00},
+	{0x27, 0x0D},
+	{0x28, 0x03},
+	{0x29, 0x1D},
+	{0x34, 0x80},
+	{0x36, 0xA0},
+	{0x86, 0x29},
+	{0xB5, 0xA0},
+	{0x5C, 0xFF},
+	{0x2A, 0x01},
+	{0x56, 0x90},
+	{0x6B, 0x71},
+	{0x69, 0x2B},
+	{0x10, 0x45},
+	{0x11, 0x88},
+	{0xB6, 0x20},
+	{0x51, 0x20},
+	{0x14, 0x43},
+	{0x2a, 0x49},
+	{0x09, 0x10}
+#endif
+	{0x20, 0xE0},
+	{0x21, 0x20},
+	{0x22, 0x31},
+	{0x23, 0x2E},
+	{0x24, 0x04},
+	{0x25, 0x2C},
+	{0x26, 0x00},
+	{0x27, 0x0F},
+	{0x28, 0x01},
+	{0x29, 0x10},
+	{0x34, 0x80},
+	{0x36, 0x2E},
+	{0x86, 0x29},
+	{0xB5, 0xA0},
+	{0x5C, 0xFF},
+	{0x2A, 0x01},
+	{0x56, 0x90},
+	{0x6B, 0x71},
+	{0x69, 0x24},
+	{0x10, 0xC0},
+	{0x11, 0x88},
+	{0xB6, 0x20},
+	{0x51, 0x20},
+	{0x14, 0x43},
+	{0x2a, 0x49},
+	{0x09, 0x10}
+};
+
+#define ICN6211_CMD_CNT (sizeof(icn6211_cmd_table)/sizeof(icn6211_cmd_table[0]))
+
+static struct icn6211 *icn6211_pdata = NULL;
+
+/*simulated i2c ----begin*/
+#define OUTP 1
+#define INP 0
+#define SDA (icn6211_pdata->iic_sda_gp)
+#define SCL (icn6211_pdata->iic_scl_gp)
+
+#define  gpio_set_direction(fuck1,fuck2) {if(fuck2==1)gpio_direction_output(fuck1,0);else gpio_direction_input(fuck1);}
+#define  gpio_set_val(fuck1,fuck2)       gpio_direction_output(fuck1,fuck2)
+#define  gpio_status(fuck1)				 gpio_get_value(fuck1)
+
+static int i2c_start(void)
+{
+
+	gpio_set_direction(SDA, OUTP);
+	gpio_set_direction (SCL, OUTP);
+	gpio_set_val(SCL, 1);
+	udelay(50);
+	gpio_set_val(SDA, 1);
+	udelay(50);
+
+	gpio_set_val(SDA, 0);
+	udelay(50);
+	gpio_set_val(SCL, 0);
+	udelay(50);
+	return 0 ;
+}
+
+static void i2c_stop(void)
+{
+	gpio_set_val(SCL, 0);
+	udelay(50);
+	gpio_set_direction(SDA, OUTP);
+	gpio_set_val(SDA, 0);
+	udelay(50);
+	gpio_set_val(SCL, 1);
+	udelay(50);
+	gpio_set_val(SDA, 1);
+	udelay(50);
+}
+
+static unsigned char i2c_read_ack(void)
+{
+	unsigned char r;
+	gpio_set_direction(SDA, INP);
+	gpio_set_val(SCL,1);
+	udelay(50);
+	r = gpio_status(SDA);
+	udelay(50);
+	gpio_set_val(SCL,0);
+	udelay(50);
+	return r;
+}
+
+#if 0
+static int i2c_send_ack(void)
+{
+	gpio_set_direction(SDA, OUTP);
+	gpio_set_val(SDA, 0);
+	udelay(50);
+	gpio_set_val(SCL,1);
+	udelay(50);
+	gpio_set_val(SCL,0);
+	udelay(50);
+	return 0 ;
+}
+#endif
+
+static int i2c_send_noack(void)
+{
+	gpio_set_direction(SDA, OUTP);
+	gpio_set_val(SDA, 1);
+	udelay(50);
+	gpio_set_val(SCL,1);
+	udelay(50);
+	gpio_set_val(SCL,0);
+	udelay(50);
+	return 0 ;
+}
+/* I2C write */
+static void i2c_write_byte(unsigned char b)
+{
+	int i;
+	gpio_set_direction(SDA, OUTP);
+	for (i=7; i>=0; i--) {
+		udelay(50);
+		gpio_set_val(SDA, !!(b & (1<<i)));
+		udelay(50);
+		gpio_set_val(SCL, 1);
+		udelay(50);
+		gpio_set_val(SCL, 0);
+	}
+	udelay(50);
+}
+/* I2C read */
+unsigned char i2c_read_byte(void)
+{
+	int i;
+	unsigned char r = 0;
+	gpio_set_direction(SDA, INP);
+	for (i=7; i>=0; i--) {
+		gpio_set_val(SCL, 1);
+		udelay(50);
+		r = (r <<1) | gpio_status(SDA);
+		gpio_set_val(SCL, 0);
+		udelay(50);
+	}
+	//i2c_send_ack();
+	return r;
+}
+
+static int icn6211_i2c_write_byte(struct icn6211 *pdata, char addr, char val)
+{
+	/*i2c_smbus_write_byte_data()*/
+	unsigned char t;
+	unsigned char slave_addr = pdata->slave_addr;
+	i2c_start();
+	t = (slave_addr << 1) | 0;
+	i2c_write_byte(t);
+	i2c_read_ack();
+	i2c_write_byte(addr);
+	i2c_read_ack();
+
+	i2c_write_byte(val);
+	i2c_read_ack();
+
+	i2c_stop();
+	return 0;
+}
+
+static int icn6211_i2c_read_byte(struct icn6211 *pdata, char addr)
+{
+	/*i2c_smbus_read_byte_data()*/
+	unsigned char t,val;
+    unsigned char slave_addr = pdata->slave_addr;
+	i2c_start();
+	t = (slave_addr << 1) | 0;
+	i2c_write_byte(t);
+	i2c_read_ack();
+	i2c_write_byte(addr);
+	i2c_read_ack();
+	i2c_start();
+	t = (slave_addr << 1) | 1;
+	i2c_write_byte(t);
+	i2c_read_ack();
+	val = i2c_read_byte();
+	i2c_send_noack();
+	i2c_stop();
+	return val ;
+}
+
+static int icn6211_init(struct icn6211 *pdata)
+{
+	int rc = 0;
+	int i = 0;
+	const struct init_cmd *cmd_list = icn6211_cmd_table;
+
+	mutex_lock(&pdata->icn6211_mutex);
+	if (pdata) {
+		for (i = 0; i < ICN6211_CMD_CNT; i++)
+		{
+			pr_info("ICN6211 write: reg_add=0x%X, reg_val=0x%X\n",
+					(cmd_list+i)->reg_add, (cmd_list+i)->reg_val);
+
+			rc = icn6211_i2c_write_byte(pdata, (cmd_list+i)->reg_add, (cmd_list+i)->reg_val);
+			if (rc < 0) {
+				mutex_unlock(&pdata->icn6211_mutex);
+				return rc;
+			}
+		}
+	}
+
+	mutex_unlock(&pdata->icn6211_mutex);
+	return rc;
+}
+
+static int icn6211_dump(struct icn6211 *pdata)
+{
+	int rc = 0;
+	int i = 0;
+	const struct init_cmd *cmd_list = icn6211_cmd_table;
+
+	mutex_lock(&pdata->icn6211_mutex);
+	if (pdata) {
+		for (i = 0; i < ICN6211_CMD_CNT; i++)
+		{
+			rc = icn6211_i2c_read_byte(pdata, (cmd_list+i)->reg_add);
+			if (rc < 0) {
+				mutex_unlock(&pdata->icn6211_mutex);
+				return rc;
+			}
+			pr_info("ICN6211 read : reg_add=0x%X, reg_val=0x%X\n",
+					(cmd_list+i)->reg_add, rc);
+		}
+		rc = icn6211_i2c_read_byte(pdata, 0x00);
+		pr_info("ICN6211 read : reg_add=0x00, reg_val=0x%X\n", rc);
+	}
+
+	mutex_unlock(&pdata->icn6211_mutex);
+	return rc;
+}
+/*simulated i2c ----end*/
+
+/*simulated spi ----begin*/
+#define SPI_SDI(x)	gpio_direction_output(icn6211_pdata->spi_sdi_gp, x)
+#define SPI_SDO		gpio_get_value(icn6211_pdata->spi_sdo_gp)
+#define SPI_SCK(x)  gpio_direction_output(icn6211_pdata->spi_sck_gp, x)
+#define SPI_SCS(x)  gpio_direction_output(icn6211_pdata->spi_csx_gp, x)
+#define DelayNs(x)	ndelay(x)
+
+static int spi_write_byte(unsigned char input)
+{
+	int i = 0;
+	SPI_SCS(0);
+	DelayNs(50);
+	SPI_SDI(1);
+	SPI_SCK(0);
+	DelayNs(50);
+	SPI_SCK(1);
+	DelayNs(50);
+	for(i = 0; i < 8; i++) {
+		SPI_SCK(0);
+
+		if (input & 0x80) {
+			SPI_SDI(1);
+		} else {
+			SPI_SDI(0);
+		}
+
+		DelayNs(50);
+		SPI_SCK(1);
+
+		input <<= 1;
+	}
+	return 0;
+}
+
+static int spi_read_byte(void)
+{
+	int i = 0;
+	int data = 0;
+
+	SPI_SCS(0);
+	DelayNs(150);
+
+	for (i = 0; i < 8; i++) {
+		data <<= 1;
+		SPI_SCK(0);
+		DelayNs(150);
+		SPI_SCK(1);
+		data |= SPI_SDO;
+		DelayNs(50);
+	}
+
+	return data;
+}
+
+static int SPI_WriteCmd(unsigned char cmd)
+{
+	return spi_write_byte(cmd);
+}
+
+static int SPI_WriteDat(unsigned char dat)
+{
+	return spi_write_byte(dat);
+}
+
+static int lcd_read_dat(void)
+{
+	return spi_read_byte();
+}
+/*simulated spi ----end*/
+
+/*lcd init cmd ---- begin*/
+#define RESET_LCD(x)	gpio_direction_output(icn6211_pdata->lcd_rst_gp, x)
+#define DelayMs(x)		mdelay(x)
+
+static void lcd_init(void)
+{
+	pr_info("icn6211 lcd_init\n");
+
+	RESET_LCD(1);
+	DelayMs(10);
+	RESET_LCD(0);
+	DelayMs(10);
+	RESET_LCD(1);
+	DelayMs(120);
+
+	/***************page one command**************/
+	SPI_WriteCmd(0xff);
+	SPI_WriteDat(0xff);
+	SPI_WriteDat(0x98);
+	SPI_WriteDat(0x06);
+	SPI_WriteDat(0x04);
+	SPI_WriteDat(0x01);
+
+	/***************interface mode**************/
+	SPI_WriteCmd(0x08);
+	SPI_WriteDat(0x10);
+
+	/***************source output direction**************/
+	SPI_WriteCmd(0x22);
+	SPI_WriteDat(0x00);
+
+	/***************resolution control**************/
+	SPI_WriteCmd(0x30);
+	SPI_WriteDat(0x02);
+
+	/***************Display Inversion Control**************/
+	SPI_WriteCmd(0x31);
+	SPI_WriteDat(0x02);
+
+	/***************Power Control**************/
+	SPI_WriteCmd(0x40);
+	SPI_WriteDat(0x15);
+
+	SPI_WriteCmd(0x41);
+	SPI_WriteDat(0x33);
+
+	SPI_WriteCmd(0x42);
+	SPI_WriteDat(0x02);
+
+	SPI_WriteCmd(0x43);
+	SPI_WriteDat(0x09);
+
+	SPI_WriteCmd(0x44);
+	SPI_WriteDat(0x06);
+
+	SPI_WriteCmd(0x45);
+	SPI_WriteDat(0xD6);
+
+	SPI_WriteCmd(0x50);
+	SPI_WriteDat(0x70);
+
+	SPI_WriteCmd(0x51);
+	SPI_WriteDat(0x70);
+
+	/***************Vcom Setting**************/
+	SPI_WriteCmd(0x52);
+	SPI_WriteDat(0x00);
+
+	SPI_WriteCmd(0x53);
+	SPI_WriteDat(0x2B);
+
+	SPI_WriteCmd(0x54);
+	SPI_WriteDat(0x00);
+
+	SPI_WriteCmd(0x55);
+	SPI_WriteDat(0x39);
+
+	/***************Timing**************/
+	SPI_WriteCmd(0x60);
+	SPI_WriteDat(0x07);
+
+	SPI_WriteCmd(0x61);
+	SPI_WriteDat(0x00);
+
+	SPI_WriteCmd(0x62);
+	SPI_WriteDat(0x09);
+
+	SPI_WriteCmd(0x63);
+	SPI_WriteDat(0x00);
+
+	/***************Power Gamma Settipng**************/
+	SPI_WriteCmd(0xa0);
+	SPI_WriteDat(0x08);
+
+	SPI_WriteCmd(0xa1);
+	SPI_WriteDat(0x14);
+
+	SPI_WriteCmd(0xa2);
+	SPI_WriteDat(0x1C) ;
+
+	SPI_WriteCmd(0xa3);
+	SPI_WriteDat(0x0D);
+
+	SPI_WriteCmd(0xa4);
+	SPI_WriteDat(0x06) ;
+
+	SPI_WriteCmd(0xa5);
+	SPI_WriteDat(0x0E);
+
+	SPI_WriteCmd(0xa6);
+	SPI_WriteDat(0x08);
+
+	SPI_WriteCmd(0xa7);
+	SPI_WriteDat(0x07);
+
+	SPI_WriteCmd(0xa8);
+	SPI_WriteDat(0x06);
+
+	SPI_WriteCmd(0xa9);
+	SPI_WriteDat(0x1A);
+
+	SPI_WriteCmd(0xaa);
+	SPI_WriteDat(0x0B);
+
+	SPI_WriteCmd(0xab);
+	SPI_WriteDat(0x04);
+
+	SPI_WriteCmd(0xac);
+	SPI_WriteDat(0x0a);
+
+	SPI_WriteCmd(0xad);
+	SPI_WriteDat(0x14);
+
+	SPI_WriteCmd(0xae);
+	SPI_WriteDat(0x10);
+
+	SPI_WriteCmd(0xaf);
+	SPI_WriteDat(0x08);
+
+	/***************Negitive Gamma setting**************/
+	SPI_WriteCmd(0xc0);
+	SPI_WriteDat(0x08);
+
+	SPI_WriteCmd(0xc1);
+	SPI_WriteDat(0x15);
+
+	SPI_WriteCmd(0xc2);
+	SPI_WriteDat(0x1d);
+
+	SPI_WriteCmd(0xc3);
+	SPI_WriteDat(0x0d);
+
+	SPI_WriteCmd(0xc4);
+	SPI_WriteDat(0x06);
+
+	SPI_WriteCmd(0xc5);
+	SPI_WriteDat(0x0F);
+
+	SPI_WriteCmd(0xc6);
+	SPI_WriteDat(0x08);
+
+	SPI_WriteCmd(0xc7);
+	SPI_WriteDat(0x07);
+
+	SPI_WriteCmd(0xc8);
+	SPI_WriteDat(0x06);
+
+	SPI_WriteCmd(0xc9);
+	SPI_WriteDat(0x1a);
+
+	SPI_WriteCmd(0xca);
+	SPI_WriteDat(0x0b);
+
+	SPI_WriteCmd(0xcb);
+	SPI_WriteDat(0x04);
+
+	SPI_WriteCmd(0xcc);
+	SPI_WriteDat(0x0a);
+
+	SPI_WriteCmd(0xcd);
+	SPI_WriteDat(0x14);
+
+	SPI_WriteCmd(0xce);
+	SPI_WriteDat(0x10);
+
+	SPI_WriteCmd(0xcf);
+	SPI_WriteDat(0x08);
+	DelayMs(10);
+
+	/***************Page 6 Command**************/
+	SPI_WriteCmd(0xff);
+	SPI_WriteDat(0xff);
+	SPI_WriteDat(0x98);
+	SPI_WriteDat(0x06);
+	SPI_WriteDat(0x04);
+	SPI_WriteDat(0x06);
+
+	/***************GIP Setting**************/
+	SPI_WriteCmd(0x00);
+	SPI_WriteDat(0x21);
+
+	SPI_WriteCmd(0x01);
+	SPI_WriteDat(0x0A);
+
+	SPI_WriteCmd(0x02);
+	SPI_WriteDat(0x60);
+
+	SPI_WriteCmd(0x03);
+	SPI_WriteDat(0x0F);
+
+	SPI_WriteCmd(0x04);
+	SPI_WriteDat(0x01);
+
+	SPI_WriteCmd(0x05);
+	SPI_WriteDat(0x01);
+
+	SPI_WriteCmd(0x06);
+	SPI_WriteDat(0x80);
+
+	SPI_WriteCmd(0x07);
+	SPI_WriteDat(0x06);
+
+	SPI_WriteCmd(0x08);
+	SPI_WriteDat(0x01);
+
+	SPI_WriteCmd(0x09);
+	SPI_WriteDat(0x00);
+
+	SPI_WriteCmd(0x0A);
+	SPI_WriteDat(0x00);
+
+	SPI_WriteCmd(0x0B);
+	SPI_WriteDat(0x00);
+
+	SPI_WriteCmd(0x0C);
+	SPI_WriteDat(0x01);
+
+	SPI_WriteCmd(0x0D);
+	SPI_WriteDat(0x01);
+
+	SPI_WriteCmd(0x0E);
+	SPI_WriteDat(0x00);
+
+	SPI_WriteCmd(0x0F);
+	SPI_WriteDat(0x00);
+
+	SPI_WriteCmd(0x10);
+	SPI_WriteDat(0xF7);
+
+	SPI_WriteCmd(0x11);
+	SPI_WriteDat(0xF0);
+
+	SPI_WriteCmd(0x12);
+	SPI_WriteDat(0x00);
+
+	SPI_WriteCmd(0x13);
+	SPI_WriteDat(0x00);
+
+	SPI_WriteCmd(0x14);
+	SPI_WriteDat(0x00);
+
+	SPI_WriteCmd(0x15);
+	SPI_WriteDat(0xC0);
+
+	SPI_WriteCmd(0x16);
+	SPI_WriteDat(0x08);
+
+	SPI_WriteCmd(0x17);
+	SPI_WriteDat(0x01);
+
+	SPI_WriteCmd(0x18);
+	SPI_WriteDat(0x01);
+
+	SPI_WriteCmd(0x19);
+	SPI_WriteDat(0x00);
+
+	SPI_WriteCmd(0x1A);
+	SPI_WriteDat(0x00);
+
+	SPI_WriteCmd(0x1B);
+	SPI_WriteDat(0x00);
+
+	SPI_WriteCmd(0x1C);
+	SPI_WriteDat(0x00);
+
+	SPI_WriteCmd(0x1D);
+	SPI_WriteDat(0x00);
+
+	SPI_WriteCmd(0x20);
+	SPI_WriteDat(0x01);
+
+	SPI_WriteCmd(0x21);
+	SPI_WriteDat(0x23);
+
+	SPI_WriteCmd(0x22);
+	SPI_WriteDat(0x45);
+
+	SPI_WriteCmd(0x23);
+	SPI_WriteDat(0x67);
+
+	SPI_WriteCmd(0x24);
+	SPI_WriteDat(0x01);
+
+	SPI_WriteCmd(0x25);
+	SPI_WriteDat(0x23);
+
+	SPI_WriteCmd(0x26);
+	SPI_WriteDat(0x45);
+
+	SPI_WriteCmd(0x27);
+	SPI_WriteDat(0x67);
+
+	SPI_WriteCmd(0x30);
+	SPI_WriteDat(0x01);
+
+	SPI_WriteCmd(0x31);
+	SPI_WriteDat(0xDA);
+
+	SPI_WriteCmd(0x32);
+	SPI_WriteDat(0xCB);
+
+	SPI_WriteCmd(0x33);
+	SPI_WriteDat(0x22);
+
+	SPI_WriteCmd(0x34);
+	SPI_WriteDat(0x22);
+
+	SPI_WriteCmd(0x35);
+	SPI_WriteDat(0x11);
+
+	SPI_WriteCmd(0x36);
+	SPI_WriteDat(0x00);
+
+	SPI_WriteCmd(0x37);
+	SPI_WriteDat(0xAD);
+
+	SPI_WriteCmd(0x38);
+	SPI_WriteDat(0xBC);
+
+	SPI_WriteCmd(0x39);
+	SPI_WriteDat(0x76);
+
+	SPI_WriteCmd(0x3A);
+	SPI_WriteDat(0x67);
+
+	SPI_WriteCmd(0x3B);
+	SPI_WriteDat(0x88);
+
+	SPI_WriteCmd(0x3C);
+	SPI_WriteDat(0x22);
+
+	SPI_WriteCmd(0x3D);
+	SPI_WriteDat(0x22);
+
+	SPI_WriteCmd(0x3E);
+	SPI_WriteDat(0x22);
+
+	SPI_WriteCmd(0x3F);
+	SPI_WriteDat(0x22);
+
+	SPI_WriteCmd(0x40);
+	SPI_WriteDat(0x22);
+
+
+	/***************page 7 Command**************/
+	SPI_WriteCmd(0xff);
+	SPI_WriteDat(0xff);
+	SPI_WriteDat(0x98);
+	SPI_WriteDat(0x06);
+	SPI_WriteDat(0x04);
+	SPI_WriteDat(0x07);
+
+	/***************VrEG1/2 Out Enable**************/
+	SPI_WriteCmd(0x18);
+	SPI_WriteDat(0x1D);
+
+	/***************VGL_REG EN**************/
+	SPI_WriteCmd(0x17);
+	SPI_WriteDat(0x32);
+
+	/***************Power Bais Control**************/
+	SPI_WriteCmd(0x02);
+	SPI_WriteDat(0x77);
+
+	SPI_WriteCmd(0xE1);
+	SPI_WriteDat(0x79);
+
+	SPI_WriteCmd(0x26);
+	SPI_WriteDat(0xB2);
+
+	/***************Page 0 Command**************/
+	SPI_WriteCmd(0xff);
+	SPI_WriteDat(0xff);
+	SPI_WriteDat(0x98);
+	SPI_WriteDat(0x06);
+	SPI_WriteDat(0x04);
+	SPI_WriteDat(0x00);
+
+	/***************Interface Pixel Format**************/
+	SPI_WriteCmd(0x3A);
+	SPI_WriteDat(0x70);
+
+	/***************Display Access Control**************/
+	/***************如果出现红蓝反色，请下0x0b,反扫下0x08**************/
+	SPI_WriteCmd(0x36);
+	SPI_WriteDat(0x03);
+
+	/***************sleep out**************/
+	SPI_WriteCmd(0x11);
+	SPI_WriteDat(0x00);
+	DelayMs(120);
+	/***************diplay on**************/
+	SPI_WriteCmd(0x29);
+	SPI_WriteDat(0x00);
+	DelayMs(20);
+	lcd_read_dat();
+}
+/*lcd init cmd ---- end*/
+
+static int icn6211_gpio_init(struct icn6211 *pdata)
+{
+	int ret = 0;
+
+	/*enable gpio*/
+	if (!gpio_is_valid(pdata->en_gp)) {
+		pr_err("%s,enable gpio [%d] is invalid!\n",
+				__func__, pdata->en_gp);
+		return -1;
+	}
+
+	ret = gpio_request(pdata->en_gp, "icn6211-en-gpio");
+	if (ret) {
+		pr_err("%s, Unable to request icn6211 en-gpio\n",__func__);
+	}
+
+	ret = gpio_direction_output(pdata->en_gp, 1);
+	if (ret) {
+		pr_err("%s, Unable to pull up icn6211 en-gpio\n",__func__);
+	}
+	mdelay(5);
+	ret = gpio_direction_output(pdata->en_gp, 0);
+	if (ret) {
+		pr_err("%s, Unable to pull up icn6211 en-gpio\n",__func__);
+	}
+	mdelay(15);
+	ret = gpio_direction_output(pdata->en_gp, 1);
+	if (ret) {
+		pr_err("%s, Unable to pull up icn6211 en-gpio\n",__func__);
+	}
+
+	/*rgb-lcd-rest gpio*/
+	if (gpio_is_valid(pdata->lcd_rst_gp)) {
+		ret = gpio_request(pdata->lcd_rst_gp, "icn6211-rgb-lcd-rest");
+		if (ret < 0) {
+			pr_err("Failed to request GPIO:%d, ERRNO:%d",
+					pdata->lcd_rst_gp, ret);
+			return -ENODEV;
+		} else {
+			ret = gpio_direction_output(pdata->lcd_rst_gp, 1);
+			if (ret)
+				pr_err("Failed to set icn6211-rgb-lcd-rest\n");
+			mdelay(5);
+		}
+	} else {
+		pr_err("%s, no rgb lcd rest gpio !!!!!\n",__func__);
+		return -1;
+	}
+
+	/*i2c-scl*/
+	if (gpio_is_valid(pdata->iic_scl_gp)) {
+		ret = gpio_request(pdata->iic_scl_gp, "icn6211-i2c-scl");
+		if (ret < 0) {
+			pr_err("Failed to request GPIO:%d, ERRNO:%d",
+					pdata->iic_scl_gp, ret);
+			return -ENODEV;
+		} else {
+			ret = gpio_direction_output(pdata->iic_scl_gp, 1);
+			if (ret)
+				pr_err("Failed to set icn6211-i2c-scl-gpio\n");
+			mdelay(5);
+		}
+	} else {
+		pr_err("%s, no scl gpio !!!!!\n",__func__);
+		return -1;
+	}
+	/*i2c-sda*/
+	if (gpio_is_valid(pdata->iic_sda_gp)) {
+		ret = gpio_request(pdata->iic_sda_gp, "icn6211-i2c-sda");
+		if (ret < 0) {
+			pr_err("Failed to request GPIO:%d, ERRNO:%d",
+					pdata->iic_sda_gp, ret);
+			return -ENODEV;
+		} else {
+			ret = gpio_direction_output(pdata->iic_sda_gp, 1);
+			if (ret)
+				pr_err("Failed to set icn6211-i2c-sda-gpio\n");
+			mdelay(5);
+		}
+	} else {
+		pr_err("%s, no sda gpio !!!!!\n",__func__);
+		return -1;
+	}
+
+	/*spi*/
+	/*spi-sdi*/
+	if (gpio_is_valid(pdata->spi_sdi_gp)) {
+		ret = gpio_request(pdata->spi_sdi_gp, "icn6211-spi-sdi");
+		if (ret < 0) {
+			pr_err("Failed to request GPIO:%d, ERRNO:%d",
+					pdata->spi_sdi_gp, ret);
+			return -ENODEV;
+		} else {
+			ret = gpio_direction_output(pdata->spi_sdi_gp, 1);
+			if (ret)
+				pr_err("Failed to set icn6211-spi-sdi-gpio\n");
+			mdelay(5);
+		}
+	} else {
+		pr_err("%s, no spi-sdi gpio !!!!!\n",__func__);
+		return -1;
+	}
+
+	/*spi-sdo*/
+	if (gpio_is_valid(pdata->spi_sdo_gp)) {
+		ret = gpio_request(pdata->spi_sdo_gp, "icn6211-spi-sdo");
+		if (ret < 0) {
+			pr_err("Failed to request GPIO:%d, ERRNO:%d",
+					pdata->spi_sdo_gp, ret);
+			return -ENODEV;
+		} else {
+			ret = gpio_direction_input(pdata->spi_sdo_gp);
+			if (ret)
+				pr_err("Failed to set icn6211-spi-sdo-gpio\n");
+			mdelay(5);
+		}
+	} else {
+		pr_err("%s, no spi-sdo gpio !!!!!\n",__func__);
+		return -1;
+	}
+
+	/*spi-cs*/
+	if (gpio_is_valid(pdata->spi_csx_gp)) {
+		ret = gpio_request(pdata->spi_csx_gp, "icn6211-spi-cs");
+		if (ret < 0) {
+			pr_err("Failed to request GPIO:%d, ERRNO:%d",
+					pdata->spi_csx_gp, ret);
+			return -ENODEV;
+		} else {
+			ret = gpio_direction_output(pdata->spi_csx_gp, 1);
+			if (ret)
+				pr_err("Failed to set icn6211-spi-cs-gpio\n");
+			mdelay(5);
+		}
+	} else {
+		pr_err("%s, nospi-cs gpio !!!!!\n",__func__);
+		return -1;
+	}
+
+	/*spi-sc*/
+	if (gpio_is_valid(pdata->spi_sck_gp)) {
+		ret = gpio_request(pdata->spi_sck_gp, "icn6211-spi-sc");
+		if (ret < 0) {
+			pr_err("Failed to request GPIO:%d, ERRNO:%d",
+					pdata->spi_sck_gp, ret);
+			return -ENODEV;
+		} else {
+			ret = gpio_direction_output(pdata->spi_sck_gp, 1);
+			if (ret)
+				pr_err("Failed to set icn6211-spi-sc-gpio\n");
+			mdelay(5);
+		}
+	} else {
+		pr_err("%s, no spi-sc gpio !!!!!\n",__func__);
+		return -1;
+	}
+
+	return ret;
+}
+
+static int icn6211_parse_dt(struct device *dev, struct icn6211 *pdata)
+{
+	int rc = 0;
+	struct device_node *np = dev->of_node;
+
+	pdata->en_gp = of_get_named_gpio(np, "icn6211,en-gp", 0);
+	pdata->lcd_rst_gp = of_get_named_gpio(np, "icn6211,lcd-rst-gp", 0);
+	pdata->iic_scl_gp = of_get_named_gpio(np, "icn6211,iic-scl-gp", 0);
+	pdata->iic_sda_gp = of_get_named_gpio(np, "icn6211,iic_sda_gp", 0);
+	pdata->spi_sdi_gp = of_get_named_gpio(np, "icn6211,spi_sdi_gp", 0);
+	pdata->spi_sdo_gp = of_get_named_gpio(np, "icn6211,spi_sdo_gp", 0);
+	pdata->spi_csx_gp = of_get_named_gpio(np, "icn6211,spi_csx_gp", 0);
+	pdata->spi_sck_gp = of_get_named_gpio(np, "icn6211,spi_sck_gp", 0);
+	//pdata->rgb_or_lvds = of_get_property(np, "icn6211,use-rgb", 0);
+	pdata->rgb_or_lvds = 1;
+	//of_property_read_u32(np, "icn6211,slave_addr", &pdata->slave_addr);
+	pdata->slave_addr = 0x2C;
+
+	pr_info("iic scl=%d,sda=%d\n",pdata->iic_scl_gp, pdata->iic_sda_gp);
+	pr_info("spi sdi=%d,sdo=%d,cs=%d,sc=%d\n",
+			pdata->spi_sdi_gp,pdata->spi_sdo_gp,pdata->spi_csx_gp,pdata->spi_sck_gp);
+	pr_info("icn6211 slave add=0x%X, enable-gpio=%d, lcd-rst=%d\n",
+	       pdata->slave_addr,pdata->en_gp,pdata->lcd_rst_gp);
+
+	return rc;
+}
+
+static int icn6211_probe(struct platform_device *pdev)
+{
+	struct icn6211 *pdata;
+	int ret = 0;
+
+	pr_info("ICN6211:%s\n",__func__);
+
+	pdata = kzalloc(sizeof(struct icn6211), GFP_KERNEL);
+	if (!pdata)
+		return -ENOMEM;
+	if (pdev->dev.of_node) {
+		icn6211_parse_dt(&pdev->dev, pdata);
+	} else {
+		pr_err("ICN6211: no device node,exit...\n");
+		ret = -1;
+		goto err_exit;
+	}
+	ret = icn6211_gpio_init(pdata);
+	if (ret) {
+		pr_err("%s: Failed to configure GPIOs\n", __func__);
+		goto err_exit;
+	}
+
+	mutex_init(&pdata->icn6211_mutex);
+	dev_set_drvdata(&pdev->dev, pdata);
+
+	icn6211_pdata = pdata;
+	lcd_init();
+	mdelay(5);
+	icn6211_init(pdata);
+	mdelay(5);
+	icn6211_dump(pdata);
+
+	return 0;
+
+err_exit:
+	kfree(pdata);
+	icn6211_pdata = NULL;
+	return ret;
+}
+
+
+static const struct of_device_id icn6211_of_match[] = {
+	{ .compatible = "qcom,icn6211",},
+	{},
+};
+
+static int icn6211_resume(struct device *pdev)
+{
+/* 	Reset_chip();
+	mdss_mipi_i2c_init(); */
+	return 0;
+}
+
+static int icn6211_remove(struct platform_device *pdev) {
+
+	return 0;
+}
+
+static int icn6211_suspend(struct device *tdev) {
+	/* gpio_direction_output(lt8912b_pdata->rst_gpio, 0); */
+	return 0;
+}
+
+static const struct dev_pm_ops icn6211_pm_ops =
+{
+	.suspend = icn6211_suspend,
+	.resume = icn6211_resume,
+};
+
+
+static struct platform_driver icn6211_driver = {
+	.driver = {
+		.name = "qcom,icn6211",
+		.owner    = THIS_MODULE,
+		.of_match_table = icn6211_of_match,
+		.pm = &icn6211_pm_ops,
+	},
+	.probe    = icn6211_probe,
+	.remove   = icn6211_remove,
+};
+
+static int __init icn6211_rgb_lvds_init(void)
+{
+	int ret;
+
+	ret = platform_driver_register(&icn6211_driver);
+	if (ret)
+		printk(KERN_ERR "icn6211_driver: probe failed: %d\n", ret);
+
+	return ret;
+}
+
+static void __exit icn6211_rgb_lvds_exit(void)
+{
+	platform_driver_unregister(&icn6211_driver);
+}
+
+subsys_initcall(icn6211_rgb_lvds_init);
+//module_init(mipi_gpio_i2c_init);
+//late_initcall(mipi_gpio_i2c_init);
+module_exit(icn6211_rgb_lvds_exit);
+MODULE_LICENSE("GPL");
+
+
