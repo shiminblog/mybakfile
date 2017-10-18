@@ -1,2 +1,2 @@
 # mybakfile
-notghing!
+nothing
