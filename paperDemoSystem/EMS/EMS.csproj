@@ -1,0 +1,413 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{26EEF5D8-54F0-4621-9519-0B8B9F56094F}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EMS</RootNamespace>
+    <AssemblyName>EMS</AssemblyName>
+    <ApplicationIcon>001.ico</ApplicationIcon>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=10.2.3600.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\WINDOWS\assembly\GAC_MSIL\CrystalDecisions.CrystalReports.Engine\10.2.3600.0__692fbea5521e1304\CrystalDecisions.CrystalReports.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="CrystalDecisions.Enterprise.Framework, Version=10.2.3600.0, Culture=neutral, PublicKeyToken=692fbea5521e1304" />
+    <Reference Include="CrystalDecisions.Enterprise.InfoStore, Version=10.2.3600.0, Culture=neutral, PublicKeyToken=692fbea5521e1304" />
+    <Reference Include="CrystalDecisions.ReportSource, Version=10.2.3600.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\WINDOWS\assembly\GAC_MSIL\CrystalDecisions.ReportSource\10.2.3600.0__692fbea5521e1304\CrystalDecisions.ReportSource.dll</HintPath>
+    </Reference>
+    <Reference Include="CrystalDecisions.Shared, Version=10.2.3600.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\WINDOWS\assembly\GAC_MSIL\CrystalDecisions.Shared\10.2.3600.0__692fbea5521e1304\CrystalDecisions.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>..\..\mysqlInstall\connect\Assemblies\v4.0\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.Services, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\WINDOWS\assembly\GAC_MSIL\System.Web.Services\2.0.0.0__b03f5f7f11d50a3a\System.Web.Services.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BaseClass\BaseInfo.cs" />
+    <Compile Include="BaseClass\DataBase.cs" />
+    <Compile Include="BaseInfo\frmEmployee.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BaseInfo\frmEmployee.Designer.cs">
+      <DependentUpon>frmEmployee.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BaseInfo\frmStock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BaseInfo\frmStock.Designer.cs">
+      <DependentUpon>frmStock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BaseInfo\frmUnits.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BaseInfo\frmUnits.Designer.cs">
+      <DependentUpon>frmUnits.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BuyStock\frmBuyStock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BuyStock\frmBuyStock.Designer.cs">
+      <DependentUpon>frmBuyStock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BuyStock\frmBuyStockAnalyse.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BuyStock\frmBuyStockAnalyse.Designer.cs">
+      <DependentUpon>frmBuyStockAnalyse.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BuyStock\frmBuyStockSum.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BuyStock\frmBuyStockSum.Designer.cs">
+      <DependentUpon>frmBuyStockSum.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BuyStock\frmCurrentAccountBook.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BuyStock\frmCurrentAccountBook.Designer.cs">
+      <DependentUpon>frmCurrentAccountBook.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BuyStock\frmRebuyStock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BuyStock\frmRebuyStock.Designer.cs">
+      <DependentUpon>frmRebuyStock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BuyStock\frmUnitsList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BuyStock\frmUnitsList.Designer.cs">
+      <DependentUpon>frmUnitsList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Class1.cs" />
+    <Compile Include="frmLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmLogin.Designer.cs">
+      <DependentUpon>frmLogin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMain.Designer.cs">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SaleStock\frmOrderDetailList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SaleStock\frmOrderDetailList.Designer.cs">
+      <DependentUpon>frmOrderDetailList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SaleStock\frmSellStockList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SaleStock\frmSellStockList.Designer.cs">
+      <DependentUpon>frmSellStockList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Welcome.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Welcome.Designer.cs">
+      <DependentUpon>Welcome.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="BaseInfo\frmEmployee.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmEmployee.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BaseInfo\frmStock.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmStock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BaseInfo\frmUnits.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmUnits.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BuyStock\frmBuyStock.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmBuyStock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BuyStock\frmBuyStockAnalyse.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmBuyStockAnalyse.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BuyStock\frmBuyStockSum.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmBuyStockSum.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BuyStock\frmCurrentAccountBook.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmCurrentAccountBook.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BuyStock\frmRebuyStock.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmRebuyStock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BuyStock\frmUnitsList.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmUnitsList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmLogin.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmLogin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmMain.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SaleStock\frmOrderDetailList.resx">
+      <DependentUpon>frmOrderDetailList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SaleStock\frmResellStock.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmResellStock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SaleStock\frmSellStockCost.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmSellStockCost.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SaleStock\frmSellStockDesc.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmSellStockDesc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SaleStock\frmSellStockDetailed.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmSellStockDetailed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SaleStock\frmSellStock.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmSellStock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SaleStock\frmSellStockList.resx">
+      <DependentUpon>frmSellStockList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SaleStock\frmSellStockStatus.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmSellStockStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SaleStock\frmSellStockSum.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmSellStockSum.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SelectDataDialog\frmSelectDateTime.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmSelectDateTime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SelectDataDialog\frmSelectStock.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmSelectStock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Stock\frmCheckStock.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmCheckStock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Stock\frmLowerLimit.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmLowerLimit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Stock\frmUpperLimit.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmUpperLimit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Stock\frmStockStatus.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmStockStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="Welcome.resx">
+      <DependentUpon>Welcome.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="SaleStock\frmResellStock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SaleStock\frmResellStock.Designer.cs">
+      <DependentUpon>frmResellStock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SaleStock\frmSellStockCost.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SaleStock\frmSellStockCost.Designer.cs">
+      <DependentUpon>frmSellStockCost.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SaleStock\frmSellStockDetailed.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SaleStock\frmSellStockDetailed.Designer.cs">
+      <DependentUpon>frmSellStockDetailed.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SaleStock\frmSellStock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SaleStock\frmSellStock.Designer.cs">
+      <DependentUpon>frmSellStock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SaleStock\frmSellStockDesc.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SaleStock\frmSellStockDesc.Designer.cs">
+      <DependentUpon>frmSellStockDesc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SaleStock\frmSellStockStatus.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SaleStock\frmSellStockStatus.Designer.cs">
+      <DependentUpon>frmSellStockStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SaleStock\frmSellStockSum.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SaleStock\frmSellStockSum.Designer.cs">
+      <DependentUpon>frmSellStockSum.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SelectDataDialog\frmSelectDateTime.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SelectDataDialog\frmSelectDateTime.Designer.cs">
+      <DependentUpon>frmSelectDateTime.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SelectDataDialog\frmSelectStock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SelectDataDialog\frmSelectStock.Designer.cs">
+      <DependentUpon>frmSelectStock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Stock\frmCheckStock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Stock\frmCheckStock.Designer.cs">
+      <DependentUpon>frmCheckStock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Stock\frmLowerLimit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Stock\frmLowerLimit.Designer.cs">
+      <DependentUpon>frmLowerLimit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Stock\frmUpperLimit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Stock\frmUpperLimit.Designer.cs">
+      <DependentUpon>frmUpperLimit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Stock\frmStockStatus.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Stock\frmStockStatus.Designer.cs">
+      <DependentUpon>frmStockStatus.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="icon\45.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="icon\44.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="icon\171.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="icon\172.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="icon\07.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="icon\check.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="icon\internet.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="icon\help.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="icon\internet.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="icon\Close.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="icon\42.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="icon\3.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="001.ico" />
+    <Content Include="image\001.ico" />
+    <Content Include="image\企业进销存主窗体.jpg" />
+    <Content Include="image\企业进销存登录窗体.jpg" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

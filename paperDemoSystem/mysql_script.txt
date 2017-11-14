@@ -1,0 +1,43 @@
+create table tb_orders(
+id varchar(255) NOT NULL  COMMENT '订单编号',
+customer_id varchar(255) NOT NULL COMMENT '客户编号',
+saler_id varchar(255)  not null comment '接单员工号',
+customer_name varchar(255) NOT NULL DEFAULT '' COMMENT '客户姓名',
+customer_tel varchar(255) NOT NULL DEFAULT '' COMMENT '客户电话',
+customer_address varchar(255) NOT NULL DEFAULT '' COMMENT '客户地址',
+order_date date not null  COMMENT '下单日期',
+bile_date date not null comment '录单日期',
+goods_count int(32) unsigned NOT NULL comment '商品件数',
+total_pay float(32) not null comment '订单总金额',
+statu varchar(255) NOT NULL DEFAULT '待出库' COMMENT '订单状态',
+PRIMARY KEY (id),
+FOREIGN KEY (customer_id),
+FOREIGN KEY (saler_id)
+)ENGINE=InnoDB  COMMENT = '销售订单表';
+
+create table tb_orders_detailed(
+id varchar(255)  NOT NULL COMMENT '流水号',
+orders_id varchar(255) NOT NULL COMMENT '销售订单号',
+goods_id varchar(255) not null comment '商品编号',
+goods_name varchar(255) NOT NULL DEFAULT '' COMMENT '商品名字',
+goods_uint varchar(255) NOT NULL DEFAULT '' COMMENT '商品单位',
+goods_price float(32) not null comment '商品单价',
+goods_qty float(32) not null comment '需求数量',
+PRIMARY KEY (id,orders_id,goods_id)
+)ENGINE=InnoDB  COMMENT = '销售订单明细表';
+
+
+create table tb_Stock(
+goods_id varchar(255) not null comment '商品编号',
+goods_name varchar(255) NOT NULL DEFAULT '' COMMENT '商品名字',
+qty float(32) not null comment '库存数量',
+goods_uint varchar(32) NOT NULL DEFAULT '件' COMMENT '商品单位',
+averageprice float(32) not null comment '成本均价',
+totalprice float(32) not null comment '成本总价',
+PRIMARY KEY (goods_id)
+)ENGINE=InnoDB  COMMENT = '库存表';
+
+
+
+
+CommandText = "INSERT INTO tb_orders (billcode, customerid, staffid, customername, customertel, customeraddress,orderdate,billdate,goodscount,fullpayment) VALUES (@billcode,@customerid,@staffid,@customername,@customertel,@customeraddress,@orderdate,@billdate,@goodscount,...
