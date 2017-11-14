@@ -335,6 +335,24 @@ namespace EMS.BaseClass
             return (data.RunProcReturn(cmd, tbName));
         }
         /// <summary>
+        /// 得到采购订单所有明细列表
+        /// </summary>
+        /// <param name="tbName"></param>
+        /// <returns></returns>
+        public DataSet GetPurchaseList(string tbName)
+        {
+            return (data.RunProcReturn("select * from tb_purchase", tbName));
+        }
+        public DataSet GetPurchaseDetailList(string tbName)
+        {
+            return (data.RunProcReturn("select * from tb_purchase_detail", tbName));
+        }
+        public DataSet GetPurchaseDetailList(string tbName, string tbPurchaseCode)
+        {
+            string cmd = "select * from tb_purchase_detail where purchase_code=" + "\'" + tbPurchaseCode + "\'";
+            return (data.RunProcReturn(cmd, tbName));
+        }
+        /// <summary>
         /// 得到所有tbName表中信息－－主要用来：得到最大的单据编号然后自动编号
         /// </summary>
         /// <param name="tbName">数据表名称</param>
@@ -431,6 +449,27 @@ namespace EMS.BaseClass
                 return (data.RunProc("INSERT INTO " + AddTableName_trueName + " (bill_code, supplier_code, supplier_name, supplier_tel, supplier_address, buyer_code,buyer_name,order_date,bile_date,deadline,goods_count,Total_payment,statu) VALUES (@bill_code, @supplier_code, @supplier_name, @supplier_tel, @supplier_address, @buyer_code,@buyer_name,@order_date,@bile_date,@deadline,@goods_count,@Total_payment,@statu)", prams));            
         }
 
+        /// <summary>
+        /// 采购--向明细表中添加数据
+        /// </summary>
+        /// <param name="billinfo">过账单据数据结构类对象</param>
+        /// <param name="AddTableName_trueName">数据库中数据表名称</param>
+        /// <returns></returns>
+        public int AddTablePurseDetail(cPurchaseBill billinfo, string AddTableName_trueName)
+        {
+            MySqlParameter[] prams = 
+                {
+                        data.MakeInParam("@purchase_detail_code",  MySqlDbType.VarChar, 255,billinfo.PurchaseDetaildCode),
+                        data.MakeInParam("@purchase_code", MySqlDbType.VarChar, 255,billinfo.PurchaseCode),
+                        data.MakeInParam("@goods_code",    MySqlDbType.VarChar, 255,billinfo.goodsCode),
+                        data.MakeInParam("@goods_name",    MySqlDbType.VarChar, 255,billinfo.goodsName),
+                        data.MakeInParam("@goods_uint",    MySqlDbType.VarChar, 255,billinfo.goodsUnit),
+                        data.MakeInParam("@goods_price",    MySqlDbType.Float, 32,billinfo.goodsPrice),
+                        data.MakeInParam("@goods_qty", MySqlDbType.Float, 32, billinfo.Qty),
+						data.MakeInParam("@goods_total_price",  MySqlDbType.Float, 32, billinfo.GoodsTotalPrice),
+			    };
+            return (data.RunProc("INSERT INTO " + AddTableName_trueName + " (purchase_detail_code, purchase_code, goods_code, goods_name, goods_uint, goods_price,goods_qty,goods_total_price) VALUES (@purchase_detail_code, @purchase_code, @goods_code, @goods_name, @goods_uint, @goods_price,@goods_qty,@goods_total_price)", prams));
+        }
         /// <summary>
         /// 向明细表中添加数据－进货单－销售退货单－销售单－进货退货单
         /// </summary>
@@ -1490,6 +1529,7 @@ namespace EMS.BaseClass
         private string goods_name = "";              //商品名称
         private string goods_unit = "";              //商品单位
         private float goods_price = 0;             //商品单价
+        private float goods_total_price = 0;        //单条明细小计
 
         /// <summary>
         /// 录单操作日期
@@ -1596,7 +1636,7 @@ namespace EMS.BaseClass
             set { purchase_detail_code = value; }
         }
         /// <summary>
-        /// 相关联的销售订单号
+        /// 相关联的采购订单号
         /// </summary>
         public string PurchaseCode
         {
@@ -1643,7 +1683,14 @@ namespace EMS.BaseClass
             get { return goods_price; }
             set { goods_price = value; }
         }
-
+        /// <summary>
+        /// 明细小计
+        /// </summary>
+        public float GoodsTotalPrice
+        {
+            get { return goods_total_price; }
+            set { goods_total_price = value; }          
+        }
         /// <summary>
         /// 订单状态
         /// </summary>

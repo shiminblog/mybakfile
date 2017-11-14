@@ -198,5 +198,12 @@ namespace EMS
 
         }
 
+        private void 采购信息检索ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EMS.BuyStock.frmPurchaseList purchase_list = new EMS.BuyStock.frmPurchaseList();
+            purchase_list.Owner = this;
+            purchase_list.Show();
+        }
+
     }
 }

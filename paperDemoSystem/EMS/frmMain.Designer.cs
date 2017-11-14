@@ -33,11 +33,13 @@
             this.fileRebuyStock = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.采购信息检索ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tlmSale = new System.Windows.Forms.ToolStripMenuItem();
             this.fileSellStock = new System.Windows.Forms.ToolStripMenuItem();
             this.fileResellStock = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.客户信息检索ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tlmStock = new System.Windows.Forms.ToolStripMenuItem();
             this.fileStockStatus = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
@@ -62,8 +64,7 @@
             this.退出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileEnd = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.客户信息检索ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.采购信息检索ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.采购信息查询ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -71,10 +72,11 @@
             // 
             this.tlmBuy.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.SaleOrder,
+            this.采购信息检索ToolStripMenuItem,
             this.fileRebuyStock,
             this.toolStripSeparator1,
             this.toolStripSeparator2,
-            this.采购信息检索ToolStripMenuItem});
+            this.采购信息查询ToolStripMenuItem});
             this.tlmBuy.Name = "tlmBuy";
             this.tlmBuy.Size = new System.Drawing.Size(68, 21);
             this.tlmBuy.Text = "采购管理";
@@ -85,7 +87,7 @@
             this.SaleOrder.Image = global::EMS.Properties.Resources._45;
             this.SaleOrder.Name = "SaleOrder";
             this.SaleOrder.Size = new System.Drawing.Size(152, 22);
-            this.SaleOrder.Text = "采购单制作";
+            this.SaleOrder.Text = "采购订单制作";
             this.SaleOrder.Click += new System.EventHandler(this.fileBuyStock_Click);
             // 
             // fileRebuyStock
@@ -105,6 +107,13 @@
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
+            // 
+            // 采购信息检索ToolStripMenuItem
+            // 
+            this.采购信息检索ToolStripMenuItem.Name = "采购信息检索ToolStripMenuItem";
+            this.采购信息检索ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.采购信息检索ToolStripMenuItem.Text = "采购订单查询";
+            this.采购信息检索ToolStripMenuItem.Click += new System.EventHandler(this.采购信息检索ToolStripMenuItem_Click);
             // 
             // tlmSale
             // 
@@ -145,6 +154,12 @@
             this.toolStripSeparator4.Name = "toolStripSeparator4";
             this.toolStripSeparator4.Size = new System.Drawing.Size(149, 6);
             // 
+            // 客户信息检索ToolStripMenuItem
+            // 
+            this.客户信息检索ToolStripMenuItem.Name = "客户信息检索ToolStripMenuItem";
+            this.客户信息检索ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.客户信息检索ToolStripMenuItem.Text = "客户信息检索";
+            // 
             // tlmStock
             // 
             this.tlmStock.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -161,33 +176,33 @@
             // 
             this.fileStockStatus.Image = global::EMS.Properties.Resources._171;
             this.fileStockStatus.Name = "fileStockStatus";
-            this.fileStockStatus.Size = new System.Drawing.Size(152, 22);
+            this.fileStockStatus.Size = new System.Drawing.Size(124, 22);
             this.fileStockStatus.Text = "出库管理";
             this.fileStockStatus.Click += new System.EventHandler(this.fileStockStatus_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(121, 6);
             // 
             // fileUpperLimit
             // 
             this.fileUpperLimit.Name = "fileUpperLimit";
-            this.fileUpperLimit.Size = new System.Drawing.Size(152, 22);
+            this.fileUpperLimit.Size = new System.Drawing.Size(124, 22);
             this.fileUpperLimit.Text = "入库管理";
             this.fileUpperLimit.Click += new System.EventHandler(this.fileUpperLimit_Click);
             // 
             // fileLowerLimit
             // 
             this.fileLowerLimit.Name = "fileLowerLimit";
-            this.fileLowerLimit.Size = new System.Drawing.Size(152, 22);
+            this.fileLowerLimit.Size = new System.Drawing.Size(124, 22);
             this.fileLowerLimit.Text = "库存查询";
             this.fileLowerLimit.Click += new System.EventHandler(this.fileLowerLimit_Click);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(121, 6);
             // 
             // tlmBase
             // 
@@ -336,17 +351,11 @@
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // 客户信息检索ToolStripMenuItem
+            // 采购信息查询ToolStripMenuItem
             // 
-            this.客户信息检索ToolStripMenuItem.Name = "客户信息检索ToolStripMenuItem";
-            this.客户信息检索ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.客户信息检索ToolStripMenuItem.Text = "客户信息检索";
-            // 
-            // 采购信息检索ToolStripMenuItem
-            // 
-            this.采购信息检索ToolStripMenuItem.Name = "采购信息检索ToolStripMenuItem";
-            this.采购信息检索ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.采购信息检索ToolStripMenuItem.Text = "采购信息检索";
+            this.采购信息查询ToolStripMenuItem.Name = "采购信息查询ToolStripMenuItem";
+            this.采购信息查询ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.采购信息查询ToolStripMenuItem.Text = "采购信息查询";
             // 
             // frmMain
             // 
@@ -405,6 +414,7 @@
         private System.Windows.Forms.ToolStripMenuItem 员工信息ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 客户信息检索ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 采购信息检索ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 采购信息查询ToolStripMenuItem;
 
     }
 }

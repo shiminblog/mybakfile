@@ -52,10 +52,9 @@ goods_name varchar(255) NOT NULL DEFAULT '' COMMENT '商品名字',
 goods_uint varchar(255) NOT NULL DEFAULT '' COMMENT '商品单位',
 goods_price float(32) not null comment '商品单价',
 goods_qty float(32) not null comment '需求数量',
+goods_total_price float(32) not null comment '明细小计',
 PRIMARY KEY (purchase_detail_code,purchase_code,goods_code)
 )ENGINE=InnoDB  COMMENT = '采购单明细表';
-
-
 
 
 create table tb_Stock(

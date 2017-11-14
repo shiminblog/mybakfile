@@ -71,8 +71,8 @@ namespace EMS.SelectDataDialog
             {
                 buyStock.dgvStockList[0, M_int_CurrentRow].Value = dgvSelectStockList[0, e.RowIndex].Value.ToString();
                 buyStock.dgvStockList[1, M_int_CurrentRow].Value = dgvSelectStockList[1, e.RowIndex].Value.ToString();
-                buyStock.dgvStockList[2, M_int_CurrentRow].Value = dgvSelectStockList[4, e.RowIndex].Value.ToString();
-                buyStock.dgvStockList[4, M_int_CurrentRow].Value = dgvSelectStockList[7, e.RowIndex].Value.ToString();
+                buyStock.dgvStockList[2, M_int_CurrentRow].Value = dgvSelectStockList[3, e.RowIndex].Value.ToString();
+                //buyStock.dgvStockList[4, M_int_CurrentRow].Value = dgvSelectStockList[7, e.RowIndex].Value.ToString();
                 this.Close();
             }
             if (M_str_object == "ResellStock")

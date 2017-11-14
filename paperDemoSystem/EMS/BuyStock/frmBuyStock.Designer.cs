@@ -130,7 +130,7 @@
             this.txtBillCode.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.txtBillCode.Name = "txtBillCode";
             this.txtBillCode.ReadOnly = true;
-            this.txtBillCode.Size = new System.Drawing.Size(183, 21);
+            this.txtBillCode.Size = new System.Drawing.Size(133, 21);
             this.txtBillCode.TabIndex = 5;
             this.txtBillCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
@@ -397,7 +397,7 @@
             // 
             this.txDeadLine.Location = new System.Drawing.Point(485, 245);
             this.txDeadLine.Name = "txDeadLine";
-            this.txDeadLine.Size = new System.Drawing.Size(100, 29);
+            this.txDeadLine.Size = new System.Drawing.Size(130, 29);
             this.txDeadLine.TabIndex = 22;
             // 
             // frmBuyStock

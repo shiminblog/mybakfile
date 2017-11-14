@@ -91,54 +91,65 @@ namespace EMS.BuyStock
             billinfo.Status = "待审核";
             billinfo.DetailNumber = Convert.ToInt32(txDetailTotal.Text);
             billinfo.TotalPayment = Convert.ToSingle(txtFullPayment.Text);
+
+            for (int i = 0; i < dgvStockList.RowCount - 1; i++)
+            {
+                //列表中数据不能为空
+                if (Convert.ToString(dgvStockList[0, i].Value) == string.Empty 
+                    || Convert.ToString(dgvStockList[1, i].Value) == string.Empty 
+                    || Convert.ToString(dgvStockList[2, i].Value) == string.Empty
+                    || Convert.ToString(dgvStockList[3, i].Value) == string.Empty
+                    || Convert.ToString(dgvStockList[4, i].Value) == string.Empty
+                    || Convert.ToString(dgvStockList[5, i].Value) == string.Empty)
+                {
+                    MessageBox.Show("请核实列表中数据：‘数量’、‘单价’、‘金额’不能为空！", "错误提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }                
+            }
+
+            //向进货（明细表）中录入商品单据信息
+            for (int i = 0; i < dgvStockList.RowCount - 1; i++)
+            {
+                if (i < 10)
+                    billinfo.PurchaseDetaildCode = txtBillCode.Text + "L00" + Convert.ToString(i);
+                else
+                    billinfo.PurchaseDetaildCode = txtBillCode.Text + "L0" + Convert.ToString(i);
+                billinfo.PurchaseCode = billinfo.BillCode;
+                billinfo.goodsCode = dgvStockList[0, i].Value.ToString();
+                billinfo.goodsName = dgvStockList[1, i].Value.ToString();
+                billinfo.goodsUnit = dgvStockList[2, i].Value.ToString();
+                billinfo.Qty = Convert.ToSingle(dgvStockList[3, i].Value.ToString());
+                billinfo.goodsPrice = Convert.ToSingle(dgvStockList[4, i].Value.ToString());
+                billinfo.GoodsTotalPrice = Convert.ToSingle(dgvStockList[5, i].Value.ToString());
+
+                //执行多行录入数据（添加到明细表中）
+                baseinfo.AddTablePurseDetail(billinfo, "tb_purchase_detail");
+                //更改库存数量和加权平均价格  此处不更改库存了，去入库中更改
+                //DataSet ds = null;
+                //stockinfo.TradeCode = dgvStockList[0, i].Value.ToString();
+                //ds = baseinfo.GetStockByTradeCode(stockinfo, "tb_Stock");
+
+                //stockinfo.Qty = Convert.ToSingle(ds.Tables[0].Rows[0]["qty"]);
+                //stockinfo.Price = Convert.ToSingle(ds.Tables[0].Rows[0]["price"]);
+                //stockinfo.AveragePrice = Convert.ToSingle(ds.Tables[0].Rows[0]["averageprice"]);
+                ////处理--加权平均价格
+                //if (stockinfo.Price == 0)
+                //{
+                //    stockinfo.AveragePrice = billinfo.Price;   //第一次进货时，加权平均价格等于进货价格
+                //    stockinfo.Price = billinfo.Price;
+                //}
+                //else
+                //{
+                //    //加权平均价格=（加权平均价*库存总数量+本次进货价格*本次进货数量）/（库存总数量+本次进货数量）
+                //    stockinfo.AveragePrice = ((stockinfo.AveragePrice * stockinfo.Qty + billinfo.Price * billinfo.Qty) / (stockinfo.Qty + billinfo.Qty));
+                //}
+                ////更新--商品库存数量
+                //stockinfo.Qty = stockinfo.Qty + billinfo.Qty;
+                //int d = baseinfo.UpdateStock_QtyAndAveragerprice(stockinfo);
+
+            }
+            
             baseinfo.AddTablePurse(billinfo, "tb_purchase");
-            //billinfo.f
-            //billinfo.BillCode = txtBillCode.Text;
-
-            //billinfo.Handle = txBuyer.Text;
-            //billinfo.Units = txtUnits.Text;
-            //billinfo.Summary = txtSummary.Text;
-            //billinfo.FullPayment =Convert.ToSingle(txtFullPayment.Text);
-            //billinfo.Payment = Convert.ToSingle(txtpayment.Text);
-            ////执行添加
-            //baseinfo.AddTableMainWarehouse(billinfo, "tb_purchase");
-
-            ////向进货（明细表）中录入商品单据信息
-            //for (int i = 0; i < dgvStockList.RowCount-1; i++)
-            //{
-            //        billinfo.BillCode = txtBillCode.Text;
-            //        billinfo.TradeCode = dgvStockList[0, i].Value.ToString();
-            //        billinfo.FullName = dgvStockList[1, i].Value.ToString();
-            //        billinfo.TradeUnit = dgvStockList[2, i].Value.ToString();
-            //        billinfo.Qty = Convert.ToSingle(dgvStockList[3, i].Value.ToString());
-            //        billinfo.Price = Convert.ToSingle(dgvStockList[4, i].Value.ToString());
-            //        billinfo.TSum = Convert.ToSingle(dgvStockList[5, i].Value.ToString());
-            //        //执行多行录入数据（添加到明细表中）
-            //        baseinfo.AddTableDetailedWarehouse(billinfo, "tb_warehouse_detailed");
-            //    //更改库存数量和加权平均价格
-            //        DataSet ds = null;
-            //    stockinfo.TradeCode=dgvStockList[0, i].Value.ToString();
-            //    ds=baseinfo.GetStockByTradeCode(stockinfo, "tb_Stock");
-
-            //    stockinfo.Qty =Convert.ToSingle(ds.Tables[0].Rows[0]["qty"]);
-            //    stockinfo.Price =Convert.ToSingle(ds.Tables[0].Rows[0]["price"]);
-            //    stockinfo.AveragePrice = Convert.ToSingle(ds.Tables[0].Rows[0]["averageprice"]);
-            //    //处理--加权平均价格
-            //    if (stockinfo.Price == 0)
-            //    {
-            //        stockinfo.AveragePrice = billinfo.Price;   //第一次进货时，加权平均价格等于进货价格
-            //        stockinfo.Price = billinfo.Price;
-            //    }
-            //    else
-            //    { 
-            //        //加权平均价格=（加权平均价*库存总数量+本次进货价格*本次进货数量）/（库存总数量+本次进货数量）
-            //        stockinfo.AveragePrice = ((stockinfo.AveragePrice * stockinfo.Qty + billinfo.Price * billinfo.Qty) / (stockinfo.Qty + billinfo.Qty));
-            //    }
-            //    //更新--商品库存数量
-            //    stockinfo.Qty = stockinfo.Qty + billinfo.Qty;
-            //    int d = baseinfo.UpdateStock_QtyAndAveragerprice(stockinfo);
-                
-            //}
 
 #if fasle
             //向往来单位明细表--录入数据--这样以来为分析
