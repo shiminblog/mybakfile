@@ -27,6 +27,37 @@ PRIMARY KEY (id,orders_id,goods_id)
 )ENGINE=InnoDB  COMMENT = '销售订单明细表';
 
 
+create table tb_purchase(
+bill_code varchar(255) NOT NULL  COMMENT '采购单编号',
+supplier_code varchar(255) NOT NULL COMMENT '供应商编号',
+supplier_name varchar(255)  not null comment '供应商姓名',
+supplier_tel varchar(255) NOT NULL DEFAULT '' COMMENT '供应商联系电话',
+supplier_address varchar(255) NOT NULL DEFAULT '' COMMENT '供应商地址',
+buyer_code varchar(255) NOT NULL DEFAULT '' COMMENT '采购员工号',
+buyer_name varchar(255) NOT NULL DEFAULT '' COMMENT '采购员姓名',
+order_date date not null  COMMENT '下单日期',
+bile_date date not null comment '录单日期',
+deadline date not null comment '要货日期',
+goods_count int(32) unsigned NOT NULL comment '商品件数',
+Total_payment float(32) not null comment '订单总金额',
+statu varchar(255) NOT NULL DEFAULT '待出库' COMMENT '订单状态',
+PRIMARY KEY (bill_code)
+)ENGINE=InnoDB  COMMENT = '采购单表';
+
+create table tb_purchase_detail(
+purchase_detail_code varchar(255)  NOT NULL COMMENT '订单明细流水号',
+purchase_code varchar(255) NOT NULL COMMENT '采购订单号',
+goods_code varchar(255) not null comment '商品编号',
+goods_name varchar(255) NOT NULL DEFAULT '' COMMENT '商品名字',
+goods_uint varchar(255) NOT NULL DEFAULT '' COMMENT '商品单位',
+goods_price float(32) not null comment '商品单价',
+goods_qty float(32) not null comment '需求数量',
+PRIMARY KEY (purchase_detail_code,purchase_code,goods_code)
+)ENGINE=InnoDB  COMMENT = '采购单明细表';
+
+
+
+
 create table tb_Stock(
 goods_id varchar(255) not null comment '商品编号',
 goods_name varchar(255) NOT NULL DEFAULT '' COMMENT '商品名字',
@@ -40,4 +71,5 @@ PRIMARY KEY (goods_id)
 
 
 
-CommandText = "INSERT INTO tb_orders (billcode, customerid, staffid, customername, customertel, customeraddress,orderdate,billdate,goodscount,fullpayment) VALUES (@billcode,@customerid,@staffid,@customername,@customertel,@customeraddress,@orderdate,@billdate,@goodscount,...
+
+#CommandText = "INSERT INTO tb_orders (billcode, customerid, staffid, customername, customertel, customeraddress,orderdate,billdate,goodscount,fullpayment) VALUES (@billcode,@customerid,@staffid,@customername,@customertel,@customeraddress,@orderdate,@billdate,@goodscount,...

@@ -404,8 +404,32 @@ namespace EMS.BaseClass
                         
             }
         }
-
-
+        /// <summary>
+        /// 采购--向主表中添加数据
+        /// </summary>
+        /// <param name="billinfo">过账单据数据结构类对象</param>
+        /// <param name="AddTableName_trueName">数据库中数据表名称</param>
+        /// <returns></returns>
+        public int AddTablePurse(cPurchaseBill billinfo, string AddTableName_trueName)
+        {
+                MySqlParameter[] prams = 
+                {
+                        data.MakeInParam("@bill_code",  MySqlDbType.VarChar, 255,billinfo.BillCode),
+                        data.MakeInParam("@supplier_code", MySqlDbType.VarChar, 255,billinfo.SupplierCode),
+                        data.MakeInParam("@supplier_name",    MySqlDbType.VarChar, 255,billinfo.SupplierName),
+                        data.MakeInParam("@supplier_tel",    MySqlDbType.VarChar, 255,billinfo.SupplierTel),
+                        data.MakeInParam("@supplier_address",    MySqlDbType.VarChar, 255,billinfo.SupplierAddress),
+                        data.MakeInParam("@buyer_code",    MySqlDbType.VarChar, 255,billinfo.BuyerCode),
+                        data.MakeInParam("@buyer_name", MySqlDbType.VarChar, 255, billinfo.BuyerName),
+						data.MakeInParam("@order_date",  MySqlDbType.DateTime, 32, billinfo.orderDate),
+                        data.MakeInParam("@bile_date", MySqlDbType.DateTime, 32, billinfo.BillDate),
+                        data.MakeInParam("@deadline",  MySqlDbType.DateTime, 32, billinfo.DeadLine),
+						data.MakeInParam("@goods_count",  MySqlDbType.Int32, 32, billinfo.DetailNumber),
+                        data.MakeInParam("@Total_payment", MySqlDbType.Float, 32, billinfo.TotalPayment),
+                        data.MakeInParam("@statu",  MySqlDbType.VarChar, 255, billinfo.Status),
+			    };
+                return (data.RunProc("INSERT INTO " + AddTableName_trueName + " (bill_code, supplier_code, supplier_name, supplier_tel, supplier_address, buyer_code,buyer_name,order_date,bile_date,deadline,goods_count,Total_payment,statu) VALUES (@bill_code, @supplier_code, @supplier_name, @supplier_tel, @supplier_address, @buyer_code,@buyer_name,@order_date,@bile_date,@deadline,@goods_count,@Total_payment,@statu)", prams));            
+        }
 
         /// <summary>
         /// 向明细表中添加数据－进货单－销售退货单－销售单－进货退货单
@@ -566,7 +590,7 @@ namespace EMS.BaseClass
                 						//data.MakeInParam("@units",  MySqlDbType.VarChar, 30, "%"+billinfo.Units+"%"),
                 						//data.MakeInParam("@handle",  MySqlDbType.VarChar, 10,"%"+ billinfo.Handle+"%"),
 			};
-            return (data.RunProcReturn("SELECT b.tradecode AS 商品编号, b.fullname AS 商品名称, SUM(b.qty) AS 进货数量,SUM(b.tsum) AS 进货金额 FROM tb_warehouse_main a INNER JOIN (SELECT billcode, tradecode, fullname, SUM(qty) AS qty, SUM(tsum) AS tsum FROM tb_warehouse_detailed GROUP BY tradecode, billcode, fullname) b ON a.billcode = b.billcode AND a.units LIKE @units AND a.handle LIKE @handle WHERE (a.billdate BETWEEN '" + starDateTime + "' AND '" + endDateTime + "') GROUP BY b.tradecode, b.fullname", prams, tbName));
+            return (data.RunProcReturn("SELECT b.tradecode AS 商品编号, b.fullname AS 商品名称, SUM(b.qty) AS 进货数量,SUM(b.tsum) AS 进货金额 FROM tb_purchase a INNER JOIN (SELECT billcode, tradecode, fullname, SUM(qty) AS qty, SUM(tsum) AS tsum FROM tb_warehouse_detailed GROUP BY tradecode, billcode, fullname) b ON a.billcode = b.billcode AND a.units LIKE @units AND a.handle LIKE @handle WHERE (a.billdate BETWEEN '" + starDateTime + "' AND '" + endDateTime + "') GROUP BY b.tradecode, b.fullname", prams, tbName));
         }
         /// <summary>
         /// 进货商品－－统计所有
@@ -1259,10 +1283,10 @@ namespace EMS.BaseClass
 
     #endregion
 
-    #region 定义过账单据--数据结构
+    #region 定义销售订单过账单据--数据结构
     public class cBillInfo
     {
-        //销售订单表结构
+        //销售订单表&结构
         private DateTime bill_date = DateTime.Now;   //录单操作日期
         private DateTime order_date = DateTime.Now;  //下单日期
         private string bill_code = "";               //销售订单编号
@@ -1273,6 +1297,8 @@ namespace EMS.BaseClass
         private string salesPerson_code = "";          //接单员工号
         private string sales_person = "";            //接单员姓名  
         private float orderTotal_payment = 0;        //订单总金额
+        private string status = "";                 //订单状态
+         private int detail_number = 0;                //明细条数
 
         //销售订单明细表结构
         private string orderDetaild_code = "";       //订单明细流水号
@@ -1364,7 +1390,6 @@ namespace EMS.BaseClass
             set { orderTotal_payment = value; }
         }
 
-        //***************明细表结构******************//
         /// <summary>
         /// 订单明细流水号
         /// </summary>
@@ -1421,11 +1446,225 @@ namespace EMS.BaseClass
             get { return goods_price; }
             set { goods_price = value; }
         }
+        /// <summary>
+        /// 订单状态
+        /// </summary>
+        public string Status
+        {
+            get { return status; }
+            set { status = value; }
+        }
+        /// <summary>
+        /// 明细条数
+        /// </summary>
+        public int DetailNumber
+        {
+            get { return detail_number; }
+            set { detail_number = value; }
+        }
+    }
+    #endregion
+    #region 定义采购订单过账单据--数据结构
+    public class cPurchaseBill
+    {
+        //采购订单表&结构
+        private DateTime bill_date = DateTime.Now;   //录单操作日期
+        private DateTime order_date = DateTime.Now;  //下单日期
+        private DateTime deadline = DateTime.Now;    //要货日期
+        private string bill_code = "";               //采购订单编号
+        private string supplier_code = "";           //供应商编号
+        private string supplier_name = "";           //供应商姓名
+        private string supplier_tel = "";            //供应商联系电话
+        private string supplier_address = "";        //供应商地址
+        private string buyer_code = "";             //采购员工号
+        private string buyer_name = "";            //采购员姓名  
+        private float Total_payment = 0;            //订单总金额
+        private string status = "";                 //订单状态
+        private int detail_number = 0;                //明细条数
+
+        //采购订单明细表结构
+        private string purchase_detail_code = "";       //订单明细流水号
+        private string purchase_code = "";              //相关联的采购订单号 == billcode
+        private string goods_code = "";              //商品编号
+        private float qty = 0;                       //需求数量
+        private string goods_name = "";              //商品名称
+        private string goods_unit = "";              //商品单位
+        private float goods_price = 0;             //商品单价
+
+        /// <summary>
+        /// 录单操作日期
+        /// </summary>
+        public DateTime BillDate
+        {
+            get { return bill_date; }
+            set { bill_date = value; }
+        }
+        /// <summary>
+        /// 下单日期
+        /// </summary>
+        public DateTime orderDate
+        {
+            get { return order_date; }
+            set { order_date = value; }
+        }
+        /// <summary>
+        /// 要货日期
+        /// </summary>
+        public DateTime DeadLine
+        {
+            get { return deadline; }
+            set { deadline = value; }
+        }
+
+        /// <summary>
+        /// 供应商地址
+        /// </summary>
+        public string SupplierAddress
+        {
+            get { return supplier_address; }
+            set { supplier_address = value; }
+        }
+
+
+        /// <summary>
+        /// 供应商联系电话
+        /// </summary>
+        public string SupplierTel
+        {
+            get { return supplier_tel; }
+            set { supplier_tel = value; }
+        }
+
+        /// <summary>
+        /// 供应商姓名
+        /// </summary>
+        public string SupplierName
+        {
+            get { return supplier_name; }
+            set { supplier_name = value; }
+        }
+        /// <summary>
+        /// 供应商编号
+        /// </summary>
+        public string SupplierCode
+        {
+            get { return supplier_code; }
+            set { supplier_code = value; }
+        }
+
+
+        /// <summary>
+        /// 采购订单编号
+        /// </summary>
+        public string BillCode
+        {
+            get { return bill_code; }
+            set { bill_code = value; }
+        }
+
+        /// <summary>
+        /// 采购员工号
+        /// </summary>
+        public string BuyerCode
+        {
+            get { return buyer_code; }
+            set { buyer_code = value; }
+        }
+        /// <summary>
+        /// 采购员姓名
+        /// </summary>
+        public string BuyerName
+        {
+            get { return buyer_name; }
+            set { buyer_name = value; }
+        }
+        /// <summary>
+        /// 订单总金额
+        /// </summary>
+        public float TotalPayment
+        {
+            get { return Total_payment; }
+            set { Total_payment = value; }
+        }
+
+        /// <summary>
+        /// 订单明细流水号
+        /// </summary>
+        public string PurchaseDetaildCode
+        {
+            get { return purchase_detail_code; }
+            set { purchase_detail_code = value; }
+        }
+        /// <summary>
+        /// 相关联的销售订单号
+        /// </summary>
+        public string PurchaseCode
+        {
+            get { return purchase_code; }
+            set { purchase_code = value; }
+        }
+        /// <summary>
+        /// 商品编号
+        /// </summary>
+        public string goodsCode
+        {
+            get { return goods_code; }
+            set { goods_code = value; }
+        }
+        /// <summary>
+        /// 需求数量
+        /// </summary>
+        public float Qty
+        {
+            get { return qty; }
+            set { qty = value; }
+        }
+        /// <summary>
+        /// 商品名称
+        /// </summary>
+        public string goodsName
+        {
+            get { return goods_name; }
+            set { goods_name = value; }
+        }
+        /// <summary>
+        /// 商品单位
+        /// </summary>
+        public string goodsUnit
+        {
+            get { return goods_unit; }
+            set { goods_unit = value; }
+        }
+        /// <summary>
+        /// 商品单价
+        /// </summary>
+        public float goodsPrice
+        {
+            get { return goods_price; }
+            set { goods_price = value; }
+        }
+
+        /// <summary>
+        /// 订单状态
+        /// </summary>
+        public string Status
+        {
+            get { return status; }
+            set { status = value; }
+        }
+        /// <summary>
+        /// 明细条数
+        /// </summary>
+        public int DetailNumber
+        {
+            get { return detail_number; }
+            set { detail_number = value; }
+        }
     }
     #endregion
 
-        #region 定义往来账本明细--数据结构
-        public class cCurrentAccount
+    #region 定义往来账本明细--数据结构
+    public class cCurrentAccount
         {
             private DateTime billdate = DateTime.Now;
             private string billcode = "";

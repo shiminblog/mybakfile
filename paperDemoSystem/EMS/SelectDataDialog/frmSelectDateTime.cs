@@ -78,7 +78,7 @@ namespace EMS.SelectDataDialog
                         if (P_Str_Code.Substring(0, 2) == "JH" && P_Str_Code!="JHTH")
                         {
                             ds_Detailed = baseinfo.FindDetailde("tb_warehouse_detailed", ds.Tables[0].Rows[i]["billcode"].ToString());
-                            ds_main = baseinfo.FindMain("tb_warehouse_main", ds.Tables[0].Rows[i]["billcode"].ToString());
+                            ds_main = baseinfo.FindMain("tb_purchase", ds.Tables[0].Rows[i]["billcode"].ToString());
                             //动态设置表格行数(注意:每当增加一些新表格的时,原有表格中最后一行数据,DataGridView控件将其自动清空)
                             G_Int_rows = G_Int_rows + ds_Detailed.Tables[0].Rows.Count;
                             currentAccountBook.dgvCurrentAccountList.RowCount = G_Int_rows;
