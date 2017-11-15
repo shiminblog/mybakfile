@@ -320,6 +320,40 @@ namespace EMS.BaseClass
         {
             return (data.RunProcReturn("select * from tb_orders", tbName));
         }
+        
+        /// <summary>
+        /// 通过指定的字段以及字段值获取表数据，不保证安全
+        /// </summary>
+        /// <param name="tbName"></param>
+        /// <returns></returns>
+        public DataSet GetTableDateByFiled(string tbName, string tbFiled, string filedValue)
+        {
+            string cmd = "select * from " + tbName + " where " + tbFiled + "=\'" + filedValue + "\'";
+            return (data.RunProcReturn(cmd, tbName));
+        }
+        /// <summary>
+        /// 通过表名获取所有信息，不保证安全
+        /// </summary>
+        /// <param name="tbName"></param>
+        /// <returns></returns>
+        public DataSet GetTableAllDataByName(string tbName)
+        {
+            string cmd = "select * from " + tbName;
+            return (data.RunProcReturn(cmd, tbName));          
+        }
+        /// <summary>
+        /// 通过表名修改单据状态，不安全
+        /// </summary>
+        /// <param name="stock">库存商品数据结构类对象</param>
+        /// <returns></returns>
+        public int UpdateTableStatu(string tbName, string statu)
+        {
+            MySqlParameter[] prams = {
+									    data.MakeInParam("@tradecode",  MySqlDbType.VarChar, 255, tbName),
+			};
+            string cmd = "update " + tbName + " set statu=\'" + statu + "\'";
+            return (data.RunProc(cmd, prams));
+        }
         /// <summary>
         /// 得到销售订单所有明细列表
         /// </summary>
@@ -329,6 +363,7 @@ namespace EMS.BaseClass
         {
             return (data.RunProcReturn("select * from tb_orders_detailed", tbName));
         }
+
         public DataSet GetSaleDetailList(string tbName, string tbSaleCode)
         {
             string cmd = "select * from tb_orders_detailed where orders_id=" +"\'" + tbSaleCode + "\'";
@@ -470,6 +505,48 @@ namespace EMS.BaseClass
 			    };
             return (data.RunProc("INSERT INTO " + AddTableName_trueName + " (purchase_detail_code, purchase_code, goods_code, goods_name, goods_uint, goods_price,goods_qty,goods_total_price) VALUES (@purchase_detail_code, @purchase_code, @goods_code, @goods_name, @goods_uint, @goods_price,@goods_qty,@goods_total_price)", prams));
         }
+
+        /// <summary>
+        /// 入库--向主表中添加数据
+        /// </summary>
+        /// <param name="billinfo">过账单据数据结构类对象</param>
+        /// <param name="AddTableName_trueName">数据库中数据表名称</param>
+        /// <returns></returns>
+        public int AddTableOutStock(cStockBill billinfo, string AddTableName_trueName)
+        {
+            MySqlParameter[] prams = 
+                {
+                        data.MakeInParam("@out_code",  MySqlDbType.VarChar, 255,billinfo.OutCode),
+                        data.MakeInParam("@orders_code", MySqlDbType.VarChar, 255,billinfo.OrdersCode),
+                        data.MakeInParam("@goods_count",    MySqlDbType.Int32, 32,billinfo.GoodsCount),
+                        data.MakeInParam("@clerk_code",    MySqlDbType.VarChar, 255,billinfo.StaffCode),
+                        data.MakeInParam("@clerk_name",    MySqlDbType.VarChar, 255,billinfo.StaffName),
+                        data.MakeInParam("@out_date",    MySqlDbType.DateTime, 255,billinfo.BillDate),
+			    };
+            return (data.RunProc("INSERT INTO " + AddTableName_trueName + " (out_code, orders_code, goods_count, clerk_code, clerk_name, out_date) VALUES (@out_code, @orders_code, @goods_count, @clerk_code, @clerk_name, @out_date)", prams));
+        }
+
+        /// <summary>
+        /// 出库-向明细表中添加数据
+        /// </summary>
+        /// <param name="billinfo">过账单据数据结构类对象</param>
+        /// <param name="AddTableName_trueName">数据库中数据表名称</param>
+        /// <returns></returns>
+        public int AddTableOutStockDetail(cStockBill billinfo, string AddTableName_trueName)
+        {
+                MySqlParameter[] prams = 
+                    {
+                            data.MakeInParam("@out_detail_code",  MySqlDbType.VarChar, 255,billinfo.EnOutDetailCode),
+                            data.MakeInParam("@out_code", MySqlDbType.VarChar, 255,billinfo.OutCode),
+                            data.MakeInParam("@goods_code",    MySqlDbType.VarChar, 255,billinfo.GoodCode),
+                            data.MakeInParam("@goods_name",    MySqlDbType.VarChar, 255,billinfo.GoodsName),
+                            data.MakeInParam("@goods_uint",    MySqlDbType.VarChar, 255,billinfo.GoodsUint),
+                            data.MakeInParam("@goods_price",    MySqlDbType.Float, 32,billinfo.GoodsPrice),
+                            data.MakeInParam("@goods_qty", MySqlDbType.Float, 32, billinfo.Qty),
+                            data.MakeInParam("@goods_total_price",  MySqlDbType.Float, 32, billinfo.GoodsTotalPrice),
+                    };
+                return (data.RunProc("INSERT INTO " + AddTableName_trueName + " (out_detail_code, out_code, goods_code, goods_name, goods_uint, goods_price,goods_qty,goods_total_price) VALUES (@out_detail_code, @out_code, @goods_code, @goods_name, @goods_uint, @goods_price,@goods_qty,@goods_total_price)", prams));
+      }
         /// <summary>
         /// 向明细表中添加数据－进货单－销售退货单－销售单－进货退货单
         /// </summary>
@@ -1706,6 +1783,186 @@ namespace EMS.BaseClass
         {
             get { return detail_number; }
             set { detail_number = value; }
+        }
+    }
+    #endregion
+
+    #region   定义出入库单过账单据--数据结构
+    public class cStockBill
+    {
+        private DateTime bill_date = DateTime.Now;   //操作日期
+        private int goods_count = 0;
+
+        //单主表
+        private string entry_code = "";
+        private string purchase_code = "";
+
+        private string supplier_code = "";
+        
+        private string staff_code = "";
+        private string staff_name = "";
+
+        private string out_code = "";
+
+        //明细表
+        private string entry_detail_code = "";
+        private string en_code = "";
+
+        private string o_code = "";
+        private string orders_code = "";
+
+        private string goods_code = "";
+        private string goods_name = "";
+        private string goods_uint = "";
+        private float goods_price = 0;
+        private int goods_qty = 0;
+        private float goods_total_price = 0;
+        
+        /// <summary>
+        /// 出库入库操作日期
+        /// </summary>
+        public DateTime BillDate
+        {
+            get { return bill_date; }
+            set { bill_date = value; }
+        }
+        /// <summary>
+        /// 明细总条数
+        /// </summary>
+        public int GoodsCount
+        {
+            get { return goods_count;}
+            set { goods_count = value;}
+        }
+        /// <summary>
+        /// 入库单号
+        /// </summary>
+        public string EntryCode
+        {
+            get { return entry_code; }
+            set { entry_code = value;}
+        }
+        /// <summary>
+        /// 采购单号
+        /// </summary>
+        public string PurchaseCode
+        {
+            get { return purchase_code;}
+            set {purchase_code = value;}
+        }
+        /// <summary>
+        /// 供应商号
+        /// </summary>
+        public string SupplierCode
+        {
+            get { return supplier_code;}
+            set {supplier_code = value;}
+        }
+        /// <summary>
+        /// 员工号
+        /// </summary>
+        public string StaffCode
+        {
+            get { return staff_code;}
+            set {staff_code = value;}
+        }
+        /// <summary>
+        /// 员工姓名
+        /// </summary>
+        public string StaffName
+        {
+            get { return staff_name; }
+            set { staff_name = value; }
+        }
+        /// <summary>
+        /// 出库单号
+        /// </summary>
+        public string OutCode
+        {
+            get { return out_code;}
+            set {out_code = value;}
+        }
+
+        /// <summary>
+        /// 出入库明细流水号
+        /// </summary>
+        public string EnOutDetailCode
+        { 
+            get {return entry_detail_code;}
+            set {entry_detail_code=value;}
+        }
+        /// <summary>
+        /// 同明细相关联的入库单号
+        /// </summary>
+        public string EnCode
+        {
+            get { return en_code;}
+            set {en_code=value;}
+        }
+        /// <summary>
+        /// 同明细相关联的出库单号
+        /// </summary>
+        public string OtCode
+        {
+            get { return o_code;}
+            set {o_code=value;}
+        }
+        /// <summary>
+        /// 销售单号
+        /// </summary>
+        public string OrdersCode
+        {
+            get {return orders_code;}
+            set {orders_code=value;}
+        }
+        /// <summary>
+        /// 商品号
+        /// </summary>
+        public string GoodCode
+        {
+            get {return goods_code;}
+            set {goods_code=value;}
+        }
+        /// <summary>
+        /// 商品名
+        /// </summary>
+        public string GoodsName
+        {
+            get {return goods_name;}
+            set {goods_name=value;}
+        }
+
+        /// <summary>
+        /// 商品计量单位
+        /// </summary>
+        public string GoodsUint
+        {
+            get {return goods_uint;}
+            set {goods_uint=value;}
+        }
+        /// <summary>
+        /// 商品价格
+        /// </summary>
+        public float GoodsPrice
+        {
+            get {return goods_price;}
+            set {goods_price=value;}
+        }
+        /// <summary>
+        /// 商品数量
+        /// </summary>
+        public int Qty
+        {
+            get { return goods_qty;}
+            set {goods_qty=value;}
+        }
+        /// <summary>
+        /// 明细小计
+        /// </summary>
+        public float GoodsTotalPrice
+        {
+            get { return goods_total_price;}
+            set {goods_total_price=value;}
         }
     }
     #endregion

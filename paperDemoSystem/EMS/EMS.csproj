@@ -162,6 +162,48 @@
     <Compile Include="SaleStock\frmSellStockList.Designer.cs">
       <DependentUpon>frmSellStockList.cs</DependentUpon>
     </Compile>
+    <Compile Include="Stock\frmInSotck.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Stock\frmInSotck.Designer.cs">
+      <DependentUpon>frmInSotck.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Stock\frmInStockDetailList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Stock\frmInStockDetailList.Designer.cs">
+      <DependentUpon>frmInStockDetailList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Stock\frmInStockList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Stock\frmInStockList.Designer.cs">
+      <DependentUpon>frmInStockList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Stock\frmOutStock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Stock\frmOutStock.Designer.cs">
+      <DependentUpon>frmOutStock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Stock\frmOutStockDetailList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Stock\frmOutStockDetailList.Designer.cs">
+      <DependentUpon>frmOutStockDetailList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Stock\frmOutStockDetailModify.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Stock\frmOutStockDetailModify.Designer.cs">
+      <DependentUpon>frmOutStockDetailModify.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Stock\frmOutStockList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Stock\frmOutStockList.Designer.cs">
+      <DependentUpon>frmOutStockList.cs</DependentUpon>
+    </Compile>
     <Compile Include="Welcome.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -269,9 +311,30 @@
       <SubType>Designer</SubType>
       <DependentUpon>frmCheckStock.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Stock\frmInSotck.resx">
+      <DependentUpon>frmInSotck.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Stock\frmInStockDetailList.resx">
+      <DependentUpon>frmInStockDetailList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Stock\frmInStockList.resx">
+      <DependentUpon>frmInStockList.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Stock\frmLowerLimit.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmLowerLimit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Stock\frmOutStock.resx">
+      <DependentUpon>frmOutStock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Stock\frmOutStockDetailList.resx">
+      <DependentUpon>frmOutStockDetailList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Stock\frmOutStockDetailModify.resx">
+      <DependentUpon>frmOutStockDetailModify.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Stock\frmOutStockList.resx">
+      <DependentUpon>frmOutStockList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Stock\frmUpperLimit.resx">
       <SubType>Designer</SubType>

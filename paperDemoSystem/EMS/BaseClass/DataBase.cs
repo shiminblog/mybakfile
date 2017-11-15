@@ -113,8 +113,21 @@ namespace EMS.BaseClass
         public int RunProc(string procName, MySqlParameter[] prams)
         {
             MySqlCommand cmd = CreateCommand(procName, prams);
-            cmd.ExecuteNonQuery();
-            this.Close();
+            try
+            {
+               cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show("录入非法字符！！！" + ex.Message, "错误提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //txtpayment.Focus();
+                //this.Close();
+            }
+            finally 
+            {
+                this.Close();
+            }
+            
             //得到执行成功返回值
             return (int)cmd.Parameters["ReturnValue"].Value;
         }

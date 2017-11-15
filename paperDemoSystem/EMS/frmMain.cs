@@ -207,7 +207,9 @@ namespace EMS
 
         private void 出库操作ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            EMS.Stock.frmOutStock out_s = new EMS.Stock.frmOutStock();
+            out_s.Owner = this;
+            out_s.Show();
         }
 
         private void 出库查询ToolStripMenuItem_Click(object sender, EventArgs e)
