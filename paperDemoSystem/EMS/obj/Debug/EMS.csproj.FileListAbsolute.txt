@@ -34,3 +34,6 @@ E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.csproj.GenerateResource.Cache
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.exe
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.pdb
+D:\MyDocumentsNameMustToBeLongOtherWiseIcannotFindIt\github\mybakfile\paperDemoSystem\EMS\bin\Debug\EMS.exe.config
+D:\MyDocumentsNameMustToBeLongOtherWiseIcannotFindIt\github\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.exe
+D:\MyDocumentsNameMustToBeLongOtherWiseIcannotFindIt\github\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.pdb

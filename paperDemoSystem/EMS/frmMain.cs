@@ -205,5 +205,25 @@ namespace EMS
             purchase_list.Show();
         }
 
+        private void 出库操作ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void 出库查询ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void 入库操作ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void 入库查询ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }
