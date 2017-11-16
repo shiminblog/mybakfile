@@ -40,7 +40,7 @@
             this.dataGridViewOrderList.Location = new System.Drawing.Point(12, 42);
             this.dataGridViewOrderList.Name = "dataGridViewOrderList";
             this.dataGridViewOrderList.RowTemplate.Height = 23;
-            this.dataGridViewOrderList.Size = new System.Drawing.Size(942, 255);
+            this.dataGridViewOrderList.Size = new System.Drawing.Size(603, 177);
             this.dataGridViewOrderList.TabIndex = 7;
             this.dataGridViewOrderList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewOrderList_CellContentClick);
             this.dataGridViewOrderList.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewOrderList_CellDoubleClick);
@@ -48,7 +48,7 @@
             // 
             // btCacle
             // 
-            this.btCacle.Location = new System.Drawing.Point(829, 329);
+            this.btCacle.Location = new System.Drawing.Point(490, 237);
             this.btCacle.Name = "btCacle";
             this.btCacle.Size = new System.Drawing.Size(125, 34);
             this.btCacle.TabIndex = 10;
@@ -69,7 +69,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(954, 388);
+            this.ClientSize = new System.Drawing.Size(622, 293);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btCacle);
             this.Controls.Add(this.dataGridViewOrderList);

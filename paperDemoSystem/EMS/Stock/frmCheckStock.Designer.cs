@@ -66,6 +66,7 @@
             this.dgvStockList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvStockList.Size = new System.Drawing.Size(857, 376);
             this.dgvStockList.TabIndex = 0;
+            this.dgvStockList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvStockList_CellContentClick);
             this.dgvStockList.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvStockList_CellEnter);
             // 
             // toolStrip1
@@ -127,7 +128,6 @@
             // 
             // tlTxtFindStock
             // 
-            this.tlTxtFindStock.Font = new System.Drawing.Font("微软雅黑", 9F);
             this.tlTxtFindStock.Name = "tlTxtFindStock";
             this.tlTxtFindStock.Size = new System.Drawing.Size(150, 25);
             // 
@@ -169,7 +169,6 @@
             // tltxtFullName
             // 
             this.tltxtFullName.BackColor = System.Drawing.Color.White;
-            this.tltxtFullName.Font = new System.Drawing.Font("微软雅黑", 9F);
             this.tltxtFullName.Name = "tltxtFullName";
             this.tltxtFullName.ReadOnly = true;
             this.tltxtFullName.Size = new System.Drawing.Size(100, 25);
@@ -192,7 +191,6 @@
             // 
             // tltxtCheckStock
             // 
-            this.tltxtCheckStock.Font = new System.Drawing.Font("微软雅黑", 9F);
             this.tltxtCheckStock.Name = "tltxtCheckStock";
             this.tltxtCheckStock.Size = new System.Drawing.Size(40, 25);
             // 

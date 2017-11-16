@@ -214,17 +214,23 @@ namespace EMS
 
         private void 出库查询ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            EMS.Stock.frmOutStockList frm = new EMS.Stock.frmOutStockList();
+            frm.Owner = this;
+            frm.Show();
         }
 
         private void 入库操作ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            EMS.Stock.frmInSotck entry_s = new EMS.Stock.frmInSotck();
+            entry_s.Owner = this;
+            entry_s.Show();
         }
 
         private void 入库查询ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            EMS.Stock.frmInStockList frm_in = new EMS.Stock.frmInStockList();
+            frm_in.Owner = this;
+            frm_in.Show();
         }
 
     }

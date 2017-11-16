@@ -505,9 +505,50 @@ namespace EMS.BaseClass
 			    };
             return (data.RunProc("INSERT INTO " + AddTableName_trueName + " (purchase_detail_code, purchase_code, goods_code, goods_name, goods_uint, goods_price,goods_qty,goods_total_price) VALUES (@purchase_detail_code, @purchase_code, @goods_code, @goods_name, @goods_uint, @goods_price,@goods_qty,@goods_total_price)", prams));
         }
-
         /// <summary>
         /// 入库--向主表中添加数据
+        /// </summary>
+        /// <param name="billinfo">过账单据数据结构类对象</param>
+        /// <param name="AddTableName_trueName">数据库中数据表名称</param>
+        /// <returns></returns>
+        public int AddTableEntryStock(cStockBill billinfo, string AddTableName_trueName)
+        {
+            MySqlParameter[] prams = 
+                {
+                        data.MakeInParam("@entry_code",  MySqlDbType.VarChar, 255,billinfo.EnOutCode),
+                        data.MakeInParam("@purchase_code", MySqlDbType.VarChar, 255,billinfo.PurchaseCode),
+                        data.MakeInParam("@goods_count",    MySqlDbType.Int32, 32,billinfo.GoodsCount),
+                        data.MakeInParam("@supplier_code",    MySqlDbType.VarChar, 255,billinfo.SupplierCode),
+                        data.MakeInParam("@clerk_code",    MySqlDbType.VarChar, 255,billinfo.StaffCode),
+                        data.MakeInParam("@clerk_name",    MySqlDbType.VarChar, 255,billinfo.StaffName),
+                        data.MakeInParam("@entry_date",    MySqlDbType.DateTime, 255,billinfo.BillDate),
+			    };
+            return (data.RunProc("INSERT INTO " + AddTableName_trueName + " (entry_code, purchase_code, goods_count, supplier_code,clerk_code, clerk_name, entry_date) VALUES (@entry_code, @purchase_code, @goods_count, @supplier_code,@clerk_code, @clerk_name, @out_date)", prams));
+        }
+        /// <summary>
+        /// 入库-向明细表中添加数据
+        /// </summary>
+        /// <param name="billinfo">过账单据数据结构类对象</param>
+        /// <param name="AddTableName_trueName">数据库中数据表名称</param>
+        /// <returns></returns>
+        public int AddTableEntryStockDetail(cStockBill billinfo, string AddTableName_trueName)
+        {
+            MySqlParameter[] prams = 
+                    {
+                            data.MakeInParam("@entry_detail_code",  MySqlDbType.VarChar, 255,billinfo.EnOutDetailCode),
+                            data.MakeInParam("@entry_code", MySqlDbType.VarChar, 255,billinfo.EnOutCode),
+                            data.MakeInParam("@goods_code",    MySqlDbType.VarChar, 255,billinfo.GoodCode),
+                            data.MakeInParam("@goods_name",    MySqlDbType.VarChar, 255,billinfo.GoodsName),
+                            data.MakeInParam("@goods_uint",    MySqlDbType.VarChar, 255,billinfo.GoodsUint),
+                            data.MakeInParam("@goods_price",    MySqlDbType.Float, 32,billinfo.GoodsPrice),
+                            data.MakeInParam("@goods_qty", MySqlDbType.Float, 32, billinfo.Qty),
+                            data.MakeInParam("@goods_total_price",  MySqlDbType.Float, 32, billinfo.GoodsTotalPrice),
+                    };
+            return (data.RunProc("INSERT INTO " + AddTableName_trueName + " (entry_detail_code, entry_code, goods_code, goods_name, goods_uint, goods_price,goods_qty,goods_total_price) VALUES (@entry_detail_code, @entry_code, @goods_code, @goods_name, @goods_uint, @goods_price,@goods_qty,@goods_total_price)", prams));
+        }
+
+        /// <summary>
+        /// 出库--向主表中添加数据
         /// </summary>
         /// <param name="billinfo">过账单据数据结构类对象</param>
         /// <param name="AddTableName_trueName">数据库中数据表名称</param>
@@ -516,7 +557,7 @@ namespace EMS.BaseClass
         {
             MySqlParameter[] prams = 
                 {
-                        data.MakeInParam("@out_code",  MySqlDbType.VarChar, 255,billinfo.OutCode),
+                        data.MakeInParam("@out_code",  MySqlDbType.VarChar, 255,billinfo.EnOutCode),
                         data.MakeInParam("@orders_code", MySqlDbType.VarChar, 255,billinfo.OrdersCode),
                         data.MakeInParam("@goods_count",    MySqlDbType.Int32, 32,billinfo.GoodsCount),
                         data.MakeInParam("@clerk_code",    MySqlDbType.VarChar, 255,billinfo.StaffCode),
@@ -537,7 +578,7 @@ namespace EMS.BaseClass
                 MySqlParameter[] prams = 
                     {
                             data.MakeInParam("@out_detail_code",  MySqlDbType.VarChar, 255,billinfo.EnOutDetailCode),
-                            data.MakeInParam("@out_code", MySqlDbType.VarChar, 255,billinfo.OutCode),
+                            data.MakeInParam("@out_code", MySqlDbType.VarChar, 255,billinfo.EnOutCode),
                             data.MakeInParam("@goods_code",    MySqlDbType.VarChar, 255,billinfo.GoodCode),
                             data.MakeInParam("@goods_name",    MySqlDbType.VarChar, 255,billinfo.GoodsName),
                             data.MakeInParam("@goods_uint",    MySqlDbType.VarChar, 255,billinfo.GoodsUint),
@@ -1875,9 +1916,9 @@ namespace EMS.BaseClass
             set { staff_name = value; }
         }
         /// <summary>
-        /// 出库单号
+        /// 出入库单号
         /// </summary>
-        public string OutCode
+        public string EnOutCode
         {
             get { return out_code;}
             set {out_code = value;}
@@ -1891,18 +1932,18 @@ namespace EMS.BaseClass
             get {return entry_detail_code;}
             set {entry_detail_code=value;}
         }
+        ///// <summary>
+        ///// 同明细相关联的入库单号
+        ///// </summary>
+        //public string EnCode
+        //{
+        //    get { return en_code;}
+        //    set {en_code=value;}
+        //}
         /// <summary>
-        /// 同明细相关联的入库单号
+        /// 同明细相关联的出入库单号
         /// </summary>
-        public string EnCode
-        {
-            get { return en_code;}
-            set {en_code=value;}
-        }
-        /// <summary>
-        /// 同明细相关联的出库单号
-        /// </summary>
-        public string OtCode
+        public string EnOtCode
         {
             get { return o_code;}
             set {o_code=value;}

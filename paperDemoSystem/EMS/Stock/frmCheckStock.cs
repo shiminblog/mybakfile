@@ -116,5 +116,10 @@ namespace EMS.Stock
         {
 
         }
+
+        private void dgvStockList_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }

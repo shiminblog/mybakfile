@@ -81,8 +81,15 @@ namespace EMS.Stock
         {
             EMS.Stock.frmOutStockDetailList out_stock_detail_list = new EMS.Stock.frmOutStockDetailList();
             out_stock_detail_list.WaiteOrderCode = dataGridViewOrderList[0, e.RowIndex].Value.ToString();
-            out_stock_detail_list.Owner = this;
-            out_stock_detail_list.Show();
+            if (out_stock_detail_list.WaiteOrderCode != string.Empty)
+            {
+                out_stock_detail_list.Owner = this;
+                out_stock_detail_list.Show();
+            }
+            else
+            {
+                MessageBox.Show("此行数据无效!", "错误提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void dataGridViewOrderList_CellValueChanged(object sender, DataGridViewCellEventArgs e)

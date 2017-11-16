@@ -108,7 +108,7 @@ namespace EMS.Stock
             billinfo.BillDate = Convert.ToDateTime(dateTimePickerOutStock.Value);
             billinfo.StaffCode = txClerkCode.Text;
             billinfo.StaffName = txClerkName.Text;
-            billinfo.OutCode = txOutStockCode.Text;
+            billinfo.EnOutCode = txOutStockCode.Text;
             billinfo.OrdersCode = WaiteOrderCode;
             billinfo.GoodsCount = dataGridViewDetailList.RowCount;
 
@@ -124,10 +124,10 @@ namespace EMS.Stock
                 //    return;
                 //}
                 if (i < 10)
-                    billinfo.EnOutDetailCode = billinfo.OutCode + "DE00" + Convert.ToString(i);
+                    billinfo.EnOutDetailCode = billinfo.EnOutCode + "DE00" + Convert.ToString(i);
                 else
-                    billinfo.EnOutDetailCode = billinfo.OutCode + "DE0" + Convert.ToString(i);
-                billinfo.OtCode = billinfo.OutCode;
+                    billinfo.EnOutDetailCode = billinfo.EnOutCode + "DE0" + Convert.ToString(i);
+                billinfo.EnOtCode = billinfo.EnOutCode;
                 billinfo.GoodCode = dataGridViewDetailList[2, i].Value.ToString();
                 billinfo.GoodsName = dataGridViewDetailList[3, i].Value.ToString();
                 billinfo.GoodsUint = dataGridViewDetailList[4, i].Value.ToString();
