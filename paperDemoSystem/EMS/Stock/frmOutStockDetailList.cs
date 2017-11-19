@@ -14,6 +14,7 @@ namespace EMS.Stock
         private string order_code = "";
         BaseClass.BaseInfo baseinfo = new EMS.BaseClass.BaseInfo();
         BaseClass.cStockBill billinfo = new EMS.BaseClass.cStockBill();
+        BaseClass.cStockInfo stockinfo = new EMS.BaseClass.cStockInfo();
         /// <summary>
         /// 待出库销售订单号
         /// </summary>
@@ -114,6 +115,7 @@ namespace EMS.Stock
 
             //出库明细表内容
             int i = 0;
+            int statu = 0;
             for (i = 0; i < dataGridViewDetailList.RowCount - 1; i++)
             {
                 //if (Convert.ToString(dataGridViewDetailList[0, i].Value) == string.Empty
@@ -124,9 +126,9 @@ namespace EMS.Stock
                 //    return;
                 //}
                 if (i < 10)
-                    billinfo.EnOutDetailCode = billinfo.EnOutCode + "DE00" + Convert.ToString(i);
+                    billinfo.EnOutDetailCode = billinfo.EnOutCode + "MX00" + Convert.ToString(i);
                 else
-                    billinfo.EnOutDetailCode = billinfo.EnOutCode + "DE0" + Convert.ToString(i);
+                    billinfo.EnOutDetailCode = billinfo.EnOutCode + "MX0" + Convert.ToString(i);
                 billinfo.EnOtCode = billinfo.EnOutCode;
                 billinfo.GoodCode = dataGridViewDetailList[2, i].Value.ToString();
                 billinfo.GoodsName = dataGridViewDetailList[3, i].Value.ToString();
@@ -135,12 +137,30 @@ namespace EMS.Stock
                 billinfo.GoodsPrice = Convert.ToSingle(dataGridViewDetailList[6, i].Value.ToString());
                 billinfo.GoodsTotalPrice = Convert.ToSingle(billinfo.Qty) * billinfo.GoodsPrice;
                 baseinfo.AddTableOutStockDetail(billinfo, "tb_outStock_detail");
+                //检查是否生成补货清单
+                DataSet ds = null;
+                stockinfo.TradeCode = billinfo.GoodCode;
+                ds = baseinfo.GetStockByTradeCode(stockinfo, "tb_Stock");
+                stockinfo.Qty = Convert.ToSingle(ds.Tables[0].Rows[0]["qty"]);
+                if (stockinfo.Qty <= 0)
+                {
+                    MessageBox.Show("该款商品需要补货！", "补货提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    statu = 1;
+                }
             }
 
             baseinfo.AddTableOutStock(billinfo, "tb_outStock");
-            baseinfo.UpdateTableStatu("tb_orders", "已出库");
-            MessageBox.Show("出库单－－过账成功！", "成功提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            //this.Owner.Show();
+            if (statu == 1)
+            {
+                baseinfo.UpdateTableStatu("tb_orders", "部分出库");
+                MessageBox.Show("出库单－－部分出库成功！", "成功提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                baseinfo.UpdateTableStatu("tb_orders", "已出库");
+                MessageBox.Show("出库单－－全部出库！", "成功提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
             this.Close();
         }
 

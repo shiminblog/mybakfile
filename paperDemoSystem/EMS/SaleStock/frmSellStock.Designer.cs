@@ -36,7 +36,6 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.cusomter_code = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.order_date = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.customer_address = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
@@ -46,7 +45,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.sales_code = new System.Windows.Forms.TextBox();
             this.sales_name = new System.Windows.Forms.TextBox();
-            this.txtBillDate = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -59,6 +57,8 @@
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvStockList)).BeginInit();
             this.SuspendLayout();
@@ -115,9 +115,10 @@
             // groupBox1
             // 
             this.groupBox1.BackColor = System.Drawing.Color.White;
+            this.groupBox1.Controls.Add(this.dateTimePicker2);
+            this.groupBox1.Controls.Add(this.dateTimePicker1);
             this.groupBox1.Controls.Add(this.cusomter_code);
             this.groupBox1.Controls.Add(this.label8);
-            this.groupBox1.Controls.Add(this.order_date);
             this.groupBox1.Controls.Add(this.label12);
             this.groupBox1.Controls.Add(this.customer_address);
             this.groupBox1.Controls.Add(this.label11);
@@ -127,7 +128,6 @@
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.sales_code);
             this.groupBox1.Controls.Add(this.sales_name);
-            this.groupBox1.Controls.Add(this.txtBillDate);
             this.groupBox1.Controls.Add(this.txtBillCode);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label3);
@@ -135,7 +135,7 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(0, 2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(616, 163);
+            this.groupBox1.Size = new System.Drawing.Size(654, 163);
             this.groupBox1.TabIndex = 23;
             this.groupBox1.TabStop = false;
             this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
@@ -155,13 +155,6 @@
             this.label8.Size = new System.Drawing.Size(53, 12);
             this.label8.TabIndex = 18;
             this.label8.Text = "客户编码";
-            // 
-            // order_date
-            // 
-            this.order_date.Location = new System.Drawing.Point(76, 142);
-            this.order_date.Name = "order_date";
-            this.order_date.Size = new System.Drawing.Size(172, 21);
-            this.order_date.TabIndex = 17;
             // 
             // label12
             // 
@@ -236,19 +229,6 @@
             this.sales_name.Size = new System.Drawing.Size(79, 21);
             this.sales_name.TabIndex = 8;
             this.sales_name.TextChanged += new System.EventHandler(this.txtHandle_TextChanged);
-            // 
-            // txtBillDate
-            // 
-            this.txtBillDate.BackColor = System.Drawing.Color.White;
-            this.txtBillDate.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Underline);
-            this.txtBillDate.ForeColor = System.Drawing.Color.Blue;
-            this.txtBillDate.Location = new System.Drawing.Point(528, 12);
-            this.txtBillDate.Name = "txtBillDate";
-            this.txtBillDate.ReadOnly = true;
-            this.txtBillDate.Size = new System.Drawing.Size(80, 21);
-            this.txtBillDate.TabIndex = 6;
-            this.txtBillDate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtBillDate.TextChanged += new System.EventHandler(this.txtBillDate_TextChanged);
             // 
             // label3
             // 
@@ -356,11 +336,25 @@
             this.Column5.HeaderText = "单价";
             this.Column5.Name = "Column5";
             // 
+            // dateTimePicker1
+            // 
+            this.dateTimePicker1.Location = new System.Drawing.Point(524, 11);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(124, 21);
+            this.dateTimePicker1.TabIndex = 20;
+            // 
+            // dateTimePicker2
+            // 
+            this.dateTimePicker2.Location = new System.Drawing.Point(76, 142);
+            this.dateTimePicker2.Name = "dateTimePicker2";
+            this.dateTimePicker2.Size = new System.Drawing.Size(160, 21);
+            this.dateTimePicker2.TabIndex = 21;
+            // 
             // frmSellStock
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(617, 357);
+            this.ClientSize = new System.Drawing.Size(656, 357);
             this.Controls.Add(this.dgvStockList);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.label7);
@@ -392,14 +386,12 @@
         private System.Windows.Forms.GroupBox groupBox1;
         public System.Windows.Forms.TextBox sales_code;
         public System.Windows.Forms.TextBox sales_name;
-        private System.Windows.Forms.TextBox txtBillDate;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtFullPayment;
         private System.Windows.Forms.TextBox txtStockQty;
         private System.Windows.Forms.Button btnEixt;
-        private System.Windows.Forms.TextBox order_date;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TextBox customer_address;
         private System.Windows.Forms.Label label11;
@@ -415,5 +407,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
+        private System.Windows.Forms.DateTimePicker dateTimePicker2;
+        private System.Windows.Forms.DateTimePicker dateTimePicker1;
     }
 }

@@ -88,7 +88,7 @@ namespace EMS.BuyStock
             billinfo.BillDate = Convert.ToDateTime(txtBillDate.Text);
             billinfo.orderDate = Convert.ToDateTime(txOrderTime.Text);
             billinfo.DeadLine = Convert.ToDateTime(txDeadLine.Text);
-            billinfo.Status = "´ýÉóºË";
+            billinfo.Status = "´ýÈë¿â";
             billinfo.DetailNumber = Convert.ToInt32(txDetailTotal.Text);
             billinfo.TotalPayment = Convert.ToSingle(txtFullPayment.Text);
 
@@ -111,9 +111,9 @@ namespace EMS.BuyStock
             for (int i = 0; i < dgvStockList.RowCount - 1; i++)
             {
                 if (i < 10)
-                    billinfo.PurchaseDetaildCode = txtBillCode.Text + "L00" + Convert.ToString(i);
+                    billinfo.PurchaseDetaildCode = txtBillCode.Text + "MX00" + Convert.ToString(i);
                 else
-                    billinfo.PurchaseDetaildCode = txtBillCode.Text + "L0" + Convert.ToString(i);
+                    billinfo.PurchaseDetaildCode = txtBillCode.Text + "MX0" + Convert.ToString(i);
                 billinfo.PurchaseCode = billinfo.BillCode;
                 billinfo.goodsCode = dgvStockList[0, i].Value.ToString();
                 billinfo.goodsName = dgvStockList[1, i].Value.ToString();

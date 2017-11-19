@@ -23,7 +23,7 @@ namespace EMS.SaleStock
 
         private void frmSellStock_Load(object sender, EventArgs e)
         {
-            txtBillDate.Text = DateTime.Now.ToString("yyyy-MM-dd");
+            //txtBillDate.Text = DateTime.Now.ToString("yyyy-MM-dd");
             int i = 0;
 
             DataSet ds = null;
@@ -147,8 +147,7 @@ namespace EMS.SaleStock
             if (customer_name.Text == string.Empty
                 || customer_tel.Text == string.Empty
                 || customer_address.Text == string.Empty
-                || cusomter_code.Text == string.Empty
-                || order_date.Text == string.Empty)
+                || cusomter_code.Text == string.Empty)
             {
                 MessageBox.Show("请完整填写客户信息","错误提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -183,7 +182,8 @@ namespace EMS.SaleStock
             billinfo.CustomerTEL = customer_tel.Text;
             billinfo.CustomerAddress = customer_address.Text;
             billinfo.CustomerCode = cusomter_code.Text;
-            billinfo.orderDate = Convert.ToDateTime(order_date.Text);
+            billinfo.orderDate = dateTimePicker1.Value; // Convert.ToDateTime(order_date.Text);
+            billinfo.BillDate = dateTimePicker2.Value;//
             billinfo.OrderTotalPayment = Convert.ToSingle(txtFullPayment.Text);
 #else
             billinfo.SalesPersonName = "wangshi"; //sales_name.Text;
@@ -210,6 +210,20 @@ namespace EMS.SaleStock
                 {
                     MessageBox.Show("请核实列表中数据：‘名称’、‘数量’、‘单价’、‘单位’不能为空！", "错误提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
+                }
+                //检查库存
+                
+                //stockinfo.TradeCode = dgvStockList[0, i].Value.ToString();
+                if (Convert.ToSingle(dgvStockList[2, i].Value.ToString()) <= 0)
+                {
+                    MessageBox.Show("销售数量错误，请重新输入", "错误提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                //检查单价
+                if (Convert.ToSingle(dgvStockList[4, i].Value.ToString()) <= 0)
+                {
+                    MessageBox.Show("单价输入错误，请重新输入", "错误提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }                            
             }
 
@@ -217,7 +231,7 @@ namespace EMS.SaleStock
             {
                 billinfo.BillCode = txtBillCode.Text;
                // billinfo.orderDetaildCode = Convert.ToString(Convert.ToSingle(txtBillCode.Text) * 10 + Convert.ToSingle(dgvStockList[0, i].Value.ToString()));
-                billinfo.orderDetaildCode = txtBillCode.Text + "DE"+ Convert.ToString(i);
+                billinfo.orderDetaildCode = txtBillCode.Text + "MX"+ Convert.ToString(i);
                 billinfo.goodsCode = dgvStockList[0, i].Value.ToString();
                 billinfo.goodsName = dgvStockList[1, i].Value.ToString();
                 billinfo.Qty = Convert.ToSingle(dgvStockList[2, i].Value.ToString());
@@ -229,7 +243,7 @@ namespace EMS.SaleStock
                 baseinfo.AddTableDetailedWarehouse(billinfo, "tb_orders_detailed");
                 //更改库存数量
                 DataSet ds = null;
-                stockinfo.TradeCode = dgvStockList[0, i].Value.ToString();
+                stockinfo.TradeCode = billinfo.goodsCode;//dgvStockList[0, i].Value.ToString();
                 ds = baseinfo.GetStockByTradeCode(stockinfo, "tb_Stock");
                 stockinfo.Qty = Convert.ToSingle(ds.Tables[0].Rows[0]["qty"]);
                 
