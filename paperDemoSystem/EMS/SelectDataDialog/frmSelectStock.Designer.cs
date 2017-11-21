@@ -40,6 +40,7 @@
             this.dgvSelectStockList.RowTemplate.Height = 23;
             this.dgvSelectStockList.Size = new System.Drawing.Size(566, 199);
             this.dgvSelectStockList.TabIndex = 1;
+            this.dgvSelectStockList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSelectStockList_CellContentClick);
             this.dgvSelectStockList.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSelectStockList_CellDoubleClick);
             // 
             // frmSelectStock

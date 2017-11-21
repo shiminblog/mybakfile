@@ -102,5 +102,10 @@ namespace EMS.SelectDataDialog
                 this.Close();
             }
         }
+
+        private void dgvSelectStockList_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }

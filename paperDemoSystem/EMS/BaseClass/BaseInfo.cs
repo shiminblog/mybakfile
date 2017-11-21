@@ -320,9 +320,18 @@ namespace EMS.BaseClass
         {
             return (data.RunProcReturn("select * from tb_orders", tbName));
         }
-        
         /// <summary>
-        /// 通过指定的字段以及字段值获取表数据，不保证安全
+        /// 通过指定的字段以及字段值获取表特定字段数据，不保证安全
+        /// </summary>
+        /// <param name="tbName"></param>
+        /// <returns></returns>
+        public DataSet GetTableDateByFiled(string tbName, string tbFiled, string filedValue, string needFiled)
+        {
+            string cmd = "select "+ needFiled +" from " + tbName + " where " + tbFiled + "=\'" + filedValue + "\'";
+            return (data.RunProcReturn(cmd, tbName));
+        }        
+        /// <summary>
+        /// 通过指定的字段以及字段值获取表所有数据，不保证安全
         /// </summary>
         /// <param name="tbName"></param>
         /// <returns></returns>

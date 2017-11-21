@@ -46,3 +46,4 @@ E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.pdb
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.Stock.frmOutStockListDetail.resources
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.Stock.frmInStockListDetail.resources
+E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.BuyStock.frmPurchase.resources

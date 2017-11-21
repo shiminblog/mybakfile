@@ -111,6 +111,12 @@
     <Compile Include="BuyStock\frmCurrentAccountBook.Designer.cs">
       <DependentUpon>frmCurrentAccountBook.cs</DependentUpon>
     </Compile>
+    <Compile Include="BuyStock\frmPurchase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BuyStock\frmPurchase.Designer.cs">
+      <DependentUpon>frmPurchase.cs</DependentUpon>
+    </Compile>
     <Compile Include="BuyStock\frmPurchaseDetail.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -243,6 +249,9 @@
     <EmbeddedResource Include="BuyStock\frmCurrentAccountBook.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmCurrentAccountBook.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BuyStock\frmPurchase.resx">
+      <DependentUpon>frmPurchase.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="BuyStock\frmPurchaseDetail.resx">
       <DependentUpon>frmPurchaseDetail.cs</DependentUpon>
