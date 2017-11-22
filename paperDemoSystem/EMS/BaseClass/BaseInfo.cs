@@ -472,25 +472,19 @@ namespace EMS.BaseClass
         /// <param name="billinfo">过账单据数据结构类对象</param>
         /// <param name="AddTableName_trueName">数据库中数据表名称</param>
         /// <returns></returns>
-        public int AddTablePurse(cPurchaseBill billinfo, string AddTableName_trueName)
+        public int AddTablePurchase(cPurchaseBill billinfo, string AddTableName_trueName)
         {
                 MySqlParameter[] prams = 
                 {
-                        data.MakeInParam("@bill_code",  MySqlDbType.VarChar, 255,billinfo.BillCode),
-                        data.MakeInParam("@supplier_code", MySqlDbType.VarChar, 255,billinfo.SupplierCode),
-                        data.MakeInParam("@supplier_name",    MySqlDbType.VarChar, 255,billinfo.SupplierName),
-                        data.MakeInParam("@supplier_tel",    MySqlDbType.VarChar, 255,billinfo.SupplierTel),
-                        data.MakeInParam("@supplier_address",    MySqlDbType.VarChar, 255,billinfo.SupplierAddress),
-                        data.MakeInParam("@buyer_code",    MySqlDbType.VarChar, 255,billinfo.BuyerCode),
-                        data.MakeInParam("@buyer_name", MySqlDbType.VarChar, 255, billinfo.BuyerName),
-						data.MakeInParam("@order_date",  MySqlDbType.DateTime, 32, billinfo.orderDate),
-                        data.MakeInParam("@bile_date", MySqlDbType.DateTime, 32, billinfo.BillDate),
-                        data.MakeInParam("@deadline",  MySqlDbType.DateTime, 32, billinfo.DeadLine),
-						data.MakeInParam("@goods_count",  MySqlDbType.Int32, 32, billinfo.DetailNumber),
-                        data.MakeInParam("@Total_payment", MySqlDbType.Float, 32, billinfo.TotalPayment),
+                        data.MakeInParam("@number",  MySqlDbType.VarChar, 255,billinfo.BillCode),
+                        data.MakeInParam("@supplier_number", MySqlDbType.VarChar, 255,billinfo.SupplierCode),
+                        data.MakeInParam("@employee_number",    MySqlDbType.VarChar, 255,billinfo.BuyerCode),
+                        data.MakeInParam("@order_date",    MySqlDbType.DateTime, 255,billinfo.orderDate),
+                        data.MakeInParam("@recive_date",    MySqlDbType.DateTime, 255,billinfo.DeadLine),
+                        data.MakeInParam("@totalpay",    MySqlDbType.Float, 255,billinfo.TotalPayment),
                         data.MakeInParam("@statu",  MySqlDbType.VarChar, 255, billinfo.Status),
 			    };
-                return (data.RunProc("INSERT INTO " + AddTableName_trueName + " (bill_code, supplier_code, supplier_name, supplier_tel, supplier_address, buyer_code,buyer_name,order_date,bile_date,deadline,goods_count,Total_payment,statu) VALUES (@bill_code, @supplier_code, @supplier_name, @supplier_tel, @supplier_address, @buyer_code,@buyer_name,@order_date,@bile_date,@deadline,@goods_count,@Total_payment,@statu)", prams));            
+                return (data.RunProc("INSERT INTO " + AddTableName_trueName + " (number,supplier_number,employee_number,order_date,recive_date,totalpay,statu) VALUES (@number,@supplier_number,@employee_number,@order_date,@recive_date,@totalpay,@statu)", prams));            
         }
 
         /// <summary>
@@ -499,20 +493,19 @@ namespace EMS.BaseClass
         /// <param name="billinfo">过账单据数据结构类对象</param>
         /// <param name="AddTableName_trueName">数据库中数据表名称</param>
         /// <returns></returns>
-        public int AddTablePurseDetail(cPurchaseBill billinfo, string AddTableName_trueName)
+        public int AddTablePurchaseDetail(cPurchaseBill billinfo, string AddTableName_trueName)
         {
             MySqlParameter[] prams = 
                 {
-                        data.MakeInParam("@purchase_detail_code",  MySqlDbType.VarChar, 255,billinfo.PurchaseDetaildCode),
-                        data.MakeInParam("@purchase_code", MySqlDbType.VarChar, 255,billinfo.PurchaseCode),
-                        data.MakeInParam("@goods_code",    MySqlDbType.VarChar, 255,billinfo.goodsCode),
-                        data.MakeInParam("@goods_name",    MySqlDbType.VarChar, 255,billinfo.goodsName),
-                        data.MakeInParam("@goods_uint",    MySqlDbType.VarChar, 255,billinfo.goodsUnit),
-                        data.MakeInParam("@goods_price",    MySqlDbType.Float, 32,billinfo.goodsPrice),
+                        data.MakeInParam("@serial_number",  MySqlDbType.VarChar, 255,billinfo.SerialNumber),
+                        data.MakeInParam("@detail_number", MySqlDbType.VarChar, 255,billinfo.PurchaseDetaildCode),
+                        data.MakeInParam("@purchase_number",    MySqlDbType.VarChar, 255,billinfo.BillCode),
+                        data.MakeInParam("@goods_number",    MySqlDbType.VarChar, 255,billinfo.goodsCode),
                         data.MakeInParam("@goods_qty", MySqlDbType.Float, 32, billinfo.Qty),
-						data.MakeInParam("@goods_total_price",  MySqlDbType.Float, 32, billinfo.GoodsTotalPrice),
+                        data.MakeInParam("@goods_price",    MySqlDbType.Float, 32,billinfo.goodsPrice),
+                        data.MakeInParam("@goods_uint",    MySqlDbType.VarChar, 255,billinfo.goodsUnit),
 			    };
-            return (data.RunProc("INSERT INTO " + AddTableName_trueName + " (purchase_detail_code, purchase_code, goods_code, goods_name, goods_uint, goods_price,goods_qty,goods_total_price) VALUES (@purchase_detail_code, @purchase_code, @goods_code, @goods_name, @goods_uint, @goods_price,@goods_qty,@goods_total_price)", prams));
+            return (data.RunProc("INSERT INTO " + AddTableName_trueName + " (serial_number,detail_number,purchase_number,goods_number,goods_qty,goods_price,goods_uint) VALUES (@serial_number,@detail_number,@purchase_number,@goods_number,@goods_qty,@goods_price,@goods_uint)", prams));
         }
         /// <summary>
         /// 入库--向主表中添加数据
@@ -1649,7 +1642,8 @@ namespace EMS.BaseClass
         private int detail_number = 0;                //明细条数
 
         //采购订单明细表结构
-        private string purchase_detail_code = "";       //订单明细流水号
+        private string serial_number = ""; //明细编号
+        private string purchase_detail_code = "";       //订单明细编号
         private string purchase_code = "";              //相关联的采购订单号 == billcode
         private string goods_code = "";              //商品编号
         private float qty = 0;                       //需求数量
@@ -1755,7 +1749,16 @@ namespace EMS.BaseClass
         }
 
         /// <summary>
-        /// 订单明细流水号
+        /// 明细流水号
+        /// </summary>
+        public string SerialNumber
+        {
+            set { serial_number = value; }
+            get { return serial_number; }
+        }
+
+        /// <summary>
+        /// 订单明细编号
         /// </summary>
         public string PurchaseDetaildCode
         {

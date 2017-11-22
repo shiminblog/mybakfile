@@ -49,7 +49,7 @@ namespace EMS
 
         private void fileRebuyStock_Click(object sender, EventArgs e)
         {
-            new EMS.BuyStock.frmRebuyStock().Show();
+            //new EMS.BuyStock.frmRebuyStock().Show();
         }
 
         private void fileSellStock_Click(object sender, EventArgs e)
@@ -60,12 +60,12 @@ namespace EMS
 
         private void fileBuyStockAnalyse_Click(object sender, EventArgs e)
         {
-            new EMS.BuyStock.frmBuyStockAnalyse().Show();
+            //new EMS.BuyStock.frmBuyStockAnalyse().Show();
         }
 
         private void fileBuyStockSum_Click(object sender, EventArgs e)
         {
-            new EMS.BuyStock.frmBuyStockSum().Show();
+            //new EMS.BuyStock.frmBuyStockSum().Show();
         }
 
         private void fileSellStockSum_Click(object sender, EventArgs e)
@@ -116,12 +116,12 @@ namespace EMS
 
         private void fileUnitsList_Click(object sender, EventArgs e)
         {
-            new EMS.BuyStock.frmUnitsList().Show();
+            //new EMS.BuyStock.frmUnitsList().Show();
         }
 
         private void fileCurrentBook_Click(object sender, EventArgs e)
         {
-            new EMS.BuyStock.frmUnitsList().Show();
+            //new EMS.BuyStock.frmUnitsList().Show();
         }
 
         private void fileBakupAndRestor_Click(object sender, EventArgs e)
@@ -201,9 +201,9 @@ namespace EMS
 
         private void 采购信息检索ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            EMS.BuyStock.frmPurchaseList purchase_list = new EMS.BuyStock.frmPurchaseList();
-            purchase_list.Owner = this;
-            purchase_list.Show();
+            //EMS.BuyStock.frmPurchaseList purchase_list = new EMS.BuyStock.frmPurchaseList();
+            //purchase_list.Owner = this;
+            //purchase_list.Show();
         }
 
         private void 出库操作ToolStripMenuItem_Click(object sender, EventArgs e)

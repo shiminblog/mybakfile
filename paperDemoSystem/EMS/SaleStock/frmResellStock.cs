@@ -67,11 +67,11 @@ namespace EMS.SaleStock
 
         private void dgvStockList_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            SelectDataDialog.frmSelectStock selectStock = new EMS.SelectDataDialog.frmSelectStock();
-            selectStock.resellStock = this;          //将新创建的窗体对象设置为同一个窗体类的实例（对象）
-            selectStock.M_int_CurrentRow = e.RowIndex;
-            selectStock.M_str_object = "ResellStock";   //用于识别　是那一个窗体调用的SelectStock窗口的
-            selectStock.ShowDialog();
+            //SelectDataDialog.frmSelectStock selectStock = new EMS.SelectDataDialog.frmSelectStock();
+            //selectStock.resellStock = this;          //将新创建的窗体对象设置为同一个窗体类的实例（对象）
+            //selectStock.M_int_CurrentRow = e.RowIndex;
+            //selectStock.M_str_object = "ResellStock";   //用于识别　是那一个窗体调用的SelectStock窗口的
+            //selectStock.ShowDialog();
         }
 
         private void dgvStockList_CellStateChanged(object sender, DataGridViewCellStateChangedEventArgs e)

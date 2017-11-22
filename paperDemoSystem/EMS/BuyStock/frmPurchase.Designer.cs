@@ -29,12 +29,6 @@
         private void InitializeComponent()
         {
             this.dtPurchaseDetail = new System.Windows.Forms.DataGridView();
-            this.goodNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.goodsName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.unit = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.qty = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.price = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.totalPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -53,6 +47,15 @@
             this.dateOrder = new System.Windows.Forms.DateTimePicker();
             this.dateReceive = new System.Windows.Forms.DateTimePicker();
             this.txTotalPay = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.cbGoodsNumber = new System.Windows.Forms.ComboBox();
+            this.goodNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.type = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.goodsName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.unit = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.qty = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.price = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.totalPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dtPurchaseDetail)).BeginInit();
             this.SuspendLayout();
             // 
@@ -61,6 +64,7 @@
             this.dtPurchaseDetail.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dtPurchaseDetail.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.goodNumber,
+            this.type,
             this.goodsName,
             this.unit,
             this.qty,
@@ -69,45 +73,14 @@
             this.dtPurchaseDetail.Location = new System.Drawing.Point(14, 113);
             this.dtPurchaseDetail.Name = "dtPurchaseDetail";
             this.dtPurchaseDetail.RowTemplate.Height = 23;
-            this.dtPurchaseDetail.Size = new System.Drawing.Size(623, 150);
+            this.dtPurchaseDetail.Size = new System.Drawing.Size(734, 150);
             this.dtPurchaseDetail.TabIndex = 0;
+            this.dtPurchaseDetail.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtPurchaseDetail_CellClick);
             this.dtPurchaseDetail.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtPurchaseDetail_CellContentDoubleClick);
+            this.dtPurchaseDetail.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtPurchaseDetail_CellDoubleClick);
             this.dtPurchaseDetail.CellStateChanged += new System.Windows.Forms.DataGridViewCellStateChangedEventHandler(this.dtPurchaseDetail_CellStateChanged);
             this.dtPurchaseDetail.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtPurchaseDetail_CellValueChanged);
-            // 
-            // goodNumber
-            // 
-            this.goodNumber.HeaderText = "商品编号";
-            this.goodNumber.Name = "goodNumber";
-            this.goodNumber.ReadOnly = true;
-            // 
-            // goodsName
-            // 
-            this.goodsName.HeaderText = "商品名称";
-            this.goodsName.Name = "goodsName";
-            this.goodsName.ReadOnly = true;
-            // 
-            // unit
-            // 
-            this.unit.HeaderText = "单位";
-            this.unit.Name = "unit";
-            this.unit.ReadOnly = true;
-            // 
-            // qty
-            // 
-            this.qty.HeaderText = "数量";
-            this.qty.Name = "qty";
-            // 
-            // price
-            // 
-            this.price.HeaderText = "单价";
-            this.price.Name = "price";
-            // 
-            // totalPrice
-            // 
-            this.totalPrice.HeaderText = "金额小计";
-            this.totalPrice.Name = "totalPrice";
-            this.totalPrice.ReadOnly = true;
+            this.dtPurchaseDetail.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dtPurchaseDetail_EditingControlShowing);
             // 
             // label1
             // 
@@ -183,7 +156,7 @@
             // 
             // btSave
             // 
-            this.btSave.Location = new System.Drawing.Point(562, 305);
+            this.btSave.Location = new System.Drawing.Point(673, 282);
             this.btSave.Name = "btSave";
             this.btSave.Size = new System.Drawing.Size(75, 23);
             this.btSave.TabIndex = 9;
@@ -193,7 +166,7 @@
             // 
             // btCacel
             // 
-            this.btCacel.Location = new System.Drawing.Point(562, 354);
+            this.btCacel.Location = new System.Drawing.Point(673, 324);
             this.btCacel.Name = "btCacel";
             this.btCacel.Size = new System.Drawing.Size(75, 23);
             this.btCacel.TabIndex = 10;
@@ -265,11 +238,72 @@
             this.txTotalPay.Size = new System.Drawing.Size(94, 21);
             this.txTotalPay.TabIndex = 18;
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(14, 64);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(53, 12);
+            this.label9.TabIndex = 19;
+            this.label9.Text = "商品选择";
+            // 
+            // cbGoodsNumber
+            // 
+            this.cbGoodsNumber.FormattingEnabled = true;
+            this.cbGoodsNumber.Location = new System.Drawing.Point(71, 56);
+            this.cbGoodsNumber.Name = "cbGoodsNumber";
+            this.cbGoodsNumber.Size = new System.Drawing.Size(97, 20);
+            this.cbGoodsNumber.TabIndex = 20;
+            this.cbGoodsNumber.SelectedIndexChanged += new System.EventHandler(this.cbGoodsNumber_SelectedIndexChanged);
+            this.cbGoodsNumber.SelectedValueChanged += new System.EventHandler(this.cbGoodsNumber_SelectedValueChanged);
+            // 
+            // goodNumber
+            // 
+            this.goodNumber.HeaderText = "商品编号";
+            this.goodNumber.Name = "goodNumber";
+            this.goodNumber.ReadOnly = true;
+            this.goodNumber.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            // 
+            // type
+            // 
+            this.type.HeaderText = "商品分类";
+            this.type.Name = "type";
+            // 
+            // goodsName
+            // 
+            this.goodsName.HeaderText = "商品名称";
+            this.goodsName.Name = "goodsName";
+            this.goodsName.ReadOnly = true;
+            // 
+            // unit
+            // 
+            this.unit.HeaderText = "单位";
+            this.unit.Name = "unit";
+            this.unit.ReadOnly = true;
+            // 
+            // qty
+            // 
+            this.qty.HeaderText = "数量";
+            this.qty.Name = "qty";
+            // 
+            // price
+            // 
+            this.price.HeaderText = "单价";
+            this.price.Name = "price";
+            // 
+            // totalPrice
+            // 
+            this.totalPrice.HeaderText = "金额小计";
+            this.totalPrice.Name = "totalPrice";
+            this.totalPrice.ReadOnly = true;
+            // 
             // frmPurchase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(649, 389);
+            this.ClientSize = new System.Drawing.Size(760, 361);
+            this.Controls.Add(this.cbGoodsNumber);
+            this.Controls.Add(this.label9);
             this.Controls.Add(this.txTotalPay);
             this.Controls.Add(this.dateReceive);
             this.Controls.Add(this.dateOrder);
@@ -319,7 +353,10 @@
         private System.Windows.Forms.DateTimePicker dateOrder;
         private System.Windows.Forms.DateTimePicker dateReceive;
         private System.Windows.Forms.TextBox txTotalPay;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.ComboBox cbGoodsNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn goodNumber;
+        private System.Windows.Forms.DataGridViewTextBoxColumn type;
         private System.Windows.Forms.DataGridViewTextBoxColumn goodsName;
         private System.Windows.Forms.DataGridViewTextBoxColumn unit;
         private System.Windows.Forms.DataGridViewTextBoxColumn qty;
