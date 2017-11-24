@@ -204,6 +204,8 @@ namespace EMS
             //EMS.BuyStock.frmPurchaseList purchase_list = new EMS.BuyStock.frmPurchaseList();
             //purchase_list.Owner = this;
             //purchase_list.Show();
+            EMS.BuyStock.frmPurchaseQuery p_query = new EMS.BuyStock.frmPurchaseQuery();
+            p_query.Show();
         }
 
         private void 出库操作ToolStripMenuItem_Click(object sender, EventArgs e)

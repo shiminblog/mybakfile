@@ -37,3 +37,6 @@ E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\bin\Debug\EMS
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\bin\Debug\EMS.pdb
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.exe
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.pdb
+E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.csprojResolveAssemblyReference.cache
+E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.BuyStock.frmPurchaseQuery.resources
+E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.BuyStock.frmPurchaseDetails.resources

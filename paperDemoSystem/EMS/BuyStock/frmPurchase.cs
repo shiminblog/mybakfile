@@ -68,8 +68,9 @@ namespace EMS.BuyStock
                 cbGoodsNumber.DataSource = listGoods;            
             }
             catch (System.Exception ex)
-            { 
-            
+            {
+                MessageBox.Show("页面初始化异常！", "错误提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.Close();
             }
         }
 

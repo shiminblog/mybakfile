@@ -93,6 +93,18 @@
     <Compile Include="BuyStock\frmPurchase.Designer.cs">
       <DependentUpon>frmPurchase.cs</DependentUpon>
     </Compile>
+    <Compile Include="BuyStock\frmPurchaseDetails.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BuyStock\frmPurchaseDetails.Designer.cs">
+      <DependentUpon>frmPurchaseDetails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BuyStock\frmPurchaseQuery.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BuyStock\frmPurchaseQuery.Designer.cs">
+      <DependentUpon>frmPurchaseQuery.cs</DependentUpon>
+    </Compile>
     <Compile Include="Class1.cs" />
     <Compile Include="frmLogin.cs">
       <SubType>Form</SubType>
@@ -188,6 +200,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="BuyStock\frmPurchase.resx">
       <DependentUpon>frmPurchase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BuyStock\frmPurchaseDetails.resx">
+      <DependentUpon>frmPurchaseDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BuyStock\frmPurchaseQuery.resx">
+      <DependentUpon>frmPurchaseQuery.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmLogin.resx">
       <SubType>Designer</SubType>
