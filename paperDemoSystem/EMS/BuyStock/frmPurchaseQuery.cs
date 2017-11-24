@@ -61,15 +61,23 @@ namespace EMS.BuyStock
 
         private void dgvPurchaseList_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            EMS.BuyStock.frmPurchaseDetails l_detail = new EMS.BuyStock.frmPurchaseDetails();
-            l_detail.Owner =  this;
-            //将供应商编号、员工编号、要货日期、订单定额传入明细界面，以便打印出来
-            l_detail.PurchaseCode = dgvPurchaseList[0, e.RowIndex].Value.ToString();
-            l_detail.SupplierNumber = dgvPurchaseList[1, e.RowIndex].Value.ToString();
-            l_detail.StaffNumber = dgvPurchaseList[2, e.RowIndex].Value.ToString();
-            l_detail.DateReCeive = Convert.ToDateTime(dgvPurchaseList[4, e.RowIndex].Value.ToString());
-            l_detail.TotalPay = Convert.ToSingle(dgvPurchaseList[5, e.RowIndex].Value);
-            l_detail.Show();
+            try
+            {
+                EMS.BuyStock.frmPurchaseDetails l_detail = new EMS.BuyStock.frmPurchaseDetails();
+                l_detail.Owner = this;
+                //将供应商编号、员工编号、要货日期、订单定额传入明细界面，以便打印出来
+                l_detail.PurchaseCode = dgvPurchaseList[0, e.RowIndex].Value.ToString();
+                l_detail.SupplierNumber = dgvPurchaseList[1, e.RowIndex].Value.ToString();
+                l_detail.StaffNumber = dgvPurchaseList[2, e.RowIndex].Value.ToString();
+                l_detail.DateReCeive = Convert.ToDateTime(dgvPurchaseList[4, e.RowIndex].Value.ToString());
+                l_detail.TotalPay = Convert.ToSingle(dgvPurchaseList[5, e.RowIndex].Value);
+                l_detail.Show();
+            }
+            catch (System.Exception ex)
+            {
+                //this.Close();
+            }
+
            // this.Close();
         }
 

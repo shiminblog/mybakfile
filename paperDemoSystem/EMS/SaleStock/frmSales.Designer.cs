@@ -40,15 +40,6 @@
             this.txEmpolyeeName = new System.Windows.Forms.TextBox();
             this.cbCustomerNumber = new System.Windows.Forms.ComboBox();
             this.dgvSalesDetailList = new System.Windows.Forms.DataGridView();
-            this.goodNnumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.goodsType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.goodsName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.unit = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.qty = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.price = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.pay = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.stock1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.stock2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label7 = new System.Windows.Forms.Label();
             this.txTotalPay = new System.Windows.Forms.TextBox();
             this.btSave = new System.Windows.Forms.Button();
@@ -56,6 +47,14 @@
             this.cbGoodsNumber = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this.txCustomerName = new System.Windows.Forms.TextBox();
+            this.goodNnumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.goodsType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.goodsName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.unit = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.qty = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.price = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.pay = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.stock2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSalesDetailList)).BeginInit();
             this.SuspendLayout();
             // 
@@ -165,7 +164,6 @@
             this.qty,
             this.price,
             this.pay,
-            this.stock1,
             this.stock2});
             this.dgvSalesDetailList.Location = new System.Drawing.Point(12, 69);
             this.dgvSalesDetailList.Name = "dgvSalesDetailList";
@@ -175,58 +173,6 @@
             this.dgvSalesDetailList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSalesDetailList_CellClick);
             this.dgvSalesDetailList.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSalesDetailList_CellDoubleClick);
             this.dgvSalesDetailList.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSalesDetailList_CellValueChanged);
-            // 
-            // goodNnumber
-            // 
-            this.goodNnumber.HeaderText = "商品编号";
-            this.goodNnumber.Name = "goodNnumber";
-            this.goodNnumber.ReadOnly = true;
-            // 
-            // goodsType
-            // 
-            this.goodsType.HeaderText = "商品种类";
-            this.goodsType.Name = "goodsType";
-            this.goodsType.ReadOnly = true;
-            // 
-            // goodsName
-            // 
-            this.goodsName.HeaderText = "商品名称";
-            this.goodsName.Name = "goodsName";
-            this.goodsName.ReadOnly = true;
-            // 
-            // unit
-            // 
-            this.unit.HeaderText = "单位";
-            this.unit.Name = "unit";
-            this.unit.ReadOnly = true;
-            // 
-            // qty
-            // 
-            this.qty.HeaderText = "数量";
-            this.qty.Name = "qty";
-            // 
-            // price
-            // 
-            this.price.HeaderText = "单价";
-            this.price.Name = "price";
-            // 
-            // pay
-            // 
-            this.pay.HeaderText = "金额小计";
-            this.pay.Name = "pay";
-            this.pay.ReadOnly = true;
-            // 
-            // stock1
-            // 
-            this.stock1.HeaderText = "预销售";
-            this.stock1.Name = "stock1";
-            this.stock1.ReadOnly = true;
-            // 
-            // stock2
-            // 
-            this.stock2.HeaderText = "当前库存";
-            this.stock2.Name = "stock2";
-            this.stock2.ReadOnly = true;
             // 
             // label7
             // 
@@ -291,6 +237,52 @@
             this.txCustomerName.Size = new System.Drawing.Size(100, 21);
             this.txCustomerName.TabIndex = 20;
             // 
+            // goodNnumber
+            // 
+            this.goodNnumber.HeaderText = "商品编号";
+            this.goodNnumber.Name = "goodNnumber";
+            this.goodNnumber.ReadOnly = true;
+            // 
+            // goodsType
+            // 
+            this.goodsType.HeaderText = "商品种类";
+            this.goodsType.Name = "goodsType";
+            this.goodsType.ReadOnly = true;
+            // 
+            // goodsName
+            // 
+            this.goodsName.HeaderText = "商品名称";
+            this.goodsName.Name = "goodsName";
+            this.goodsName.ReadOnly = true;
+            // 
+            // unit
+            // 
+            this.unit.HeaderText = "单位";
+            this.unit.Name = "unit";
+            this.unit.ReadOnly = true;
+            // 
+            // qty
+            // 
+            this.qty.HeaderText = "数量";
+            this.qty.Name = "qty";
+            // 
+            // price
+            // 
+            this.price.HeaderText = "单价";
+            this.price.Name = "price";
+            // 
+            // pay
+            // 
+            this.pay.HeaderText = "金额小计";
+            this.pay.Name = "pay";
+            this.pay.ReadOnly = true;
+            // 
+            // stock2
+            // 
+            this.stock2.HeaderText = "当前库存";
+            this.stock2.Name = "stock2";
+            this.stock2.ReadOnly = true;
+            // 
             // frmSales
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -343,6 +335,8 @@
         private System.Windows.Forms.Button btSave;
         private System.Windows.Forms.Button btCacel;
         private System.Windows.Forms.ComboBox cbGoodsNumber;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox txCustomerName;
         private System.Windows.Forms.DataGridViewTextBoxColumn goodNnumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn goodsType;
         private System.Windows.Forms.DataGridViewTextBoxColumn goodsName;
@@ -350,9 +344,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn qty;
         private System.Windows.Forms.DataGridViewTextBoxColumn price;
         private System.Windows.Forms.DataGridViewTextBoxColumn pay;
-        private System.Windows.Forms.DataGridViewTextBoxColumn stock1;
         private System.Windows.Forms.DataGridViewTextBoxColumn stock2;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox txCustomerName;
     }
 }

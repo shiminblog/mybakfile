@@ -40,11 +40,7 @@ namespace EMS
 
         private void fileResellStock_Click(object sender, EventArgs e)
         {
-            //new EMS.SaleStock.frmResellStock().Show();
-            EMS.SaleStock.frmSellStockList list_oreder = new EMS.SaleStock.frmSellStockList();
-            list_oreder.Owner = this;
-            list_oreder.Show();
-            //new EMS.SaleStock.frmSellStockList().Show();
+            new EMS.SaleStock.frmSalesQuery().Show();
         }
 
         private void fileRebuyStock_Click(object sender, EventArgs e)
@@ -69,12 +65,12 @@ namespace EMS
 
         private void fileSellStockSum_Click(object sender, EventArgs e)
         {
-            new EMS.SaleStock.frmSellStockSum().Show();
+            //new EMS.SaleStock.frmSellStockSum().Show();
         }
 
         private void fileSellStockStatus_Click(object sender, EventArgs e)
         {
-            new EMS.SaleStock.frmSellStockStatus().Show();
+            //new EMS.SaleStock.frmSellStockStatus().Show();
         }
 
         private void fileSellStockOrderBy_Click(object sender, EventArgs e)
@@ -84,7 +80,7 @@ namespace EMS
 
         private void fileSellStockCost_Click(object sender, EventArgs e)
         {
-            new EMS.SaleStock.frmSellStockCost().Show();
+            //new EMS.SaleStock.frmSellStockCost().Show();
         }
 
         private void fileStockStatus_Click(object sender, EventArgs e)

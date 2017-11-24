@@ -59,7 +59,7 @@ namespace EMS.BuyStock
                 cbSupplierNumber.DataSource = listSupplier;
 
                 //4. 访问商品数据表，将商品编号存储到下拉列表中
-                dsGoods = baseinfo.GetAllStock("tb_goods");
+                dsGoods = baseinfo.GetAllBill("tb_goods");
                 DataTable dtGoods = dsGoods.Tables[0];
                 foreach (DataRow dr in dtGoods.Rows)
                 {
@@ -194,10 +194,10 @@ namespace EMS.BuyStock
                 {
                     totalPay = pay_row * Convert.ToSingle(qty_row);
                     dtPurchaseDetail[6, e.RowIndex].Value = Convert.ToString(totalPay);
-
+                    totalPay = 0;
                     for (int i = 0; i < dtPurchaseDetail.RowCount-1; i++)
                     {
-                        totalPay = totalPay + Convert.ToSingle(dtPurchaseDetail[6, i].Value.ToString());
+                        totalPay +=  Convert.ToSingle(dtPurchaseDetail[6, i].Value.ToString());
                     }
 
                     //订单总金额

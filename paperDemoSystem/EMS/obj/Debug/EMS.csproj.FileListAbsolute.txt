@@ -4,7 +4,6 @@ D:\MyDocumentsNameMustToBeLongOtherWiseIcannotFindIt\github\mybakfile\paperDemoS
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\bin\Debug\EMS.exe.config
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\bin\Debug\EMS.exe
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\bin\Debug\EMS.pdb
-E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.csprojResolveAssemblyReference.cache
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.BaseInfo.frmEmployee.resources
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.BaseInfo.frmStock.resources
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.BaseInfo.frmUnits.resources
@@ -14,16 +13,7 @@ E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.frmLogin.resources
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.frmMain.resources
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.Properties.Resources.resources
-E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.SaleStock.frmOrderDetailList.resources
-E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.SaleStock.frmResellStock.resources
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.SaleStock.frmSales.resources
-E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.SaleStock.frmSellStockCost.resources
-E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.SaleStock.frmSellStockDesc.resources
-E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.SaleStock.frmSellStockDetailed.resources
-E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.SaleStock.frmSellStock.resources
-E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.SaleStock.frmSellStockList.resources
-E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.SaleStock.frmSellStockStatus.resources
-E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.SaleStock.frmSellStockSum.resources
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.SelectDataDialog.frmSelectDateTime.resources
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.Stock.frmCheckStock.resources
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.Stock.frmInSotck.resources
@@ -41,3 +31,5 @@ E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.csproj.GenerateResource.Cache
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.exe
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.pdb
+E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.SaleStock.frmSalesDetails.resources
+E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.SaleStock.frmSalesQuery.resources

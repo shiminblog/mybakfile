@@ -120,23 +120,23 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SaleStock\frmOrderDetailList.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SaleStock\frmOrderDetailList.Designer.cs">
-      <DependentUpon>frmOrderDetailList.cs</DependentUpon>
-    </Compile>
     <Compile Include="SaleStock\frmSales.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="SaleStock\frmSales.Designer.cs">
       <DependentUpon>frmSales.cs</DependentUpon>
     </Compile>
-    <Compile Include="SaleStock\frmSellStockList.cs">
+    <Compile Include="SaleStock\frmSalesDetails.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SaleStock\frmSellStockList.Designer.cs">
-      <DependentUpon>frmSellStockList.cs</DependentUpon>
+    <Compile Include="SaleStock\frmSalesDetails.Designer.cs">
+      <DependentUpon>frmSalesDetails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SaleStock\frmSalesQuery.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SaleStock\frmSalesQuery.Designer.cs">
+      <DependentUpon>frmSalesQuery.cs</DependentUpon>
     </Compile>
     <Compile Include="Stock\frmInSotck.cs">
       <SubType>Form</SubType>
@@ -226,42 +226,14 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="SaleStock\frmOrderDetailList.resx">
-      <DependentUpon>frmOrderDetailList.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SaleStock\frmResellStock.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmResellStock.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="SaleStock\frmSales.resx">
       <DependentUpon>frmSales.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SaleStock\frmSellStockCost.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmSellStockCost.cs</DependentUpon>
+    <EmbeddedResource Include="SaleStock\frmSalesDetails.resx">
+      <DependentUpon>frmSalesDetails.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SaleStock\frmSellStockDesc.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmSellStockDesc.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SaleStock\frmSellStockDetailed.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmSellStockDetailed.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SaleStock\frmSellStock.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmSellStock.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SaleStock\frmSellStockList.resx">
-      <DependentUpon>frmSellStockList.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SaleStock\frmSellStockStatus.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmSellStockStatus.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SaleStock\frmSellStockSum.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmSellStockSum.cs</DependentUpon>
+    <EmbeddedResource Include="SaleStock\frmSalesQuery.resx">
+      <DependentUpon>frmSalesQuery.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SelectDataDialog\frmSelectDateTime.resx">
       <SubType>Designer</SubType>
@@ -324,48 +296,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <Compile Include="SaleStock\frmResellStock.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SaleStock\frmResellStock.Designer.cs">
-      <DependentUpon>frmResellStock.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SaleStock\frmSellStockCost.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SaleStock\frmSellStockCost.Designer.cs">
-      <DependentUpon>frmSellStockCost.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SaleStock\frmSellStockDetailed.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SaleStock\frmSellStockDetailed.Designer.cs">
-      <DependentUpon>frmSellStockDetailed.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SaleStock\frmSellStock.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SaleStock\frmSellStock.Designer.cs">
-      <DependentUpon>frmSellStock.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SaleStock\frmSellStockDesc.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SaleStock\frmSellStockDesc.Designer.cs">
-      <DependentUpon>frmSellStockDesc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SaleStock\frmSellStockStatus.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SaleStock\frmSellStockStatus.Designer.cs">
-      <DependentUpon>frmSellStockStatus.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SaleStock\frmSellStockSum.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SaleStock\frmSellStockSum.Designer.cs">
-      <DependentUpon>frmSellStockSum.cs</DependentUpon>
     </Compile>
     <Compile Include="SelectDataDialog\frmSelectDateTime.cs">
       <SubType>Form</SubType>

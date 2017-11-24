@@ -60,7 +60,7 @@ namespace EMS.SaleStock
                 cbCustomerNumber.DataSource = listCustomer;
 
                 //4. 访问商品数据表，将商品编号存储到下拉列表中
-                dsGoods = baseinfo.GetAllStock("tb_goods");
+                dsGoods = baseinfo.GetAllBill("tb_goods");
                 DataTable dtGoods = dsGoods.Tables[0];
                 foreach (DataRow dr in dtGoods.Rows)
                 {
@@ -94,6 +94,7 @@ namespace EMS.SaleStock
         private void cbGoodsNumber_SelectedIndexChanged(object sender, EventArgs e)
         {
             DataSet dsGoods = null;
+            DataSet dsGoodsStock = null;
             try
             {
                 dsGoods = baseinfo.GetTableDateByFiled("tb_goods", "number", cbGoodsNumber.Text);
@@ -101,8 +102,12 @@ namespace EMS.SaleStock
                 dgvSalesDetailList[1, detailRow].Value = dsGoods.Tables[0].Rows[0]["type"].ToString();
                 dgvSalesDetailList[2, detailRow].Value = dsGoods.Tables[0].Rows[0]["name"].ToString();
                 dgvSalesDetailList[3, detailRow].Value = dsGoods.Tables[0].Rows[0]["unit"].ToString();
-                //dtPurchaseDetail[4, detailRow].Value = Convert.ToString(1);
-                //dtPurchaseDetail[5, detailRow].Value = Convert.ToString(0.1);            
+                dsGoodsStock = baseinfo.GetTableDateByFiled("tb_stock", "goods_number", cbGoodsNumber.Text);
+                dgvSalesDetailList[7, detailRow].Value = dsGoodsStock.Tables[0].Rows[0]["stock"].ToString();
+                if (Convert.ToInt32(dsGoodsStock.Tables[0].Rows[0]["stock"].ToString()) < Convert.ToInt32(dsGoodsStock.Tables[0].Rows[0]["min_stock"].ToString()))
+                {
+                    MessageBox.Show("该款商品缺货，请补货", "库存不足", MessageBoxButtons.OK);
+                }
             }
             catch (System.Exception ex)
             {
@@ -155,6 +160,11 @@ namespace EMS.SaleStock
                         MessageBox.Show("数量必须大于0", "错误提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
+
+                    if (qty_row > Convert.ToInt32(dgvSalesDetailList[7, e.RowIndex].Value))
+                    {
+                        MessageBox.Show("请注意，销售数量大于库存量", "库存不足", MessageBoxButtons.OK);
+                    }
                 }
 
                 if (e.ColumnIndex == 5)
@@ -171,10 +181,10 @@ namespace EMS.SaleStock
                 {
                     totalPay = pay_row * Convert.ToSingle(qty_row);
                     dgvSalesDetailList[6, e.RowIndex].Value = Convert.ToString(totalPay);
-
+                    totalPay = 0;
                     for (int i = 0; i < dgvSalesDetailList.RowCount - 1; i++)
                     {
-                        totalPay = totalPay + Convert.ToSingle(dgvSalesDetailList[6, i].Value.ToString());
+                        totalPay +=  Convert.ToSingle(dgvSalesDetailList[6, i].Value.ToString());
                     }
 
                     //订单总金额
