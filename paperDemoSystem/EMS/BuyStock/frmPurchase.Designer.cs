@@ -29,6 +29,13 @@
         private void InitializeComponent()
         {
             this.dtPurchaseDetail = new System.Windows.Forms.DataGridView();
+            this.goodNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.type = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.goodsName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.unit = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.qty = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.price = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.totalPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -49,13 +56,6 @@
             this.txTotalPay = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.cbGoodsNumber = new System.Windows.Forms.ComboBox();
-            this.goodNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.type = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.goodsName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.unit = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.qty = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.price = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.totalPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dtPurchaseDetail)).BeginInit();
             this.SuspendLayout();
             // 
@@ -81,6 +81,46 @@
             this.dtPurchaseDetail.CellStateChanged += new System.Windows.Forms.DataGridViewCellStateChangedEventHandler(this.dtPurchaseDetail_CellStateChanged);
             this.dtPurchaseDetail.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtPurchaseDetail_CellValueChanged);
             this.dtPurchaseDetail.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dtPurchaseDetail_EditingControlShowing);
+            // 
+            // goodNumber
+            // 
+            this.goodNumber.HeaderText = "商品编号";
+            this.goodNumber.Name = "goodNumber";
+            this.goodNumber.ReadOnly = true;
+            this.goodNumber.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            // 
+            // type
+            // 
+            this.type.HeaderText = "商品分类";
+            this.type.Name = "type";
+            // 
+            // goodsName
+            // 
+            this.goodsName.HeaderText = "商品名称";
+            this.goodsName.Name = "goodsName";
+            this.goodsName.ReadOnly = true;
+            // 
+            // unit
+            // 
+            this.unit.HeaderText = "单位";
+            this.unit.Name = "unit";
+            this.unit.ReadOnly = true;
+            // 
+            // qty
+            // 
+            this.qty.HeaderText = "数量";
+            this.qty.Name = "qty";
+            // 
+            // price
+            // 
+            this.price.HeaderText = "单价";
+            this.price.Name = "price";
+            // 
+            // totalPrice
+            // 
+            this.totalPrice.HeaderText = "金额小计";
+            this.totalPrice.Name = "totalPrice";
+            this.totalPrice.ReadOnly = true;
             // 
             // label1
             // 
@@ -189,6 +229,7 @@
             this.cbEmployeeNumber.Name = "cbEmployeeNumber";
             this.cbEmployeeNumber.Size = new System.Drawing.Size(91, 20);
             this.cbEmployeeNumber.TabIndex = 12;
+            this.cbEmployeeNumber.SelectedIndexChanged += new System.EventHandler(this.cbEmployeeNumber_SelectedIndexChanged);
             this.cbEmployeeNumber.SelectedValueChanged += new System.EventHandler(this.cbEmployeeNumber_SelectedValueChanged);
             // 
             // txEmpolyeeName
@@ -256,46 +297,6 @@
             this.cbGoodsNumber.TabIndex = 20;
             this.cbGoodsNumber.SelectedIndexChanged += new System.EventHandler(this.cbGoodsNumber_SelectedIndexChanged);
             this.cbGoodsNumber.SelectedValueChanged += new System.EventHandler(this.cbGoodsNumber_SelectedValueChanged);
-            // 
-            // goodNumber
-            // 
-            this.goodNumber.HeaderText = "商品编号";
-            this.goodNumber.Name = "goodNumber";
-            this.goodNumber.ReadOnly = true;
-            this.goodNumber.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            // 
-            // type
-            // 
-            this.type.HeaderText = "商品分类";
-            this.type.Name = "type";
-            // 
-            // goodsName
-            // 
-            this.goodsName.HeaderText = "商品名称";
-            this.goodsName.Name = "goodsName";
-            this.goodsName.ReadOnly = true;
-            // 
-            // unit
-            // 
-            this.unit.HeaderText = "单位";
-            this.unit.Name = "unit";
-            this.unit.ReadOnly = true;
-            // 
-            // qty
-            // 
-            this.qty.HeaderText = "数量";
-            this.qty.Name = "qty";
-            // 
-            // price
-            // 
-            this.price.HeaderText = "单价";
-            this.price.Name = "price";
-            // 
-            // totalPrice
-            // 
-            this.totalPrice.HeaderText = "金额小计";
-            this.totalPrice.Name = "totalPrice";
-            this.totalPrice.ReadOnly = true;
             // 
             // frmPurchase
             // 

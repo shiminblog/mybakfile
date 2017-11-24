@@ -54,8 +54,7 @@ namespace EMS
 
         private void fileSellStock_Click(object sender, EventArgs e)
         {
-            new EMS.SaleStock.frmSellStock().Show();
-            //new EMS.SaleStock.FormSellOrderWrite().Show();
+            new EMS.SaleStock.frmSales().Show();
         }
 
         private void fileBuyStockAnalyse_Click(object sender, EventArgs e)

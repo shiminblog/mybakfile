@@ -285,5 +285,10 @@ namespace EMS.BuyStock
         {
             //TOTO..
         }
+
+        private void cbEmployeeNumber_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

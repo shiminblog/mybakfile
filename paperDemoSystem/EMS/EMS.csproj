@@ -126,6 +126,12 @@
     <Compile Include="SaleStock\frmOrderDetailList.Designer.cs">
       <DependentUpon>frmOrderDetailList.cs</DependentUpon>
     </Compile>
+    <Compile Include="SaleStock\frmSales.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SaleStock\frmSales.Designer.cs">
+      <DependentUpon>frmSales.cs</DependentUpon>
+    </Compile>
     <Compile Include="SaleStock\frmSellStockList.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -226,6 +232,9 @@
     <EmbeddedResource Include="SaleStock\frmResellStock.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmResellStock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SaleStock\frmSales.resx">
+      <DependentUpon>frmSales.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SaleStock\frmSellStockCost.resx">
       <SubType>Designer</SubType>

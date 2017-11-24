@@ -472,7 +472,7 @@ namespace EMS.BaseClass
         /// <param name="billinfo">过账单据数据结构类对象</param>
         /// <param name="AddTableName_trueName">数据库中数据表名称</param>
         /// <returns></returns>
-        public int AddTablePurchase(cPurchaseBill billinfo, string AddTableName_trueName)
+        public int AddTablePurchase(cPurchaseBill billinfo, string table_name)
         {
                 MySqlParameter[] prams = 
                 {
@@ -484,7 +484,7 @@ namespace EMS.BaseClass
                         data.MakeInParam("@totalpay",    MySqlDbType.Float, 255,billinfo.TotalPayment),
                         data.MakeInParam("@statu",  MySqlDbType.VarChar, 255, billinfo.Status),
 			    };
-                return (data.RunProc("INSERT INTO " + AddTableName_trueName + " (number,supplier_number,employee_number,order_date,recive_date,totalpay,statu) VALUES (@number,@supplier_number,@employee_number,@order_date,@recive_date,@totalpay,@statu)", prams));            
+                return (data.RunProc("INSERT INTO " + table_name + " (number,supplier_number,employee_number,order_date,recive_date,totalpay,statu) VALUES (@number,@supplier_number,@employee_number,@order_date,@recive_date,@totalpay,@statu)", prams));            
         }
 
         /// <summary>
@@ -493,7 +493,7 @@ namespace EMS.BaseClass
         /// <param name="billinfo">过账单据数据结构类对象</param>
         /// <param name="AddTableName_trueName">数据库中数据表名称</param>
         /// <returns></returns>
-        public int AddTablePurchaseDetail(cPurchaseBill billinfo, string AddTableName_trueName)
+        public int AddTablePurchaseDetail(cPurchaseBill billinfo, string table_name)
         {
             MySqlParameter[] prams = 
                 {
@@ -505,8 +505,48 @@ namespace EMS.BaseClass
                         data.MakeInParam("@goods_price",    MySqlDbType.Float, 32,billinfo.goodsPrice),
                         data.MakeInParam("@goods_uint",    MySqlDbType.VarChar, 255,billinfo.goodsUnit),
 			    };
-            return (data.RunProc("INSERT INTO " + AddTableName_trueName + " (serial_number,detail_number,purchase_number,goods_number,goods_qty,goods_price,goods_uint) VALUES (@serial_number,@detail_number,@purchase_number,@goods_number,@goods_qty,@goods_price,@goods_uint)", prams));
+            return (data.RunProc("INSERT INTO " + table_name + " (serial_number,detail_number,purchase_number,goods_number,goods_qty,goods_price,goods_uint) VALUES (@serial_number,@detail_number,@purchase_number,@goods_number,@goods_qty,@goods_price,@goods_uint)", prams));
         }
+        /// <summary>
+        /// 销售 --- 向销售表中添加数据
+        /// </summary>
+        /// <param name="billinfo"></param>
+        /// <param name="table_name"></param>
+        /// <returns></returns>
+        public int AddTableSales(cBillInfo billinfo, string table_name)
+        {
+
+            MySqlParameter[] prams = 
+                {
+                        data.MakeInParam("@number",  MySqlDbType.VarChar, 255,billinfo.BillCode),
+                        data.MakeInParam("@customer_number", MySqlDbType.VarChar, 255,billinfo.CustomerCode),
+                        data.MakeInParam("@employee_number",    MySqlDbType.VarChar, 255,billinfo.SalesPersonCode),
+                        data.MakeInParam("@order_date",    MySqlDbType.DateTime, 255,billinfo.orderDate),
+                        data.MakeInParam("@totalpay",    MySqlDbType.Float, 255,billinfo.OrderTotalPayment),
+                        data.MakeInParam("@statu",  MySqlDbType.VarChar, 255, billinfo.Status),
+			    };
+            return (data.RunProc("INSERT INTO " + table_name + " (number,customer_number,employee_number,order_date,totalpay,statu) VALUES (@number,@customer_number,@employee_number,@order_date,@totalpay,@statu)", prams));
+        }
+        /// <summary>
+        /// 销售 --- 向销售明细表中添加数据
+        /// </summary>
+        /// <param name="billinfo"></param>
+        /// <param name="table_name"></param>
+        /// <returns></returns>
+        public int AddTableSalesDetail(cBillInfo billinfo, string table_name)
+        {
+            MySqlParameter[] prams = 
+                {
+                        data.MakeInParam("@number",  MySqlDbType.VarChar, 255,billinfo.orderDetaildCode),
+                        data.MakeInParam("@sales_number", MySqlDbType.VarChar, 255,billinfo.BillCode),
+                        data.MakeInParam("@goods_number",    MySqlDbType.VarChar, 255,billinfo.goodsCode),
+                        data.MakeInParam("@goods_qty", MySqlDbType.Float, 32, billinfo.Qty),
+                        data.MakeInParam("@goods_price",    MySqlDbType.Float, 32,billinfo.goodsPrice),
+                        data.MakeInParam("@goods_uint",    MySqlDbType.VarChar, 255,billinfo.goodsUnit),
+			    };
+            return (data.RunProc("INSERT INTO " + table_name + " (number,sales_number,goods_number,goods_qty,goods_price,goods_uint) VALUES (@number,@sales_number,@goods_number,@goods_qty,@goods_price,@goods_uint)", prams));           
+        }
+
         /// <summary>
         /// 入库--向主表中添加数据
         /// </summary>
