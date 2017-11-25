@@ -90,26 +90,26 @@ namespace EMS.BuyStock
 
                 dgv_row = dgvDetailList.RowCount;
 
-                dgvDetailList.Columns[0].HeaderText = "流水号";
+                //dgvDetailList.Columns[0].HeaderText = "流水号";
+                //dgvDetailList.Columns[0].Visible = true;
+
+                dgvDetailList.Columns[0].HeaderText = "明细编号";
                 dgvDetailList.Columns[0].Visible = true;
 
-                dgvDetailList.Columns[1].HeaderText = "明细编号";
+                dgvDetailList.Columns[1].HeaderText = "采购单号";
                 dgvDetailList.Columns[1].Visible = true;
 
-                dgvDetailList.Columns[2].HeaderText = "采购单号";
+                dgvDetailList.Columns[2].HeaderText = "商品名字";
                 dgvDetailList.Columns[2].Visible = true;
 
-                dgvDetailList.Columns[3].HeaderText = "商品名字";
+                dgvDetailList.Columns[3].HeaderText = "商品数量";
                 dgvDetailList.Columns[3].Visible = true;
 
-                dgvDetailList.Columns[4].HeaderText = "商品数量";
+                dgvDetailList.Columns[4].HeaderText = "商品单价";
                 dgvDetailList.Columns[4].Visible = true;
 
-                dgvDetailList.Columns[5].HeaderText = "商品单价";
+                dgvDetailList.Columns[5].HeaderText = "商品单位";
                 dgvDetailList.Columns[5].Visible = true;
-
-                dgvDetailList.Columns[6].HeaderText = "商品单位";
-                dgvDetailList.Columns[6].Visible = true;
 
                 //填充表头
                 txBillNumber.Text = PurchaseCode;
@@ -154,7 +154,7 @@ namespace EMS.BuyStock
                 int dgv_row = dgvDetailList.RowCount;
                 //DataSet dsGoods = baseinfo.GetAllBill("tb_goods");
                 //获取商品名字，使用商品名字替换 dgvDetailList 中的商品编号
-                if (e.ColumnIndex == 3)
+                if (e.ColumnIndex == 2)
                 {
                     foreach (DataRow dr in dsGoods.Tables[0].Rows)
                     {

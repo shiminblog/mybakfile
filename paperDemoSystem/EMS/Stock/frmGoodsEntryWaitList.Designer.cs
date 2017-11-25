@@ -1,6 +1,6 @@
 ﻿namespace EMS.Stock
 {
-    partial class frmOutStockListDetail
+    partial class frmGoodsEntryWaitList
     {
         /// <summary>
         /// Required designer variable.
@@ -28,48 +28,49 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dataGridViewOutStockListDetail = new System.Windows.Forms.DataGridView();
+            this.dgvList = new System.Windows.Forms.DataGridView();
             this.btBack = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOutStockListDetail)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvList)).BeginInit();
             this.SuspendLayout();
             // 
-            // dataGridViewOutStockListDetail
+            // dgvList
             // 
-            this.dataGridViewOutStockListDetail.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewOutStockListDetail.Location = new System.Drawing.Point(12, 12);
-            this.dataGridViewOutStockListDetail.Name = "dataGridViewOutStockListDetail";
-            this.dataGridViewOutStockListDetail.RowTemplate.Height = 23;
-            this.dataGridViewOutStockListDetail.Size = new System.Drawing.Size(874, 292);
-            this.dataGridViewOutStockListDetail.TabIndex = 0;
+            this.dgvList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvList.Location = new System.Drawing.Point(12, 12);
+            this.dgvList.Name = "dgvList";
+            this.dgvList.RowTemplate.Height = 23;
+            this.dgvList.Size = new System.Drawing.Size(502, 199);
+            this.dgvList.TabIndex = 0;
+            this.dgvList.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvList_CellDoubleClick);
             // 
             // btBack
             // 
-            this.btBack.Location = new System.Drawing.Point(801, 333);
+            this.btBack.Location = new System.Drawing.Point(439, 217);
             this.btBack.Name = "btBack";
             this.btBack.Size = new System.Drawing.Size(75, 23);
             this.btBack.TabIndex = 1;
-            this.btBack.Text = "返回出库单列表";
+            this.btBack.Text = "返回";
             this.btBack.UseVisualStyleBackColor = true;
             this.btBack.Click += new System.EventHandler(this.btBack_Click);
             // 
-            // frmOutStockListDetail
+            // frmGoodsEntryWaitList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(898, 368);
+            this.ClientSize = new System.Drawing.Size(526, 262);
             this.Controls.Add(this.btBack);
-            this.Controls.Add(this.dataGridViewOutStockListDetail);
-            this.Name = "frmOutStockListDetail";
-            this.Text = "出库订单明细表";
-            this.Load += new System.EventHandler(this.frmOutStockListDetail_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOutStockListDetail)).EndInit();
+            this.Controls.Add(this.dgvList);
+            this.Name = "frmGoodsEntryWaitList";
+            this.Text = "供货单列表";
+            this.Load += new System.EventHandler(this.frmGoodsEntryWaitList_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvList)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.DataGridView dataGridViewOutStockListDetail;
+        private System.Windows.Forms.DataGridView dgvList;
         private System.Windows.Forms.Button btBack;
     }
 }

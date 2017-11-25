@@ -497,15 +497,14 @@ namespace EMS.BaseClass
         {
             MySqlParameter[] prams = 
                 {
-                        data.MakeInParam("@serial_number",  MySqlDbType.VarChar, 255,billinfo.SerialNumber),
-                        data.MakeInParam("@detail_number", MySqlDbType.VarChar, 255,billinfo.PurchaseDetaildCode),
+                        data.MakeInParam("@number",  MySqlDbType.VarChar, 255,billinfo.PurchaseDetaildCode),
                         data.MakeInParam("@purchase_number",    MySqlDbType.VarChar, 255,billinfo.BillCode),
                         data.MakeInParam("@goods_number",    MySqlDbType.VarChar, 255,billinfo.goodsCode),
                         data.MakeInParam("@goods_qty", MySqlDbType.Float, 32, billinfo.Qty),
                         data.MakeInParam("@goods_price",    MySqlDbType.Float, 32,billinfo.goodsPrice),
                         data.MakeInParam("@goods_uint",    MySqlDbType.VarChar, 255,billinfo.goodsUnit),
 			    };
-            return (data.RunProc("INSERT INTO " + table_name + " (serial_number,detail_number,purchase_number,goods_number,goods_qty,goods_price,goods_uint) VALUES (@serial_number,@detail_number,@purchase_number,@goods_number,@goods_qty,@goods_price,@goods_uint)", prams));
+            return (data.RunProc("INSERT INTO " + table_name + " (number,purchase_number,goods_number,goods_qty,goods_price,goods_uint) VALUES (@number,@purchase_number,@goods_number,@goods_qty,@goods_price,@goods_uint)", prams));
         }
         /// <summary>
         /// 销售 --- 向销售表中添加数据
@@ -546,26 +545,48 @@ namespace EMS.BaseClass
 			    };
             return (data.RunProc("INSERT INTO " + table_name + " (number,sales_number,goods_number,goods_qty,goods_price,goods_uint) VALUES (@number,@sales_number,@goods_number,@goods_qty,@goods_price,@goods_uint)", prams));           
         }
-
+        /// <summary>
+        /// 更新销售单据状态
+        /// </summary>
+        /// <param name="stock"></param>
+        /// <returns></returns>
+        public int UpdateSalesStatu(cBillInfo billinfo)
+        {
+            MySqlParameter[] prams = {
+									    data.MakeInParam("@number",  MySqlDbType.VarChar, 45,billinfo.BillCode),
+                						data.MakeInParam("@statu",  MySqlDbType.VarChar, 45,billinfo.Status),
+			};
+            return (data.RunProc("update tb_sales set statu=@statu where number=@number", prams));
+        }
+        /// <summary>
+        /// 更新采购单状态
+        /// </summary>
+        /// <param name="billinfo"></param>
+        /// <returns></returns>
+        public int UpdatePurchaseStatu(cPurchaseBill billinfo)
+        {
+            MySqlParameter[] prams = {
+									    data.MakeInParam("@number",  MySqlDbType.VarChar, 45,billinfo.BillCode),
+                						data.MakeInParam("@statu",  MySqlDbType.VarChar, 45,billinfo.Status),
+			};
+            return (data.RunProc("update tb_purchase set statu=@statu where number=@number", prams));
+        }
         /// <summary>
         /// 入库--向主表中添加数据
         /// </summary>
         /// <param name="billinfo">过账单据数据结构类对象</param>
         /// <param name="AddTableName_trueName">数据库中数据表名称</param>
         /// <returns></returns>
-        public int AddTableEntryStock(cStockBill billinfo, string AddTableName_trueName)
+        public int AddTableEntryStock(cStockBill billinfo, string tableName)
         {
             MySqlParameter[] prams = 
                 {
-                        data.MakeInParam("@entry_code",  MySqlDbType.VarChar, 255,billinfo.EnOutCode),
-                        data.MakeInParam("@purchase_code", MySqlDbType.VarChar, 255,billinfo.PurchaseCode),
-                        data.MakeInParam("@goods_count",    MySqlDbType.Int32, 32,billinfo.GoodsCount),
-                        data.MakeInParam("@supplier_code",    MySqlDbType.VarChar, 255,billinfo.SupplierCode),
-                        data.MakeInParam("@clerk_code",    MySqlDbType.VarChar, 255,billinfo.StaffCode),
-                        data.MakeInParam("@clerk_name",    MySqlDbType.VarChar, 255,billinfo.StaffName),
-                        data.MakeInParam("@entry_date",    MySqlDbType.DateTime, 255,billinfo.BillDate),
+                        data.MakeInParam("@number",  MySqlDbType.VarChar, 255,billinfo.EnOutCode),
+                        data.MakeInParam("@purchase_number", MySqlDbType.VarChar, 255,billinfo.PurchaseCode),
+                        data.MakeInParam("@employee_number",    MySqlDbType.VarChar, 255,billinfo.StaffCode),
+                        data.MakeInParam("@date",    MySqlDbType.DateTime, 255,billinfo.BillDate),
 			    };
-            return (data.RunProc("INSERT INTO " + AddTableName_trueName + " (entry_code, purchase_code, goods_count, supplier_code,clerk_code, clerk_name, entry_date) VALUES (@entry_code, @purchase_code, @goods_count, @supplier_code,@clerk_code, @clerk_name, @out_date)", prams));
+            return (data.RunProc("INSERT INTO " + tableName + " (number,purchase_number,employee_number,date) VALUES (@number,@purchase_number,@employee_number,@date)", prams));
         }
         /// <summary>
         /// 入库-向明细表中添加数据
@@ -573,20 +594,16 @@ namespace EMS.BaseClass
         /// <param name="billinfo">过账单据数据结构类对象</param>
         /// <param name="AddTableName_trueName">数据库中数据表名称</param>
         /// <returns></returns>
-        public int AddTableEntryStockDetail(cStockBill billinfo, string AddTableName_trueName)
+        public int AddTableEntryStockDetail(cStockBill billinfo, string tableName)
         {
             MySqlParameter[] prams = 
                     {
-                            data.MakeInParam("@entry_detail_code",  MySqlDbType.VarChar, 255,billinfo.EnOutDetailCode),
-                            data.MakeInParam("@entry_code", MySqlDbType.VarChar, 255,billinfo.EnOutCode),
-                            data.MakeInParam("@goods_code",    MySqlDbType.VarChar, 255,billinfo.GoodCode),
-                            data.MakeInParam("@goods_name",    MySqlDbType.VarChar, 255,billinfo.GoodsName),
-                            data.MakeInParam("@goods_uint",    MySqlDbType.VarChar, 255,billinfo.GoodsUint),
-                            data.MakeInParam("@goods_price",    MySqlDbType.Float, 32,billinfo.GoodsPrice),
-                            data.MakeInParam("@goods_qty", MySqlDbType.Float, 32, billinfo.Qty),
-                            data.MakeInParam("@goods_total_price",  MySqlDbType.Float, 32, billinfo.GoodsTotalPrice),
+                            data.MakeInParam("@number",  MySqlDbType.VarChar, 255,billinfo.EnOutDetailCode),
+                            data.MakeInParam("@entry_number", MySqlDbType.VarChar, 255,billinfo.EnOutCode),
+                            data.MakeInParam("@goods_number",    MySqlDbType.VarChar, 255,billinfo.GoodCode),
+                            data.MakeInParam("@qty", MySqlDbType.Float, 32, billinfo.Qty),
                     };
-            return (data.RunProc("INSERT INTO " + AddTableName_trueName + " (entry_detail_code, entry_code, goods_code, goods_name, goods_uint, goods_price,goods_qty,goods_total_price) VALUES (@entry_detail_code, @entry_code, @goods_code, @goods_name, @goods_uint, @goods_price,@goods_qty,@goods_total_price)", prams));
+            return (data.RunProc("INSERT INTO " + tableName + " (number,entry_number,goods_number,qty) VALUES (@number,@entry_number,@goods_number,@qty)", prams));
         }
 
         /// <summary>
@@ -630,6 +647,22 @@ namespace EMS.BaseClass
                     };
                 return (data.RunProc("INSERT INTO " + AddTableName_trueName + " (out_detail_code, out_code, goods_code, goods_name, goods_uint, goods_price,goods_qty,goods_total_price) VALUES (@out_detail_code, @out_code, @goods_code, @goods_name, @goods_uint, @goods_price,@goods_qty,@goods_total_price)", prams));
       }
+
+        /// <summary>
+        /// 修改出入库后库存量
+        /// </summary>
+        /// <param name="stock"></param>
+        /// <returns></returns>
+        public int UpdateStockQty(cStockInfo stock)
+        {
+            MySqlParameter[] prams = {
+									    data.MakeInParam("@goods_number",  MySqlDbType.VarChar, 5, stock.TradeCode),
+                						data.MakeInParam("@stock",  MySqlDbType.Float, 30,stock.Qty),
+			};
+            return (data.RunProc("update tb_stock set stock=@stock where goods_number=@goods_number", prams));
+        }
+
+
         /// <summary>
         /// 向明细表中添加数据－进货单－销售退货单－销售单－进货退货单
         /// </summary>

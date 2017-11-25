@@ -24,7 +24,7 @@ namespace EMS
         private void fileStore_Click(object sender, EventArgs e)
         {
             //new EMS.BaseInfo.frmStock().Show();
-            new EMS.Stock.frmLowerLimit().Show();
+            //new EMS.Stock.frmLowerLimit().Show();
         }
 
         private void fileEmployee_Click(object sender, EventArgs e)
@@ -85,12 +85,12 @@ namespace EMS
 
         private void fileStockStatus_Click(object sender, EventArgs e)
         {
-            new EMS.Stock.frmStockStatus().Show();
+            //new EMS.Stock.frmStockStatus().Show();
         }
 
         private void fileUpperLimit_Click(object sender, EventArgs e)
         {
-            new EMS.Stock.frmUpperLimit().Show();
+           // new EMS.Stock.frmUpperLimit().Show();
         }
 
         private void fileLowerLimit_Click(object sender, EventArgs e)
@@ -101,7 +101,7 @@ namespace EMS
 
         private void fileCheckStock_Click(object sender, EventArgs e)
         {
-            new EMS.Stock.frmCheckStock().Show();
+            //new EMS.Stock.frmCheckStock().Show();
         }
 
         private void 本单位ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -196,39 +196,26 @@ namespace EMS
 
         private void 采购信息检索ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //EMS.BuyStock.frmPurchaseList purchase_list = new EMS.BuyStock.frmPurchaseList();
-            //purchase_list.Owner = this;
-            //purchase_list.Show();
             EMS.BuyStock.frmPurchaseQuery p_query = new EMS.BuyStock.frmPurchaseQuery();
             p_query.Show();
         }
 
         private void 出库操作ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            EMS.Stock.frmOutStock out_s = new EMS.Stock.frmOutStock();
-            out_s.Owner = this;
-            out_s.Show();
         }
 
         private void 出库查询ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            EMS.Stock.frmOutStockList frm = new EMS.Stock.frmOutStockList();
-            frm.Owner = this;
-            frm.Show();
         }
 
         private void 入库操作ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            EMS.Stock.frmInSotck entry_s = new EMS.Stock.frmInSotck();
-            entry_s.Owner = this;
-            entry_s.Show();
+            EMS.Stock.frmGoodsEntryWaitList frm = new EMS.Stock.frmGoodsEntryWaitList();
+            frm.Show();
         }
 
         private void 入库查询ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            EMS.Stock.frmInStockList frm_in = new EMS.Stock.frmInStockList();
-            frm_in.Owner = this;
-            frm_in.Show();
         }
 
     }

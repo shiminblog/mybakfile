@@ -116,8 +116,8 @@ namespace EMS.BuyStock
                 for (int i = 0; i < dtPurchaseDetail.RowCount - 1; i++)
                 {
                     // 2.2.0 自动增长明细编号
-                    // 2.2.1 明细流水号
-                    purchaseBillinfo.SerialNumber = Convert.ToString(rowCount + i);
+                    //// 2.2.1 明细流水号
+                    //purchaseBillinfo.SerialNumber = Convert.ToString(rowCount + i);
                     // 2.2.2 明细编号
                     purchaseBillinfo.PurchaseDetaildCode = Convert.ToString(700000001 + rowCount + i);
                     // 2.2.3 采购订单号
