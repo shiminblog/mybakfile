@@ -24,3 +24,8 @@ E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.csprojResolveAssemblyReference.cache
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.Stock.frmGoodsEntryDetail.resources
 E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.Stock.frmGoodsEntryWaitList.resources
+E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.Stock.frmGoodsOut.resources
+E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.Stock.frmGoodsOutWaitList.resources
+E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.Stock.frmStockCheck.resources
+E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.Stock.frmEntryCheck.resources
+E:\PaperNameHastoLongIfICannotFindIt\mybakfile\paperDemoSystem\EMS\obj\Debug\EMS.Stock.frmOutCheck.resources

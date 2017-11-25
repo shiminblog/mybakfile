@@ -32,8 +32,8 @@ namespace EMS
                 //int i = 0;
                 if (txtUserName.Text == string.Empty)
                 {
-                    //MessageBox.Show("用户名称不能为空！", "错误提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    //return;
+                    MessageBox.Show("用户名称不能为空！", "错误提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
                 //DataView DataSource = MySqlHelper.GetDataSet(testConn, CommandType.Text, "select * from user", null).Tables[0].DefaultView;
 
@@ -42,7 +42,7 @@ namespace EMS
                 popedom.Password = txtUserPwd.Text;
                 ds = baseinfo.Login(popedom);
 
-                if (true )//ds.Tables[0].Rows.Count > 0))
+                if (ds.Tables[0].Rows.Count > 0)
                 {
                     frmMain frm_main = new frmMain();
                     frm_main.Show();

@@ -162,7 +162,7 @@ namespace EMS.BuyStock
                         {
 
                             e.Value = dsGoods.Tables[0].Rows[goods_row]["name"].ToString();
-                            continue;
+                            break;
                         }
                         goods_row++;
                     }                    

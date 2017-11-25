@@ -96,7 +96,9 @@ namespace EMS
         private void fileLowerLimit_Click(object sender, EventArgs e)
         {
             //new EMS.Stock.frmLowerLimit().Show();
-            new EMS.BaseInfo.frmStock().Show();
+            //new EMS.BaseInfo.frmStock().Show();
+            EMS.Stock.frmStockCheck frm = new EMS.Stock.frmStockCheck();
+            frm.Show();
         }
 
         private void fileCheckStock_Click(object sender, EventArgs e)
@@ -202,10 +204,14 @@ namespace EMS
 
         private void 出库操作ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            EMS.Stock.frmGoodsOutWaitList frm = new EMS.Stock.frmGoodsOutWaitList();
+            frm.Show();
         }
 
         private void 出库查询ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            EMS.Stock.frmOutCheck frm = new EMS.Stock.frmOutCheck();
+            frm.Show();
         }
 
         private void 入库操作ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -216,6 +222,8 @@ namespace EMS
 
         private void 入库查询ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            EMS.Stock.frmEntryCheck frm = new EMS.Stock.frmEntryCheck();
+            frm.Show();
         }
 
     }

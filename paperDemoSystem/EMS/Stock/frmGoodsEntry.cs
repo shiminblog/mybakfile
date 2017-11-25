@@ -192,7 +192,7 @@ namespace EMS.Stock
                 DataSet dsEntryDetail = baseinfo.GetAllBill("tb_entry_stock_details");
                 int rowCount = dsEntryDetail.Tables[0].Rows.Count;
                 //先把库存表读取出来
-                DataSet dsStock = baseinfo.GetAllBill("tb_stock");
+                DataSet dsStock = null;
 
                 DataSet dsPurchaseDetail = baseinfo.GetTableDateByFiled("tb_purchase_details", "purchase_number", PurchaseCode);
 
@@ -212,9 +212,10 @@ namespace EMS.Stock
                     // 2.2.8 保存明细表
                     baseinfo.AddTableEntryStockDetail(entry_billinfo, "tb_entry_stock_details");
                     
-                    //2.2.9 更新库存
+                    //2.2.9 更新库存（加库存）
+                    dsStock = baseinfo.GetTableDateByFiled("tb_stock", "goods_number", entry_billinfo.GoodCode);
                     stockinfo.TradeCode = entry_billinfo.GoodCode;
-                    stockinfo.Qty = entry_billinfo.Qty;
+                    stockinfo.Qty = Convert.ToSingle(dsStock.Tables[0].Rows[0]["stock"].ToString()) + entry_billinfo.Qty;
                     baseinfo.UpdateStockQty(stockinfo);
                     // 2.2.9 增加明细表 row 数，在缓存中
                     rowCount += i;
@@ -268,7 +269,7 @@ namespace EMS.Stock
                         {
 
                             e.Value = dsGoods.Tables[0].Rows[goods_row]["name"].ToString();
-                            continue;
+                            break;
                         }
                         goods_row++;
                     }

@@ -612,18 +612,16 @@ namespace EMS.BaseClass
         /// <param name="billinfo">过账单据数据结构类对象</param>
         /// <param name="AddTableName_trueName">数据库中数据表名称</param>
         /// <returns></returns>
-        public int AddTableOutStock(cStockBill billinfo, string AddTableName_trueName)
+        public int AddTableOutStock(cStockBill billinfo, string tbName)
         {
             MySqlParameter[] prams = 
                 {
-                        data.MakeInParam("@out_code",  MySqlDbType.VarChar, 255,billinfo.EnOutCode),
-                        data.MakeInParam("@orders_code", MySqlDbType.VarChar, 255,billinfo.OrdersCode),
-                        data.MakeInParam("@goods_count",    MySqlDbType.Int32, 32,billinfo.GoodsCount),
-                        data.MakeInParam("@clerk_code",    MySqlDbType.VarChar, 255,billinfo.StaffCode),
-                        data.MakeInParam("@clerk_name",    MySqlDbType.VarChar, 255,billinfo.StaffName),
-                        data.MakeInParam("@out_date",    MySqlDbType.DateTime, 255,billinfo.BillDate),
+                        data.MakeInParam("@number",  MySqlDbType.VarChar, 255,billinfo.EnOutCode),
+                        data.MakeInParam("@sales_number", MySqlDbType.VarChar, 255,billinfo.OrdersCode),
+                        data.MakeInParam("@empolyee_number",    MySqlDbType.VarChar, 255,billinfo.StaffCode),
+                        data.MakeInParam("@date",    MySqlDbType.DateTime, 255,billinfo.BillDate),
 			    };
-            return (data.RunProc("INSERT INTO " + AddTableName_trueName + " (out_code, orders_code, goods_count, clerk_code, clerk_name, out_date) VALUES (@out_code, @orders_code, @goods_count, @clerk_code, @clerk_name, @out_date)", prams));
+            return (data.RunProc("INSERT INTO " + tbName + " (number, sales_number, empolyee_number, date) VALUES (@number, @sales_number, @empolyee_number, @date)", prams));
         }
 
         /// <summary>
@@ -632,20 +630,16 @@ namespace EMS.BaseClass
         /// <param name="billinfo">过账单据数据结构类对象</param>
         /// <param name="AddTableName_trueName">数据库中数据表名称</param>
         /// <returns></returns>
-        public int AddTableOutStockDetail(cStockBill billinfo, string AddTableName_trueName)
+        public int AddTableOutStockDetail(cStockBill billinfo, string tbName)
         {
                 MySqlParameter[] prams = 
                     {
-                            data.MakeInParam("@out_detail_code",  MySqlDbType.VarChar, 255,billinfo.EnOutDetailCode),
-                            data.MakeInParam("@out_code", MySqlDbType.VarChar, 255,billinfo.EnOutCode),
-                            data.MakeInParam("@goods_code",    MySqlDbType.VarChar, 255,billinfo.GoodCode),
-                            data.MakeInParam("@goods_name",    MySqlDbType.VarChar, 255,billinfo.GoodsName),
-                            data.MakeInParam("@goods_uint",    MySqlDbType.VarChar, 255,billinfo.GoodsUint),
-                            data.MakeInParam("@goods_price",    MySqlDbType.Float, 32,billinfo.GoodsPrice),
-                            data.MakeInParam("@goods_qty", MySqlDbType.Float, 32, billinfo.Qty),
-                            data.MakeInParam("@goods_total_price",  MySqlDbType.Float, 32, billinfo.GoodsTotalPrice),
+                            data.MakeInParam("@number",  MySqlDbType.VarChar, 255,billinfo.EnOutDetailCode),
+                            data.MakeInParam("@out_stock_number", MySqlDbType.VarChar, 255,billinfo.EnOutCode),
+                            data.MakeInParam("@goods_number",    MySqlDbType.VarChar, 255,billinfo.GoodCode),
+                            data.MakeInParam("@qty", MySqlDbType.Float, 32, billinfo.Qty),
                     };
-                return (data.RunProc("INSERT INTO " + AddTableName_trueName + " (out_detail_code, out_code, goods_code, goods_name, goods_uint, goods_price,goods_qty,goods_total_price) VALUES (@out_detail_code, @out_code, @goods_code, @goods_name, @goods_uint, @goods_price,@goods_qty,@goods_total_price)", prams));
+                return (data.RunProc("INSERT INTO " + tbName + " (number,out_stock_number,goods_number,qty) VALUES (@number,@out_stock_number,@goods_number,@qty)", prams));
       }
 
         /// <summary>
