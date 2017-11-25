@@ -311,17 +311,17 @@ namespace EMS.Stock
                 }
                 // 3.保存出库单
                 baseinfo.AddTableOutStock(out_billinfo, "tb_out_stock");
-                MessageBox.Show("入库单－－过账成功！", "成功提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("出库单－－过账成功！", "成功提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 //4.更新销售单状态
                 saleinfo.BillCode = SalesCode;
-                saleinfo.Status = "已入库";
+                saleinfo.Status = "已出库";
                 baseinfo.UpdateSalesStatu(saleinfo);
-                MessageBox.Show("采购单状态更新成功！", "成功提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("销售单状态更新成功！", "成功提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.Close();
             }
             catch (System.Exception ex)
             {
-                MessageBox.Show("数据错误，入库失败!", "错误提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("数据错误，出库失败!", "错误提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 //return;
             }
         }
