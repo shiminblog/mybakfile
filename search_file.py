@@ -1,8 +1,8 @@
 import os,sys
 import shutil
 
-pathname = "/home/shimin/LA.5.6.XXX/"
-def detect_walk(rootdir):
+pathname = []
+def cp_file(rootdir):
     #print "dirpath = %s\n" % dirpath
     #for root, dirs in os.walk(dirpath):
     for root, dirs, files in os.walk(rootdir):
@@ -49,7 +49,7 @@ if __name__ == "__main__":
     if para_num < 3:
         print "Usage: python search_file.py [name of rootdir] [outdir],for example:\n"
         print "python search_file.py kernel /home/shaomingliang/SML/ \n"
-        #exit(0)
-    #pathname = sys.argv[2]
-    #detect_walk(sys.argv[1])
-    rename_file(".")
+        exit(0)
+    pathname = sys.argv[2]
+    cp_file(sys.argv[1])
+    #rename_file(".")
